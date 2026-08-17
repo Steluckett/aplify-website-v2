@@ -69,31 +69,36 @@ export const capabilities = {
   eyebrow: "For your candidates",
   lines: ["Four steps,", "no dead ends"],
   standfirst:
-    "The whole candidate journey happens on your own site, in your own brand.",
+    "The whole candidate journey happens on your own site, in your own brand — and every step of it is a place people usually drop out.",
+  /** Rendered as alternating copy/image rows, so each step gets a shot. */
   steps: [
     {
       n: "01",
       title: "Find the right job",
-      body: "Keyword, region, salary and contract, plus postcode search and a map.",
-      ground: "sky" as const,
+      body: "Full-text search across every live role, narrowed by region, salary band and contract type. Candidates who only know the town they can get to use postcode search with a radius, or the map — which is often the only filter that matters when the job is shift work.",
+      points: ["Keyword and salary filtering", "Postcode search with radius", "Interactive map"],
+      shot: { url: "yourcompany.co.uk/careers", placeholder: "Search and filters" },
     },
     {
       n: "02",
       title: "Apply without leaving",
-      body: "On-page and anonymous, with pre-qualification before the form.",
-      ground: "violet" as const,
+      body: "The application form is on the page, not behind a redirect. Pre-qualification runs first, so anyone who cannot be offered the role finds out in two questions rather than after twenty minutes of typing — and each company chooses which fields it actually needs.",
+      points: ["No ATS redirect", "No account to create", "Pre-qualification first"],
+      shot: { url: "yourcompany.co.uk/careers/apply", placeholder: "Easy Apply form" },
     },
     {
       n: "03",
       title: "Register for events",
-      body: "Hiring events get the same low-friction flow, on their own tab.",
-      ground: "mint" as const,
+      body: "Open days and assessment centres get the same low-friction flow on their own tab, with places tracked and attendance recorded against the candidate afterwards — so an event stops being a spreadsheet that lives on somebody's desktop.",
+      points: ["Own tab, same flow", "Places tracked", "Attendance recorded"],
+      shot: { url: "yourcompany.co.uk/careers/events", placeholder: "Event registration" },
     },
     {
       n: "04",
       title: "Kept informed",
-      body: "Branded status emails at every stage, in your own voice.",
-      ground: "amber" as const,
+      body: "Every status change sends a branded email in your own voice, so a candidate is never left guessing whether anyone read their application. Silence is the single most common reason people say they would not apply to an employer twice.",
+      points: ["Branded templates", "Every status change", "Your tone of voice"],
+      shot: { url: "app.aplify.co.uk/emails", placeholder: "Candidate status email" },
     },
   ],
 };

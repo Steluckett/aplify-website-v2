@@ -36,7 +36,7 @@ export const Product = () => (
           standfirst={demos.jobSearch.standfirst}
         />
         <div className="mt-16">
-          <ScreenCard ground="wash" url={demos.jobSearch.shot.url}>
+          <ScreenCard ground="wash" pad="generous" url={demos.jobSearch.shot.url}>
             <JobSearchDemo />
           </ScreenCard>
           {/* The roles are invented and the page must say so — a demo that
@@ -70,7 +70,7 @@ export const Product = () => (
           standfirst={demos.dashboard.standfirst}
         />
         <div className="mt-16">
-          <ScreenCard ground="wash" url={demos.dashboard.shot.url}>
+          <ScreenCard ground="wash" pad="generous" url={demos.dashboard.shot.url}>
             <DashboardDemo />
           </ScreenCard>
         </div>

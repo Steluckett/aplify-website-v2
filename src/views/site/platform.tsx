@@ -103,12 +103,20 @@ const FeatureBento = () => (
 );
 
 /**
- * The four-step row, on a full-bleed white band.
+ * The four steps, as alternating copy/shot rows.
  *
- * The band is the point. A pastel card measures within a point of the tinted
- * page ground in lightness, so on the ground these four read as flat rectangles
- * of nothing; on white they separate cleanly and the tints do the job they were
- * chosen for — four steps as four distinct moments rather than a list.
+ * Each step is a panel holding two things: the copy on one side and a real
+ * product shot on the other, with the sides swapping every row. The swap is
+ * what stops four rows of identical structure reading as a list — the eye
+ * tracks back and forth instead of straight down, and each step gets its own
+ * beat.
+ *
+ * It also buys four more places to show the product, which is worth more than
+ * the page length it costs: a claim beside a screenshot of the thing doing it
+ * is a different kind of claim.
+ *
+ * The panel is the quiet grey; the shot inside it sits on the wash. Two
+ * surfaces inside one panel, which is the layering the whole page runs on.
  */
 const Capabilities = () => (
   <section id="candidates" className="band-white py-24 lg:py-32">
@@ -119,18 +127,41 @@ const Capabilities = () => (
         standfirst={capabilities.standfirst}
       />
 
-      <div className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-        {capabilities.steps.map((step, i) => (
-          <Reveal key={step.n} variant="up" delay={i * 80}>
-            <article
-              className={`pastel-${step.ground} flex h-full flex-col rounded-panel p-8 lg:p-10`}
-            >
-              <p className="figure text-h1 text-ink/30">{step.n}</p>
-              <h3 className="display mt-8 text-h4">{step.title}</h3>
-              <p className="mt-3 text-body leading-[1.6] text-ink-body">{step.body}</p>
-            </article>
-          </Reveal>
-        ))}
+      <div className="mt-16 space-y-5">
+        {capabilities.steps.map((step, i) => {
+          const shotFirst = i % 2 === 1;
+          return (
+            <Reveal key={step.n} variant="up">
+              <article className="rounded-panel bg-surface-chip p-5 sm:p-8 lg:p-10">
+                <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14">
+                  <div className={shotFirst ? "lg:order-2" : ""}>
+                    <p className="figure text-h2 text-ink/25">{step.n}</p>
+                    <h3 className="display mt-6 text-h3">{step.title}</h3>
+                    <p className="mt-5 max-w-[34rem] text-body leading-[1.6] text-ink-body">
+                      {step.body}
+                    </p>
+                    <ul className="mt-7 flex flex-wrap gap-2">
+                      {step.points.map((point) => (
+                        <li key={point} className="chip bg-surface-raised">
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <ScreenCard
+                    ground="wash"
+                    pad="generous"
+                    url={step.shot.url}
+                    placeholder={step.shot.placeholder}
+                    ratio="4 / 3"
+                    className={shotFirst ? "lg:order-1" : ""}
+                  />
+                </div>
+              </article>
+            </Reveal>
+          );
+        })}
       </div>
     </div>
   </section>

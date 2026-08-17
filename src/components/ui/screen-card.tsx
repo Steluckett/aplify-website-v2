@@ -16,6 +16,12 @@ export interface ScreenCardProps {
   /** The card behind the frame. `wash` is the spectrum; the pastels are for
    *  points of difference in a grid; `none` drops the card entirely. */
   ground?: "wash" | "soft" | "sky" | "violet" | "mint" | "amber" | "none";
+  /**
+   * How much ground shows around the frame. `tight` is the dashboard's 12px
+   * rule; `generous` is the marketing exception — on a showcase the wash is
+   * part of the argument rather than a hairline, so it is given room to read.
+   */
+  pad?: "tight" | "generous";
   className?: string;
 }
 
@@ -47,17 +53,22 @@ export const ScreenCard = ({
   children,
   placeholder = "Product shot",
   ground = "wash",
+  pad = "tight",
   className,
 }: ScreenCardProps) => {
   const groundClass = GROUND_CLASS[ground];
-  // The pastel grounds have no padding of their own — `.wash` supplies it.
-  const needsPadding = ground !== "wash" && ground !== "none";
+  const generous = pad === "generous" && ground !== "none";
+  // `.wash` carries its own 12px; the pastel grounds do not, so they get it
+  // from a utility. `.wash-lg` overrides either with the showcase padding.
+  const padClass = generous
+    ? "wash-lg"
+    : ground !== "wash" && ground !== "none"
+      ? "p-3"
+      : "";
 
   return (
     <Reveal variant="rise" className={className}>
-      <div
-        className={`${groundClass} rounded-panel ${needsPadding ? "p-3" : ""}`}
-      >
+      <div className={`${groundClass} rounded-panel ${padClass}`}>
         <div className="frame">
           {url ? (
             <div className="frame-bar">

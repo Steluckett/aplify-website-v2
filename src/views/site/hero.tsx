@@ -83,6 +83,7 @@ export const Hero = () => (
     >
       <ScreenCard
         ground="wash"
+        pad="generous"
         url={hero.shot.url}
         placeholder={hero.shot.placeholder}
         ratio="16 / 9"

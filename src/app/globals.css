@@ -507,16 +507,24 @@ body {
      why the fallback colour below is set first and unconditionally: if the
      clip ever stops painting again, the text goes solid blue instead of
      invisible. */
-  .grad-tip {
+  /* Scoped to the LAST WORD of the line, not the line — matching the
+     dashboard, where one word takes the tip and the rest of the heading stays
+     ink. Everything before it inherits normal heading ink. */
+  .grad-tip .line-word:last-child {
     color: var(--accent-mid);
   }
 
-  .grad-tip .line-word > *,
-  .grad-tip > span > span > .line-word {
+  /* And the blend holds ink most of the way, turning only at the far edge:
+     a heading that starts changing colour at its first letter reads as a
+     two-tone word rather than a dissolve. Painted on the innermost span —
+     background-clip does not paint through a transformed descendant, and the
+     text engine transforms every line to animate it. */
+  .grad-tip .line-word:last-child > * {
     background-image: linear-gradient(
       100deg,
       var(--ink-heading) 0%,
-      var(--accent-mid) 92%
+      var(--ink-heading) 52%,
+      var(--accent-mid) 104%
     );
     -webkit-background-clip: text;
     background-clip: text;
@@ -575,6 +583,15 @@ body {
   .wash {
     background: var(--wash), var(--surface);
     padding: 12px;
+  }
+
+  /* The showcase exception. In the dashboard the wash is a 12px frame, because
+     a tool cannot spend space on atmosphere. On a marketing page the wash IS
+     part of the argument — it is the product's own colour pooling around the
+     product — so the showcase cards open the frame right up and let it read.
+     Scales with the viewport so it never eats a phone's width. */
+  .wash-lg {
+    padding: clamp(1rem, 2.6vw, 2.75rem);
   }
 
   .inset-tile {
