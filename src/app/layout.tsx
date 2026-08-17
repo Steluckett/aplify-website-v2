@@ -15,23 +15,17 @@ import { ScrollLayout } from "@/layouts/scroll-layout";
 
 import "@/app/globals.css";
 
-/** Body and UI face, self-hosted as a variable font; the static cuts
- *  alongside it exist for the Satori-rendered share images, which cannot read
- *  a variable axis. */
-const onest = localFont({
-  src: [{ path: "./fonts/Onest-Variable.ttf", weight: "100 900", style: "normal" }],
-  variable: "--font-onest",
-  display: "swap",
-});
-
-/** Display face — headlines and set pieces only, never body copy. A
- *  high-contrast serif against Onest's neutrality is what stops the page
- *  reading as a default. */
-const instrument = localFont({
+/** The one face, shared with the dashboard — the same self-hosted files the
+ *  product ships, so a screenshot of the app and the page around it are set in
+ *  the same type. One file carries weights 100–900 AND the optical-size axis,
+ *  which is what makes large headings take Inter's Display cuts automatically;
+ *  there is no separate display family to ask for. */
+const inter = localFont({
   src: [
-    { path: "./fonts/InstrumentSerif-Regular.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/inter-var.woff2", weight: "100 900", style: "normal" },
+    { path: "./fonts/inter-var-italic.woff2", weight: "100 900", style: "italic" },
   ],
-  variable: "--font-instrument",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -44,8 +38,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${onest.variable} ${instrument.variable}`}>
+    /* The font variable goes on <html>, not <body>: globals.css resolves
+       --raw-font-sans at :root, and a custom property declared on <body>
+       is not in scope there. */
+    <html lang="en" className={inter.variable}>
+      <body className="ground">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

@@ -1,160 +1,351 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   APLIFY — dark-luxury, product-first.
+   AURORA — the Aplify design system, web expression.
 
-   The page is near-black end to end. The only bright surfaces are the product
-   screens themselves, framed in browser/phone chrome and lit from behind, so
-   colour arrives almost entirely from the UI *inside* the mockups. Light is
-   surgical, never structural.
+   The dashboard skin (`helion_aurora.css`) and this file are siblings, not
+   copies: both were drawn from the same MeetSync reference, so the materials
+   are shared and the register is not. The dashboard is a tool a recruiter
+   sits in all day; this is a page a stranger reads once. Same ground, same
+   depth logic, same accent, same chips — bigger type, more air, more motion.
 
-   Two contexts:
-     :root        — the dark page.
-     .screen      — inside a product frame; flips the same roles back to light
-                    so the demos read as real client-facing UI.
-   Every colour below clears WCAG AA on the surface it is used on (checked at
-   #08080a / #101014 / #17171d).
+   TWO REGISTERS, and the difference is load-bearing:
+     :root     — the MARKETING register. Display type up to 72px, generous
+                 panel radii, section-scale spacing.
+     .screen   — the PRODUCT register, inside a device frame. Aurora's own UI
+                 scale (11–24px), 22/16/12 radii, white pill fields. A product
+                 shot must read as the product, so nothing about the marketing
+                 register leaks in past this boundary.
+
+   Token tiers follow obsidian/frontend/design-system.md:
+     Tier 1  --raw-*        primitives. The ONLY tier holding literals.
+     Tier 2  --<role>       semantic roles, always var() of a raw.
+     Tier 3  @theme inline  Tailwind bindings, always var() of a role.
+
+   ACCESSIBILITY: this is a public site, so every text colour clears WCAG AA
+   on the surfaces it actually lands on. That is a deliberate divergence from
+   the dashboard, which takes two informed exceptions (its label grey at
+   3.35:1, its success chip at 4.40:1). Four values are darkened here and
+   nothing else moves — see the notes at each.
    --------------------------------------------------------------------------- */
+
+/* === TIER 1 — raw primitives ============================================== */
 :root {
-  /* Ground and raised surfaces. */
-  --canvas: #08080a;
-  --surface: #101014;
-  --surface-raised: #17171d;
+  /* --- Accent. The spectrum sweep: sky running to violet at 115°. The pair
+     is the system's signature and it belongs to FILLS — buttons, progress,
+     the wash. Violet fails AA as text on every ground we use, which is why
+     the dashboard's rule ("the two-hue sweep is for interactive fills only")
+     is a contrast fact rather than a preference. */
+  --raw-color-sky: #0ea5e9;
+  --raw-color-violet: #5b4ee0;
+  --raw-color-blue: #3c78eb; /* the sweep's midpoint — rings and halos key off it */
 
-  /* Ink. `soft` is the floor — 5.5:1 even on the highest surface. */
-  --ink: #f5f5f7;
-  --ink-muted: #a8a8b3;
-  --ink-soft: #8e8e99;
+  /* The sweep DEEPENED, so white text on it clears AA at both ends
+     (4.73:1 at the sky end, 6.69:1 at the violet end). Buttons use this
+     pair; decorative washes use the bright pair above. */
+  --raw-color-sky-deep: #0879b8;
+  --raw-color-violet-deep: #5044d6;
 
-  /* Hairlines. */
-  --hairline: rgb(255 255 255 / 0.09);
-  --hairline-strong: rgb(255 255 255 / 0.16);
+  /* Link/accent ink on a light ground. The bright sky reads at 4.23:1 and
+     the midpoint blue at 3.69:1 — both under AA for body-size text, so
+     coloured text takes this deepened blue (4.61:1) instead. */
+  --raw-color-blue-ink: #0673ad;
 
-  /* Brand. `brand` is a fill that carries white text (5.67:1); `brand-light`
-     is the on-dark accent for text and rules (5.56:1+); `signal` is Aplify's
-     cyan, reserved for brand moments — the wordmark dot and the particle
-     head — and never used as UI colour. */
-  --brand: #2563c9;
-  --brand-light: #5790e6;
-  --signal: #02dafd;
+  /* Brand ink navy — the logo's own blue, and the page's dark moment. */
+  --raw-color-navy: #041324;
+  /* Aplify's cyan. Reserved for the wordmark. Never a UI colour. */
+  --raw-color-cyan: #02dafd;
 
-  /* Light values, for use inside `.screen` and the rare light inset. */
-  --paper: #ffffff;
-  --paper-sunk: #f4f4f4;
-  --paper-ink: #0a0a0a;
-  --paper-ink-soft: #5f6572; /* 5.85 on white, 5.32 on #f4f4f4 — AA */
-  --paper-hairline: #e6e8ec;
+  /* --- Neutrals. The ground is a tinted near-white, not grey: everything
+     above it is lighter, which is what makes depth tonal rather than
+     shadowed. */
+  --raw-color-ground: #f0f2f7;
+  --raw-color-white: #ffffff;
+  --raw-color-chip: #eef0f5;
+  --raw-color-border: #e6e9f0;
+  --raw-color-track: #e2e6ee;
 
-  /* Ambient light behind a product shot: the glow that makes a screen read as
-     lit rather than pasted on. */
-  --glow-product: radial-gradient(
-    ellipse 70% 60% at 50% 45%,
-    rgb(37 99 201 / 0.28) 0%,
-    rgb(37 99 201 / 0.1) 45%,
-    transparent 72%
-  );
+  --raw-color-ink: #101318; /* UI ink */
+  --raw-color-heading: #0c1220; /* headings sit a shade deeper than UI ink */
+  --raw-color-body: #4a515c; /* running copy — a step lighter, 8.01:1 on white */
+  /* Labels. The dashboard runs #868d97 at 3.35:1 by explicit decision; a
+     public page cannot. #696e76 is the same neutral axis walked down until
+     it clears 4.5:1 on ALL THREE grounds it lands on — white 5.13, page
+     ground 4.58, chip 4.50. */
+  --raw-color-label: #696e76;
 
-  /* Hero canvas — black, with a deep-blue pool behind the particle head.
-     Deliberately wide and low-contrast: a tighter ellipse reads as a visible
-     disc floating on the black rather than depth behind the subject. */
-  --hero-glow: radial-gradient(
-    ellipse 95% 80% at 50% 64%,
-    #061626 0%,
-    #030a14 40%,
-    #000000 78%
-  );
+  /* --- Status chip inks. Dots mean STATE. Each ink is the hue's 700-shade
+     nudged until it clears 4.5:1 on the chip wash as well as on white;
+     attention, teal, rose and violet already did, so they are untouched. */
+  --raw-color-success-ink: #157e3c; /* was #15803d — 4.40 on chip, now 4.51 */
+  --raw-color-attention-ink: #b91c1c;
+  --raw-color-warn-ink: #9c5f07; /* was #a16207 — 4.46 on chip, now 4.54 */
+  --raw-color-teal-ink: #0f766e;
+  --raw-color-slate-ink: #5f6e84; /* was #64748b — 4.30 on chip, now 4.55 */
+  --raw-color-rose-ink: #be123c;
+  --raw-color-violet-ink: #6d28d9;
 
-  /* Read by the WebGL scene through `getComputedStyle`, not by markup — a
-     shader cannot resolve a CSS variable, so these stay tokens here and are
-     parsed once at mount. Mirrored in hero-scene.config.ts. */
-  --scene-key: #0787b8;
-  --scene-rim: #02dafd;
-  --scene-fill: #020a16;
+  /* Dots are non-text marks, so they keep the vivid shades (3:1 bar). Slate's
+     is deliberately LIGHT: against teal it collapses to ΔE 7.3 under
+     deuteranopia otherwise — the dashboard solved this with lightness and the
+     solution ports unchanged. */
+  --raw-color-success-dot: #22c55e;
+  --raw-color-attention-dot: #ef4444;
+  --raw-color-warn-dot: #f59e0b;
+  --raw-color-teal-dot: #14b8a6;
+  --raw-color-slate-dot: #b8c3d1;
+  --raw-color-rose-dot: #f43f5e;
+  --raw-color-violet-dot: #8b5cf6;
 
-  /* Radii. */
-  --radius-card: 1.25rem;
-  --radius-card-lg: 1.75rem;
-  --radius-pill: 62.5rem;
+  /* Classification tints — coloured but silent, no dot. */
+  --raw-color-tint-info: #efe9fc;
+  --raw-color-tint-sky: #e7effc;
 
-  /* Type scale, as raw values.
-     These live here as well as in `@theme inline` below because `inline` does
-     NOT emit its entries to :root — it inlines them into the utilities it
-     generates. Anything that needs `var(...)` in hand-written CSS (the
-     `.eyebrow` class, inline styles) has to read these. Markup should use the
-     generated utilities — `text-hero`, `text-h2`, `text-body` — rather than
-     `text-[length:var(--text-h2)]`, which silently resolves to nothing.
+  /* --- Charts. The "Vivid" categorical six, validated for colourblind
+     separation and 3:1 on both Aurora card surfaces. Order is fixed and
+     never cycled; re-run the dataviz validator before changing any value. */
+  --raw-color-chart-1: #0b84e0;
+  --raw-color-chart-2: #ea580c;
+  --raw-color-chart-3: #0d9488;
+  --raw-color-chart-4: #8b5cf6;
+  --raw-color-chart-5: #d97706;
+  --raw-color-chart-6: #ec4899;
+  /* A chart mark is "lit from above": a single hue blending vertically from
+     a near-white crown into the full hue. Never the two-hue brand sweep. */
+  --raw-color-chart-crown: #c3e0fa;
 
-     THREE tiers with real jumps, so a glance ranks the page. `rem` is
-     viewport-scaled by the adaptive grid below, so these already respond;
-     only the two giant display sizes use vw directly. */
-  --raw-text-hero: 9vw;
-  --raw-text-piece: 7.5vw;
-  --raw-text-h2: 3.25rem;
-  --raw-text-h3: 1.375rem;
-  --raw-text-body: 0.9375rem;
-  --raw-text-caption: 0.75rem;
+  /* --- Type. ONE face: Inter's variable optical-size axis is what makes a
+     72px heading read as a Display cut, so there is no second family to ask
+     for. Weight 550 is the display weight — 700 at these sizes reads heavy
+     and "placed"; the polish is semibold with tight tracking.
+
+     `--font-inter` is next/font's generated family name, set on <html> in
+     layout.tsx so it is in scope here at :root. */
+  --raw-font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Marketing register. rem is viewport-scaled by the adaptive grid below, so
+     these already respond — no clamp() needed. */
+  --raw-text-display: 4.5rem; /* 72px — hero */
+  --raw-text-h1: 3.5rem; /* 56px — section heads */
+  --raw-text-h2: 2.5rem; /* 40px */
+  --raw-text-h3: 1.75rem; /* 28px — card titles */
+  --raw-text-h4: 1.25rem; /* 20px */
+  --raw-text-lead: 1.125rem; /* 18px — standfirst under a section head */
+  --raw-text-body: 1rem; /* 16px */
+  --raw-text-sm: 0.875rem; /* 14px */
+  --raw-text-caption: 0.75rem; /* 12px — eyebrows */
+
+  /* Product register — Aurora's own UI scale, used inside .screen. These are
+     SMALL on purpose: a product shot whose type is marketing-sized stops
+     looking like software. */
+  --raw-text-ui-2xs: 0.6875rem; /* 11px — chips, table heads */
+  --raw-text-ui-xs: 0.75rem; /* 12px */
+  --raw-text-ui-sm: 0.8125rem; /* 13px — controls */
+  --raw-text-ui-base: 0.875rem; /* 14px — UI body */
+  --raw-text-ui-lg: 1.25rem; /* 20px — card titles */
+  --raw-text-ui-xl: 1.5rem; /* 24px */
+  --raw-text-stat: 3rem; /* 48px — stat tile figure */
+  --raw-text-stat-hero: 5.25rem; /* 84px — the metric card's figure */
+
+  --raw-tracking-display: -0.02em;
+  --raw-tracking-eyebrow: 0.18em;
+  --raw-leading-display: 1.06;
+  --raw-leading-body: 1.6;
+
+  /* --- Space. The dashboard's eight steps, plus two section-scale steps the
+     marketing register needs and a tool never does. */
+  --raw-space-1: 0.25rem;
+  --raw-space-2: 0.5rem;
+  --raw-space-3: 0.75rem;
+  --raw-space-4: 1rem;
+  --raw-space-5: 1.5rem;
+  --raw-space-6: 2rem;
+  --raw-space-7: 3rem;
+  --raw-space-8: 4rem;
+  --raw-space-9: 6rem; /* between a section head and its content */
+  --raw-space-10: 8rem; /* between sections */
+
+  /* --- Radii. Outer stays rounder than inner or a field near a corner reads
+     as bulging out of it, so these move together. 22/16/12 are the
+     dashboard's; the 32px panel is the marketing register's outermost
+     surface, which the dashboard has no equivalent of. */
+  --raw-radius-panel: 2rem; /* 32px — full-width section panels */
+  --raw-radius-card: 1.375rem; /* 22px */
+  --raw-radius-sm: 1rem; /* 16px */
+  --raw-radius-field: 0.75rem; /* 12px */
+  --raw-radius-pill: 62.5rem;
+
+  /* --- Motion. One curve everywhere; the durations differ by register. The
+     dashboard stops at 420ms because motion there is acknowledgement. This
+     page is allowed reveals, so it gets a fourth, longer step. */
+  --raw-ease-entrance: cubic-bezier(0.2, 0, 0, 1);
+  --raw-dur-fast: 160ms;
+  --raw-dur-base: 240ms;
+  --raw-dur-slow: 420ms;
+  --raw-dur-reveal: 900ms;
+
+  /* --- Depth. Three tonal steps, shadow second. A shadow on same-tone
+     surfaces reads flat — the TONE difference is the depth. */
+  --raw-surface-group: rgb(255 255 255 / 0.55); /* translucent; ground breathes through */
+  --raw-surface-tile: #ffffff;
+  --raw-shadow-group: 0 1px 2px rgb(16 19 26 / 0.02), 0 10px 30px rgb(16 19 26 / 0.04);
+  --raw-shadow-tile: 0 1px 2px rgb(16 19 26 / 0.04), 0 10px 28px rgb(16 19 26 / 0.07);
+  --raw-shadow-sm: 0 1px 1.5px rgb(16 19 26 / 0.05), 0 6px 18px rgb(16 19 26 / 0.06);
+  /* A product shot sits higher than anything else on the page and needs a
+     shadow that says so. */
+  --raw-shadow-lift: 0 2px 6px rgb(16 19 26 / 0.05), 0 24px 70px rgb(16 19 26 / 0.12);
 }
 
-/* Inside a product frame — the demo is a real client-facing UI, so it is
-   light. Only the roles flip; every utility bound below follows the cascade. */
+/* === TIER 2 — semantic roles ============================================== */
+:root {
+  --canvas: var(--raw-color-ground);
+  --surface: var(--raw-surface-group);
+  --surface-raised: var(--raw-surface-tile);
+  --surface-chip: var(--raw-color-chip);
+  --surface-dark: var(--raw-color-navy);
+
+  --ink: var(--raw-color-ink);
+  --ink-heading: var(--raw-color-heading);
+  --ink-body: var(--raw-color-body);
+  --ink-label: var(--raw-color-label);
+  --ink-accent: var(--raw-color-blue-ink);
+  --ink-on-dark: #f4f5f8;
+
+  --hairline: var(--raw-color-border);
+  --track: var(--raw-color-track);
+
+  --accent: var(--raw-color-sky);
+  --accent-end: var(--raw-color-violet);
+  --accent-mid: var(--raw-color-blue);
+  --accent-grad: linear-gradient(115deg, var(--raw-color-sky), var(--raw-color-violet));
+  --accent-grad-x: linear-gradient(90deg, var(--raw-color-sky), var(--raw-color-violet));
+  /* The button gradient is the deepened pair — white text needs it. */
+  --accent-grad-solid: linear-gradient(
+    115deg,
+    var(--raw-color-sky-deep),
+    var(--raw-color-violet-deep)
+  );
+
+  --radius-panel: var(--raw-radius-panel);
+  --radius-card: var(--raw-radius-card);
+  --radius-sm: var(--raw-radius-sm);
+  --radius-field: var(--raw-radius-field);
+  --radius-pill: var(--raw-radius-pill);
+
+  --shadow-group: var(--raw-shadow-group);
+  --shadow-tile: var(--raw-shadow-tile);
+  --shadow-sm: var(--raw-shadow-sm);
+  --shadow-lift: var(--raw-shadow-lift);
+
+  /* The spectrum wash. Wherever this grounds a surface, its content sits in
+     an INSET 12px from the edge — the wash is a frame, not padding. */
+  --wash: linear-gradient(
+    135deg,
+    rgb(14 165 233 / 0.2),
+    rgb(91 78 224 / 0.21) 52%,
+    rgb(80 200 190 / 0.15)
+  );
+}
+
+/* --- The product register -------------------------------------------------
+   Inside a device frame. The page is already light, so unlike the old build
+   this is not a light/dark flip — it is a SCALE flip. Type drops to Aurora's
+   UI sizes and radii to Aurora's 22/16/12, so a shot reads as software
+   rather than as more page. */
 .screen {
-  --canvas: var(--paper);
-  --surface: var(--paper-sunk);
-  --surface-raised: var(--paper);
-  --ink: var(--paper-ink);
-  --ink-muted: var(--paper-ink-soft);
-  --ink-soft: var(--paper-ink-soft);
-  --hairline: var(--paper-hairline);
-  --hairline-strong: #d7dae1;
+  --canvas: var(--raw-surface-tile);
+  --surface: var(--raw-color-ground);
+  --surface-raised: var(--raw-surface-tile);
+
+  --radius-panel: var(--raw-radius-card);
+  --radius-card: var(--raw-radius-card);
+  --radius-sm: var(--raw-radius-sm);
+  --radius-field: var(--raw-radius-field);
+
+  font-size: var(--raw-text-ui-base);
+  line-height: 1.5;
 }
 
+/* === TIER 3 — Tailwind bindings =========================================== */
 @theme inline {
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
-  --color-ink: var(--ink);
-  --color-ink-muted: var(--ink-muted);
-  --color-ink-soft: var(--ink-soft);
-  --color-hairline: var(--hairline);
-  --color-hairline-strong: var(--hairline-strong);
-  --color-brand: var(--brand);
-  --color-brand-light: var(--brand-light);
-  --color-signal: var(--signal);
-  --color-paper: var(--paper);
-  --color-paper-ink: var(--paper-ink);
+  --color-surface-chip: var(--surface-chip);
+  --color-surface-dark: var(--surface-dark);
 
+  --color-ink: var(--ink);
+  --color-ink-heading: var(--ink-heading);
+  --color-ink-body: var(--ink-body);
+  --color-ink-label: var(--ink-label);
+  --color-ink-accent: var(--ink-accent);
+  --color-ink-on-dark: var(--ink-on-dark);
+
+  --color-hairline: var(--hairline);
+  --color-track: var(--track);
+  --color-accent: var(--accent);
+  --color-accent-end: var(--accent-end);
+  --color-accent-mid: var(--accent-mid);
+
+  --radius-panel: var(--radius-panel);
   --radius-card: var(--radius-card);
-  --radius-card-lg: var(--radius-card-lg);
+  --radius-sm: var(--radius-sm);
+  --radius-field: var(--radius-field);
   --radius-pill: var(--radius-pill);
 
-  /* Two faces doing different jobs. Instrument Serif is display only — it
-     never sets body copy. */
-  --font-display: var(--font-instrument);
-  --font-sans: var(--font-onest);
+  --shadow-group: var(--shadow-group);
+  --shadow-tile: var(--shadow-tile);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-lift: var(--shadow-lift);
 
-  /* Generates the `text-hero` / `text-piece` / `text-h2` / `text-h3` /
-     `text-body` / `text-caption` utilities. Values come from the raw tier so
-     both the utilities and hand-written `var()` reads stay in step. */
-  --text-hero: var(--raw-text-hero);
-  --text-piece: var(--raw-text-piece);
+  --font-sans: var(--raw-font-sans);
+
+  --text-display: var(--raw-text-display);
+  --text-h1: var(--raw-text-h1);
   --text-h2: var(--raw-text-h2);
   --text-h3: var(--raw-text-h3);
+  --text-h4: var(--raw-text-h4);
+  --text-lead: var(--raw-text-lead);
   --text-body: var(--raw-text-body);
+  --text-sm: var(--raw-text-sm);
   --text-caption: var(--raw-text-caption);
 
-  --tracking-eyebrow: 0.22em;
+  --text-ui-2xs: var(--raw-text-ui-2xs);
+  --text-ui-xs: var(--raw-text-ui-xs);
+  --text-ui-sm: var(--raw-text-ui-sm);
+  --text-ui-base: var(--raw-text-ui-base);
+  --text-ui-lg: var(--raw-text-ui-lg);
+  --text-ui-xl: var(--raw-text-ui-xl);
+  --text-stat: var(--raw-text-stat);
+  --text-stat-hero: var(--raw-text-stat-hero);
 
-  --ease-entrance: cubic-bezier(0.2, 0, 0, 1);
+  --tracking-display: var(--raw-tracking-display);
+  --tracking-eyebrow: var(--raw-tracking-eyebrow);
+  --leading-display: var(--raw-leading-display);
+
+  /* NOTE: the space scale is deliberately NOT bound here. Tailwind's `p-N`
+     already means N × 0.25rem, while Aurora's `--space-8` means 64px —
+     binding `--spacing-8` would quietly redefine `p-8` from 2rem to 4rem
+     everywhere. The raw steps stay for hand-written CSS in @layer
+     components; markup uses Tailwind's native scale (py-24 = 6rem). */
+
+  --ease-entrance: var(--raw-ease-entrance);
+  --duration-fast: var(--raw-dur-fast);
+  --duration-base: var(--raw-dur-base);
+  --duration-slow: var(--raw-dur-slow);
+  --duration-reveal: var(--raw-dur-reveal);
 }
 
 body {
   background: var(--canvas);
   color: var(--ink);
-  /* `--font-onest` directly, not the `--font-sans` alias: `@theme inline`
-     bindings are inlined into utilities rather than emitted at :root, so the
-     alias would resolve to Tailwind's default stack here. */
-  font-family: var(--font-onest), sans-serif;
+  /* The raw token directly, not the --font-sans alias: `@theme inline`
+     bindings are inlined into the utilities they generate rather than
+     emitted at :root, so the alias resolves to nothing here. */
+  font-family: var(--raw-font-sans);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
 @layer base {
@@ -197,45 +388,322 @@ body {
     cursor: pointer;
   }
 
+  /* Focus is a RING, never an underline — an underline cannot sit inside a
+     pill's corner radius, which is why the dashboard retired it. */
   :focus-visible {
-    outline: 2px solid var(--brand-light);
+    outline: 2px solid var(--accent-mid);
     outline-offset: 2px;
   }
 
   ::selection {
-    background: var(--brand);
+    background: var(--raw-color-sky-deep);
     color: #ffffff;
   }
 }
 
 @layer components {
-  /* Display type. Instrument Serif is a high-contrast face: it needs negative
-     tracking and tight leading at size, and it must never be faux-bolded. */
-  .display {
-    font-family: var(--font-instrument), Georgia, serif;
-    font-weight: 400;
-    line-height: 0.92;
-    letter-spacing: -0.02em;
+  /* --- The ground ---------------------------------------------------------
+     Liquid glass: three chromatic washes at almost the ground's own
+     lightness — sky top-left, violet top-right, mint low — over the flat
+     base. Painted on a position:fixed layer, NOT background-attachment:
+     fixed, which repaints the whole viewport per scroll frame and leaves
+     unpainted bands. A fixed element composites once and the page scrolls
+     over it: same picture, none of the artefacts. */
+  .ground::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(55% 60% at 8% -5%, rgb(120 165 245 / 0.16), transparent 60%),
+      radial-gradient(45% 50% at 92% 0%, rgb(150 122 240 / 0.14), transparent 56%),
+      radial-gradient(50% 60% at 75% 108%, rgb(80 200 190 / 0.1), transparent 60%),
+      var(--canvas);
   }
 
-  /* Section eyebrow — the quietest thing on screen (handover §10.1). */
+  /* --- Type ---------------------------------------------------------------
+     The display register. Weight 550 is between medium and semibold on the
+     variable axis — the reference's headline weight, and the single biggest
+     reason its headings read light rather than shouted. */
+  .display {
+    font-weight: 550;
+    letter-spacing: var(--raw-tracking-display);
+    line-height: var(--raw-leading-display);
+    color: var(--ink-heading);
+  }
+
+  /* A heading's ink DISSOLVES into blue across its last word — a blend, not
+     a two-colour split. Wrap only the final word. Page and section headings
+     only: a record's name is data and takes no tip. */
+  .grad-tip {
+    background: linear-gradient(100deg, var(--ink-heading) 0%, var(--accent-mid) 92%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
   .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--raw-space-2);
     font-size: var(--raw-text-caption);
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow);
-    color: var(--ink-soft);
+    letter-spacing: var(--raw-tracking-eyebrow);
+    color: var(--ink-label);
   }
 
-  /* Very fine film grain over the dark ground. Without it large black fields
-     band on 8-bit displays and read as flat rather than deep. Pure CSS, no
-     asset, and it sits under everything at very low opacity. */
-  .grain::after {
+  /* The eyebrow's dot is the only place the accent appears at caption size. */
+  .eyebrow::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background: var(--accent-mid);
+    flex: none;
+  }
+
+  /* --- Depth --------------------------------------------------------------
+     Three steps, each lighter as it comes toward you: ground < group card
+     (translucent) < tile (white, carries the visible lift). */
+  .panel {
+    background: var(--surface);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-group);
+  }
+
+  .tile {
+    background: var(--surface-raised);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* --- Wash + inset is law ------------------------------------------------
+     Wherever the wash grounds a surface, its content sits in an inset 12px
+     from the edge. Two insets: WHITE for figures, GLASS for anything holding
+     white pill fields — a white inset would swallow them. */
+  .wash {
+    background: var(--wash), var(--surface);
+    padding: 12px;
+  }
+
+  .inset-tile {
+    background: var(--raw-surface-tile);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .inset-glass {
+    background: var(--raw-surface-group);
+    border-radius: var(--radius-sm);
+  }
+
+  /* --- The dark moment ----------------------------------------------------
+     At most ONE navy surface per page — it is the page's moment of contrast
+     and a second one halves both. */
+  .dark-moment {
+    background: var(--surface-dark);
+    color: var(--ink-on-dark);
+    border-radius: var(--radius-panel);
+  }
+
+  /* --- Progress is the tally ----------------------------------------------
+     Thin 3px bars, 5px gaps, the spectrum sweeping left to right. Set the
+     fraction inline: style="--fill: 62%". THIN IS THE POINT — never thicken
+     these for visibility; adjust colour instead. */
+  .tally {
+    --tally-w: 3px;
+    --tally-gap: 5px;
+    position: relative;
+    height: 40px;
+    overflow: hidden;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--track) 0 var(--tally-w),
+      transparent var(--tally-w) calc(var(--tally-w) + var(--tally-gap))
+    );
+  }
+
+  .tally::before {
     content: "";
     position: absolute;
     inset: 0;
-    pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+    width: var(--fill, 0%);
+    background: var(--accent-grad-x);
+    -webkit-mask-image: repeating-linear-gradient(
+      90deg,
+      #000 0 var(--tally-w),
+      transparent var(--tally-w) calc(var(--tally-w) + var(--tally-gap))
+    );
+    mask-image: repeating-linear-gradient(
+      90deg,
+      #000 0 var(--tally-w),
+      transparent var(--tally-w) calc(var(--tally-w) + var(--tally-gap))
+    );
+  }
+
+  /* --- Figures ------------------------------------------------------------
+     A stat is weight 200 and large; the unit steps down and mutes, so the
+     number carries and the "%" does not compete. */
+  .figure {
+    font-weight: 200;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  .figure-unit {
+    font-size: 0.35em;
+    font-weight: 500;
+    color: var(--ink-label);
+    margin-left: 0.06em;
+  }
+
+  /* --- Chips --------------------------------------------------------------
+     Dots mean STATE. Classification carries quiet TINTS and no dot, because
+     a dot on every label makes each one read as a status. 11px, weight 550.
+     Ground is contextual: the neutral wash on white surfaces, a white pill
+     on the tinted page ground — each vanishes on the other's surface. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--surface-chip);
+    color: var(--ink-label);
+    font-size: var(--raw-text-ui-2xs);
+    font-weight: 550;
+    letter-spacing: 0.01em;
+    padding: 0.5em 1em;
+    border-radius: var(--radius-pill);
+  }
+
+  .chip[data-state]::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: var(--radius-pill);
+    flex: none;
+    background: var(--_dot);
+  }
+
+  .chip[data-state="success"] {
+    color: var(--raw-color-success-ink);
+    --_dot: var(--raw-color-success-dot);
+  }
+  .chip[data-state="attention"] {
+    color: var(--raw-color-attention-ink);
+    --_dot: var(--raw-color-attention-dot);
+  }
+  .chip[data-state="warn"] {
+    color: var(--raw-color-warn-ink);
+    --_dot: var(--raw-color-warn-dot);
+  }
+  .chip[data-state="teal"] {
+    color: var(--raw-color-teal-ink);
+    --_dot: var(--raw-color-teal-dot);
+  }
+  .chip[data-state="slate"] {
+    color: var(--raw-color-slate-ink);
+    --_dot: var(--raw-color-slate-dot);
+  }
+  .chip[data-state="rose"] {
+    color: var(--raw-color-rose-ink);
+    --_dot: var(--raw-color-rose-dot);
+  }
+  .chip[data-state="violet"] {
+    color: var(--raw-color-violet-ink);
+    --_dot: var(--raw-color-violet-dot);
+  }
+
+  .chip[data-tint="info"] {
+    background: var(--raw-color-tint-info);
+    color: var(--raw-color-violet-ink);
+  }
+  .chip[data-tint="sky"] {
+    background: var(--raw-color-tint-sky);
+    color: #2b64d8;
+  }
+
+  /* --- Icon chip ----------------------------------------------------------
+     Round, quiet NEUTRAL ground, saturated blue glyph. The reference fills
+     these with green; the dashboard retired that on purpose — colour is
+     reserved for state and the accent, and a green circle means nothing.
+     3.63:1 on the chip, past the 3:1 non-text bar. */
+  .icon-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-pill);
+    background: var(--surface-chip);
+    color: var(--accent-mid);
+  }
+
+  /* The one chip that carries the sweep. It means "a model wrote this" and
+     nothing else — promoting it to decoration would dilute the signal. */
+  .icon-chip[data-ai] {
+    background: var(--accent-grad);
+    color: #fff;
+    box-shadow: 0 4px 12px rgb(60 120 235 / 0.35);
+  }
+
+  /* --- Controls -----------------------------------------------------------
+     The suite rule: surfaces dip into tint, controls and fields are WHITE
+     PILLS sitting on them. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--raw-space-2);
+    border-radius: var(--radius-pill);
+    padding: 0.9em 1.6em;
+    font-size: var(--raw-text-sm);
+    font-weight: 500;
+    border: none;
+    text-decoration: none;
+    transition:
+      transform var(--raw-dur-fast) var(--raw-ease-entrance),
+      box-shadow var(--raw-dur-fast) var(--raw-ease-entrance);
+  }
+
+  .btn-primary {
+    background: var(--accent-grad-solid);
+    color: #fff;
+    box-shadow: 0 6px 16px rgb(60 120 235 / 0.25);
+  }
+
+  .btn-secondary {
+    background: var(--raw-surface-tile);
+    color: var(--ink);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .field {
+    width: 100%;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: var(--raw-surface-tile);
+    color: var(--ink);
+    padding: 0.9em 1.25em;
+    font: inherit;
+    font-size: var(--raw-text-sm);
+  }
+
+  .field::placeholder {
+    color: var(--ink-label);
+  }
+
+  /* A textarea is a paragraph, not a pill. */
+  textarea.field {
+    border-radius: 18px;
   }
 }
