@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
-import { heroContent } from "@/data/content/hero";
 import { siteConfig } from "@/lib/site";
 import { generateMetadata as buildMetadata } from "@/utils/seo/generate-page-metadata";
-import { HomeView } from "@/views/home";
+import { SiteView } from "@/views/site";
 
 /**
  * The home route's own title, built from the headline the hero actually sets —
@@ -20,5 +19,5 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function Home() {
-  return <HomeView />;
+  return <SiteView />;
 }

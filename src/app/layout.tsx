@@ -9,7 +9,6 @@ import { getSiteStructuredData } from "@/utils/seo/structured-data";
 
 import { LazyCookie } from "@/components/common/Cookie";
 import { AdaptiveGrid } from "@/components/common/grid";
-import { Loader } from "@/components/common/loader";
 import { ReducedMotion } from "@/components/common/reduced-motion";
 import { ScrollLayout } from "@/layouts/scroll-layout";
 
@@ -55,7 +54,6 @@ export default function RootLayout({
           <LazyCookie />
           {children}
         </ScrollLayout>
-        <Loader brand="Aplify" />
       </body>
     </html>
   );

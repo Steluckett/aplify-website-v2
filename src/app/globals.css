@@ -101,6 +101,25 @@
   --raw-color-tint-info: #efe9fc;
   --raw-color-tint-sky: #e7effc;
 
+  /* --- Pastels. Card grounds for points of difference, so a grid of six
+     cards does not read as six of the same thing. Each is its own hue at
+     roughly 8% on white, and three of the four are OUR hues — sky, violet
+     and the mint from the ground wash. Amber is the exception: the palette
+     has no warm, and the reference leans on a cream card to break up a cool
+     grid, so it borrows the warn/chart-5 hue rather than inventing one.
+     All four are grounds only — every ink placed on them is measured. */
+  --raw-color-pastel-sky: #e7f2fd;
+  --raw-color-pastel-violet: #eeebfb;
+  --raw-color-pastel-mint: #e4f4f1;
+  --raw-color-pastel-amber: #fbf3e2;
+
+  /* Apple-glass: a translucent white that BLURS what is behind it. Used for
+     the floating nav and anything that must sit over moving imagery — over
+     the hero video a solid fill reads as a lid, and full transparency loses
+     the type. */
+  --raw-surface-glass: rgb(255 255 255 / 0.72);
+  --raw-surface-glass-edge: rgb(255 255 255 / 0.65);
+
   /* --- Charts. The "Vivid" categorical six, validated for colourblind
      separation and 3:1 on both Aurora card surfaces. Order is fixed and
      never cycled; re-run the dataviz validator before changing any value. */
@@ -195,6 +214,31 @@
   /* A product shot sits higher than anything else on the page and needs a
      shadow that says so. */
   --raw-shadow-lift: 0 2px 6px rgb(16 19 26 / 0.05), 0 24px 70px rgb(16 19 26 / 0.12);
+}
+
+/* The display steps need real breakpoints, which the rest of the scale does
+   not. The adaptive grid keeps rem proportional WITHIN a band, but each band
+   re-bases 1rem to 16px at its own design width — so an unqualified 4.5rem is
+   72px on a 360px phone as well as on a 1440px laptop, which is about five
+   characters a line. Only the three display steps are affected; UI sizes are
+   already small enough that the re-basing is what you want. */
+@media (max-width: 1024px) {
+  :root {
+    --raw-text-display: 3.25rem;
+    --raw-text-h1: 2.5rem;
+    --raw-text-h2: 2rem;
+    --raw-text-h3: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --raw-text-display: 2.5rem;
+    --raw-text-h1: 2rem;
+    --raw-text-h2: 1.75rem;
+    --raw-text-h3: 1.375rem;
+    --raw-text-lead: 1rem;
+  }
 }
 
 /* === TIER 2 — semantic roles ============================================== */
@@ -705,5 +749,129 @@ body {
   /* A textarea is a paragraph, not a pill. */
   textarea.field {
     border-radius: 18px;
+  }
+
+  /* --- Glass ---------------------------------------------------------------
+     Translucent white over a blur. The nav sits on this because it crosses
+     both the light ground and the hero video: a solid fill reads as a lid
+     over the imagery, and pure transparency loses the type against the
+     grass. */
+  .glass {
+    background: var(--raw-surface-glass);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid var(--raw-surface-glass-edge);
+  }
+
+  /* --- Pastel card grounds -------------------------------------------------
+     A point of difference, not decoration: they mark which cards belong to
+     the same idea. Never more than two hues in one grid. */
+  .pastel-sky {
+    background: var(--raw-color-pastel-sky);
+  }
+  .pastel-violet {
+    background: var(--raw-color-pastel-violet);
+  }
+  .pastel-mint {
+    background: var(--raw-color-pastel-mint);
+  }
+  .pastel-amber {
+    background: var(--raw-color-pastel-amber);
+  }
+
+  /* A softer wash than the full spectrum one — for large card grounds where
+     the full wash would shout. Directional, so a row of them has movement. */
+  .wash-soft {
+    background:
+      linear-gradient(
+        150deg,
+        rgb(14 165 233 / 0.1),
+        rgb(91 78 224 / 0.11) 55%,
+        rgb(80 200 190 / 0.08)
+      ),
+      var(--raw-surface-tile);
+  }
+
+  /* --- Device chrome -------------------------------------------------------
+     A product shot needs a frame or it reads as a floating rectangle of UI.
+     The bar is a browser's, reduced to the three dots and an address pill —
+     enough to say "this is a real screen" without drawing a whole browser. */
+  .frame {
+    background: #e9ecf2;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-lift);
+    overflow: hidden;
+  }
+
+  .frame-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--raw-space-3);
+    padding: 12px 16px;
+  }
+
+  .frame-dots {
+    display: flex;
+    gap: 6px;
+    flex: none;
+  }
+
+  .frame-dots span {
+    width: 9px;
+    height: 9px;
+    border-radius: var(--radius-pill);
+    background: #c8cdd8;
+  }
+
+  .frame-url {
+    flex: 1;
+    background: var(--raw-surface-tile);
+    border-radius: var(--radius-pill);
+    padding: 6px 14px;
+    font-size: var(--raw-text-ui-xs);
+    color: var(--ink-label);
+    text-align: center;
+  }
+
+  /* --- Placeholder ---------------------------------------------------------
+     Where a real product shot will go. Deliberately designed rather than a
+     grey box: an undesigned placeholder makes the whole composition
+     impossible to judge. */
+  .placeholder {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--raw-space-3);
+    background:
+      linear-gradient(
+        135deg,
+        rgb(14 165 233 / 0.07),
+        rgb(91 78 224 / 0.08) 52%,
+        rgb(80 200 190 / 0.06)
+      ),
+      var(--raw-surface-tile);
+    color: var(--ink-label);
+    text-align: center;
+  }
+
+  .placeholder::after {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border: 1px dashed rgb(60 120 235 / 0.25);
+    border-radius: var(--radius-sm);
+    pointer-events: none;
+  }
+
+  /* --- Reduced motion ------------------------------------------------------
+     Everything decorative stops. The springs already read the same media
+     query through ReducedMotion; this covers the CSS-side transitions and
+     the hero video, which is motion whether or not React knows about it. */
+  @media (prefers-reduced-motion: reduce) {
+    .btn {
+      transition: none;
+    }
   }
 }
