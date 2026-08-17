@@ -52,7 +52,7 @@ const DemoSection = ({
   </section>
 );
 
-export const Demos = () => (
+export const Product = () => (
   <>
     <DemoSection id="job-search" demo={demos.jobSearch} band ground="wash" />
     <DemoSection

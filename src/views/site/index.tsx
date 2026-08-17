@@ -1,7 +1,7 @@
 import { NavBar } from "@/components/ui/nav-bar";
 import { nav } from "@/data/content/site";
 
-import { Demos } from "./demos";
+import { Product } from "./product";
 import { Hero } from "./hero";
 import { HowItWorks } from "./how-it-works";
 import { Platform } from "./platform";
@@ -25,7 +25,7 @@ export const SiteView = () => (
       <Payoff />
       <Platform />
       <HowItWorks />
-      <Demos />
+      <Product />
       <Trust />
       <SiteFooter />
     </main>

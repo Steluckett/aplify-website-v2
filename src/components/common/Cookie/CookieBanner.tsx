@@ -36,12 +36,12 @@ export const CookieBanner = () => {
           opacity: style.opacity,
           transform: style.y.to((v) => `translateY(${v}px)`),
         }}
-        className="fixed bottom-4 left-4 right-4 z-50 flex flex-col gap-3 rounded-xl border border-ink/10 bg-canvas/95 p-5 font-sans text-ink shadow-2xl backdrop-blur-xl sm:bottom-12 sm:left-auto sm:right-12 sm:w-[420px] sm:p-6"
+        className="glass fixed right-4 bottom-4 left-4 z-50 flex flex-col gap-3 rounded-card p-6 text-ink shadow-lift sm:right-8 sm:bottom-8 sm:left-auto sm:w-[26rem]"
       >
-        <h2 className="text-base font-medium leading-snug sm:text-lg">
+        <h2 className="text-h4 font-medium">
           This website uses cookies
         </h2>
-        <p className="text-sm leading-relaxed text-ink/70">
+        <p className="text-sm leading-[1.6] text-ink-body">
           We use cookies to keep the site working, learn how it&apos;s used, and
           improve what we ship next. Accept everything, reject the non-essential,
           or pick category by category. See our{" "}
@@ -49,7 +49,7 @@ export const CookieBanner = () => {
             href="/privacy-policy"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-ink/70"
+            className="text-ink-accent underline underline-offset-2"
           >
             privacy policy
           </Link>
@@ -63,7 +63,7 @@ export const CookieBanner = () => {
           <button
             type="button"
             onClick={openModal}
-            className="px-2 py-2 text-sm font-medium leading-none text-ink underline underline-offset-2 hover:text-ink/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-light"
+            className="rounded-pill px-3 py-2 text-sm font-medium text-ink-body underline underline-offset-2 transition-colors duration-[var(--duration-fast)] ease-entrance hover:text-ink"
           >
             Manage preferences
           </button>

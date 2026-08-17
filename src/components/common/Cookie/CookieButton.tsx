@@ -4,10 +4,13 @@
 import type { ReactNode } from "react";
 
 /**
- * Cookie-scoped button primitive. Two variants matching the project's
- * white/dark surfaces — replaces the external `SimpleButton` the component
- * shipped with. Hover states snap (the project bans CSS transitions; real
- * motion goes through @react-spring/web).
+ * Cookie-scoped button primitive.
+ *
+ * Delegates to the page's own `.btn` recipes rather than carrying its own
+ * palette — the previous version painted `bg-ink text-background`, and when
+ * the token layer was rebuilt `text-background` stopped existing, leaving a
+ * black pill with invisible text. Anything that needs to look like a button
+ * should use the button classes, not re-describe them.
  */
 export interface CookieButtonProps {
   children: ReactNode;
@@ -15,21 +18,16 @@ export interface CookieButtonProps {
   variant?: "primary" | "secondary";
 }
 
-const base =
-  "rounded-lg px-4 py-2 text-sm font-medium leading-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-light";
-
-const variants: Record<NonNullable<CookieButtonProps["variant"]>, string> = {
-  primary: "bg-ink text-background hover:opacity-90",
-  secondary:
-    "border border-ink/15 bg-transparent text-ink hover:bg-ink/5",
-};
-
 export const CookieButton = ({
   children,
   onClick,
   variant = "primary",
 }: CookieButtonProps) => (
-  <button type="button" onClick={onClick} className={`${base} ${variants[variant]}`}>
+  <button
+    type="button"
+    onClick={onClick}
+    className={`btn ${variant === "primary" ? "btn-primary" : "btn-secondary"}`}
+  >
     {children}
   </button>
 );
