@@ -21,6 +21,13 @@ export interface StackedLinesProps {
   duration?: number;
   /** Master switch — hold the reveal until `true` (e.g. behind the loader). */
   enabled?: boolean;
+  /**
+   * Per-line extra classes, indexed to `lines`. Lets one line differ from its
+   * siblings — the gradient tip on a heading's last line, for instance —
+   * without splitting the heading into separate engines and losing the
+   * shared stagger.
+   */
+  lineClassNames?: string[];
 }
 
 /**
@@ -38,6 +45,7 @@ export const StackedLines = ({
   baseDelay = 0,
   duration = 950,
   enabled = true,
+  lineClassNames,
 }: StackedLinesProps) => {
   const Tag = tag as ElementType;
   return (
@@ -56,7 +64,9 @@ export const StackedLines = ({
           // Bottom padding keeps descenders (y, p, g) from being clipped by the
           // overflow-hidden line wrapper used for the slide-up reveal.
           lineClassName="pb-[0.14em]"
-          className={`block whitespace-nowrap ${lineClassName ?? ""}`}
+          className={`block whitespace-nowrap ${lineClassName ?? ""} ${
+            lineClassNames?.[i] ?? ""
+          }`}
         >
           {line}
         </TextEngine>

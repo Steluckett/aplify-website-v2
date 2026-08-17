@@ -46,10 +46,10 @@ export const NavBar = ({ items, ctaLabel, ctaHref }: NavBarProps) => {
   }, [open]);
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-6">
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 pt-4 sm:pt-5">
       <nav
         aria-label="Primary"
-        className="glass pointer-events-auto mx-auto flex h-16 w-full max-w-[76rem] items-center gap-2 rounded-pill pr-2 pl-5 shadow-[0_1px_2px_rgba(16,19,26,0.04),0_10px_28px_rgba(16,19,26,0.07)] sm:pl-6"
+        className="glass shell pointer-events-auto flex h-[4.5rem] items-center gap-2 rounded-pill pr-3 pl-6 shadow-[0_1px_2px_rgba(16,19,26,0.04),0_10px_28px_rgba(16,19,26,0.07)] sm:pl-8"
       >
         <Link href="#home" className="flex flex-none items-center" aria-label="Aplify — home">
           <Image
@@ -58,7 +58,7 @@ export const NavBar = ({ items, ctaLabel, ctaHref }: NavBarProps) => {
             width={317}
             height={103}
             priority
-            className="h-[1.375rem] w-auto"
+            className="h-[1.5rem] w-auto"
           />
         </Link>
 
@@ -118,7 +118,7 @@ export const NavBar = ({ items, ctaLabel, ctaHref }: NavBarProps) => {
           from={{ opacity: 0, transform: "translate3d(0,-8px,0)" }}
           to={{ opacity: 1, transform: "translate3d(0,0,0)" }}
           config={{ tension: 200, friction: 26 }}
-          className="pointer-events-auto mx-auto mt-3 w-full max-w-[76rem] lg:hidden"
+          className="shell pointer-events-auto mt-3 lg:hidden"
         >
           <div id="nav-menu" className="glass rounded-card p-3">
             <ul className="flex flex-col">

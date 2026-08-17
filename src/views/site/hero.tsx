@@ -12,21 +12,25 @@ import { hero } from "@/data/content/site";
 /**
  * The hero.
  *
- * Composition is the reference's: a tinted near-white ground, the headline
- * centred and large, one filled pill, and imagery entering from the bottom of
- * the frame rather than sitting in a box. The footage runs full-bleed along
- * the foot and the product shot sits over its middle, so the grass reads at
- * the left and right edges and the page's own white carries the centre — the
- * negative space is the composition, not what is left over.
+ * The composition is a fixed split rather than a stack: the copy takes
+ * whatever height is left, and the footage band takes a SHARE OF THE VIEWPORT
+ * (55svh). That is the whole reason the grass is on screen at load on a large
+ * desktop and on a laptop with a short window alike — a band sized in rem
+ * drops below the fold the moment the window is short, which is exactly what
+ * went wrong on the first pass.
  *
- * Two parallax rates on scroll: the footage lags and the shot leads, which is
- * what gives the band depth rather than the whole hero sliding as one plane.
+ * The shot is pulled up over the copy and runs off the bottom of the section,
+ * clipped. The reference cuts its product off at the hero's foot, and that
+ * crop is what makes the page read as continuing rather than ending.
+ *
+ * Two parallax rates: the footage lags, the shot leads. One plane moving is a
+ * slide; two moving at different rates is depth.
  */
 export const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // The footage is decorative. Under reduced-motion it holds on its poster
-  // frame — a looping 4K plate is motion whether or not React started it.
+  // frame — a looping plate is motion whether or not React started it.
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
@@ -41,24 +45,30 @@ export const Hero = () => {
   }, []);
 
   return (
-    <section id="home" className="relative isolate overflow-hidden pt-[10rem] sm:pt-[12rem]">
-      {/* The hero's own tint, over the page ground. Wider and softer than the
-          section washes so it reads as light in the room rather than a shape. */}
+    <section
+      id="home"
+      className="relative isolate flex min-h-svh flex-col overflow-hidden"
+    >
+      {/* The glow behind the nav and the headline. The reference pools violet
+          here; ours is blue, because blue is the brand's and the violet end of
+          the sweep is already carrying the buttons. Two stacked radials rather
+          than one — a single ellipse reads as a visible disc. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[70vh]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[85vh]"
         style={{
           background:
-            "radial-gradient(70% 60% at 50% 0%, rgb(91 78 224 / 0.13), transparent 62%), radial-gradient(50% 50% at 12% 8%, rgb(14 165 233 / 0.12), transparent 60%)",
+            "radial-gradient(58% 52% at 50% 2%, rgb(60 120 235 / 0.22), transparent 66%), radial-gradient(90% 60% at 50% 0%, rgb(14 165 233 / 0.13), transparent 70%)",
         }}
       />
 
-      <div className="mx-auto w-full max-w-[76rem] px-6 text-center">
+      <div className="shell flex flex-1 flex-col justify-center pt-[7.5rem] pb-[3.5rem] text-center sm:pt-[8rem]">
         <StackedLines
           tag="h1"
           lines={hero.lines}
           className="display hidden text-center text-display sm:block"
           lineClassName="justify-center"
+          lineClassNames={["", "grad-tip"]}
           stagger={130}
           duration={1100}
         />
@@ -67,18 +77,19 @@ export const Hero = () => {
           lines={hero.linesSm}
           className="display text-center text-display sm:hidden"
           lineClassName="justify-center"
+          lineClassNames={["", "", "grad-tip"]}
           stagger={130}
           duration={1100}
         />
 
         <Reveal variant="up" delay={260}>
-          <p className="mx-auto mt-7 max-w-[38rem] text-lead leading-[1.6] text-ink-body">
+          <p className="mx-auto mt-6 max-w-[40rem] text-lead leading-[1.6] text-ink-body">
             {hero.standfirst}
           </p>
         </Reveal>
 
         <Reveal variant="up" delay={380}>
-          <div className="mt-9 flex justify-center">
+          <div className="mt-8 flex justify-center">
             <Link href={hero.cta.href} className="btn btn-primary">
               {hero.cta.label}
             </Link>
@@ -86,23 +97,22 @@ export const Hero = () => {
         </Reveal>
       </div>
 
-      {/* --- The footage band ------------------------------------------------
-          Full-bleed along the foot of the hero, faded into the ground at its
-          top edge so it emerges rather than starting. */}
-      <div className="relative mt-12 sm:mt-14">
+      {/* --- The footage band ----------------------------------------------- */}
+      <div className="relative h-[55svh] min-h-[19rem]">
         <SpringTrigger
           tag="div"
           mode="scrub"
           start="top bottom"
           end="bottom top"
           from={{ y: "0%" }}
-          to={{ y: "12%" }}
+          to={{ y: "14%" }}
           className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
           innerClassName="h-full w-full"
         >
           <video
             ref={videoRef}
             className="h-full w-full object-cover"
+            style={{ objectPosition: "center 78%" }}
             src="/assets/hero/hills.mp4"
             poster="/assets/hero/hills-poster.jpg"
             muted
@@ -112,32 +122,36 @@ export const Hero = () => {
             preload="metadata"
             aria-hidden
           />
-          {/* The fade is what stops the footage reading as a pasted-in band. */}
+          {/* Short fade: the band is short, and a long one would eat the grass
+              we just fought to keep above the fold. */}
           <div
-            className="absolute inset-x-0 top-0 h-[38%]"
+            className="absolute inset-x-0 top-0 h-[14%]"
             style={{
               background:
-                "linear-gradient(to bottom, var(--canvas) 0%, rgb(240 242 247 / 0.6) 45%, transparent 100%)",
+                "linear-gradient(to bottom, var(--canvas) 0%, rgb(232 235 242 / 0.55) 50%, transparent 100%)",
             }}
           />
         </SpringTrigger>
 
-        {/* The shot leads the footage, so the two planes separate on scroll. */}
+        {/* The shot: narrower than the shell so grass reads down both sides,
+            lifted over the copy, and running off the foot of the section. */}
         <SpringTrigger
           tag="div"
           mode="scrub"
           start="top bottom"
           end="bottom top"
           from={{ y: "0%" }}
-          to={{ y: "-6%" }}
-          className="mx-auto w-full max-w-[68rem] px-6 pt-[6rem] pb-[3rem] sm:pt-[8rem] sm:pb-[4rem]"
+          to={{ y: "-8%" }}
+          className="absolute inset-x-0 -top-[2rem] sm:-top-[3rem]"
         >
-          <ScreenCard
-            ground="wash"
-            url={hero.shot.url}
-            placeholder={hero.shot.placeholder}
-            ratio="16 / 9"
-          />
+          <div className="mx-auto w-[min(58vw,820px)]">
+            <ScreenCard
+              ground="wash"
+              url={hero.shot.url}
+              placeholder={hero.shot.placeholder}
+              ratio="16 / 9"
+            />
+          </div>
         </SpringTrigger>
       </div>
     </section>

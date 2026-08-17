@@ -19,8 +19,8 @@ import { footer } from "@/data/content/site";
  */
 export const SiteFooter = () => (
   <>
-    <section id="demo" className="px-6 py-24 lg:py-32">
-      <div className="mx-auto w-full max-w-[76rem]">
+    <section id="demo" className="py-24 lg:py-32">
+      <div className="shell">
         <SectionIntro
           lines={[...footer.cta.lines]}
           linesSm={[...footer.cta.linesSm]}
@@ -33,9 +33,9 @@ export const SiteFooter = () => (
       </div>
     </section>
 
-    <footer id="contact" className="px-4 pb-4 sm:px-6 sm:pb-6">
+    <footer id="contact" className="pb-5 sm:pb-6">
       <Reveal variant="fade">
-        <div className="relative mx-auto w-full max-w-[76rem] overflow-hidden rounded-panel bg-white">
+        <div className="shell relative overflow-hidden rounded-panel bg-white shadow-group">
           {/* The wash pools at the FOOT of the card, not across it — the page's
               last surface glows from below, the way the ground's own washes do. */}
           <div

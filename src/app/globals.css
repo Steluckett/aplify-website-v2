@@ -48,8 +48,9 @@
 
   /* Link/accent ink on a light ground. The bright sky reads at 4.23:1 and
      the midpoint blue at 3.69:1 — both under AA for body-size text, so
-     coloured text takes this deepened blue (4.61:1) instead. */
-  --raw-color-blue-ink: #0673ad;
+     coloured text takes this deepened blue instead (4.51:1 on the ground,
+     5.39:1 on white). */
+  --raw-color-blue-ink: #0670a9;
 
   /* Brand ink navy — the logo's own blue, and the page's dark moment. */
   --raw-color-navy: #041324;
@@ -59,7 +60,7 @@
   /* --- Neutrals. The ground is a tinted near-white, not grey: everything
      above it is lighter, which is what makes depth tonal rather than
      shadowed. */
-  --raw-color-ground: #f0f2f7;
+  --raw-color-ground: #e8ebf2;
   --raw-color-white: #ffffff;
   --raw-color-chip: #eef0f5;
   --raw-color-border: #e6e9f0;
@@ -71,8 +72,10 @@
   /* Labels. The dashboard runs #868d97 at 3.35:1 by explicit decision; a
      public page cannot. #696e76 is the same neutral axis walked down until
      it clears 4.5:1 on ALL THREE grounds it lands on — white 5.13, page
-     ground 4.58, chip 4.50. */
-  --raw-color-label: #696e76;
+     ground 4.51, chip 4.72. Re-solved when the ground darkened — moving a
+     ground silently breaks every ink measured against it, which is the
+     trap that made the pastel cards vanish in the first place. */
+  --raw-color-label: #656b72;
 
   /* --- Status chip inks. Dots mean STATE. Each ink is the hue's 700-shade
      nudged until it clears 4.5:1 on the chip wash as well as on white;
@@ -145,11 +148,11 @@
 
   /* Marketing register. rem is viewport-scaled by the adaptive grid below, so
      these already respond — no clamp() needed. */
-  --raw-text-display: 4.5rem; /* 72px — hero */
-  --raw-text-h1: 3.5rem; /* 56px — section heads */
-  --raw-text-h2: 2.5rem; /* 40px */
-  --raw-text-h3: 1.75rem; /* 28px — card titles */
-  --raw-text-h4: 1.25rem; /* 20px */
+  --raw-text-display: 6rem; /* 96px — hero */
+  --raw-text-h1: 4.5rem; /* 72px — section heads */
+  --raw-text-h2: 3.25rem; /* 52px */
+  --raw-text-h3: 2rem; /* 32px — card titles */
+  --raw-text-h4: 1.5rem; /* 24px */
   --raw-text-lead: 1.125rem; /* 18px — standfirst under a section head */
   --raw-text-body: 1rem; /* 16px */
   --raw-text-sm: 0.875rem; /* 14px */
@@ -167,9 +170,12 @@
   --raw-text-stat: 3rem; /* 48px — stat tile figure */
   --raw-text-stat-hero: 5.25rem; /* 84px — the metric card's figure */
 
-  --raw-tracking-display: -0.02em;
+  --raw-tracking-display: -0.035em;
   --raw-tracking-eyebrow: 0.18em;
-  --raw-leading-display: 1.06;
+  /* 1.1 is a FLOOR, not a preference: the text engine clips each line to its
+     line-height box for the reveal, so anything tighter shaves descenders.
+     Display tightness therefore comes from tracking, not leading. */
+  --raw-leading-display: 1.1;
   --raw-leading-body: 1.6;
 
   /* --- Space. The dashboard's eight steps, plus two section-scale steps the
@@ -189,6 +195,11 @@
      as bulging out of it, so these move together. 22/16/12 are the
      dashboard's; the 32px panel is the marketing register's outermost
      surface, which the dashboard has no equivalent of. */
+  /* The page's measure. Wide and immersive rather than a centred column —
+     90vw so the layout breathes with the window, capped so a 27" display
+     gets a composition rather than a stretched one. */
+  --raw-shell: min(90vw, 1440px);
+
   --raw-radius-panel: 2rem; /* 32px — full-width section panels */
   --raw-radius-card: 1.375rem; /* 22px */
   --raw-radius-sm: 1rem; /* 16px */
@@ -224,19 +235,19 @@
    already small enough that the re-basing is what you want. */
 @media (max-width: 1024px) {
   :root {
-    --raw-text-display: 3.25rem;
-    --raw-text-h1: 2.5rem;
-    --raw-text-h2: 2rem;
-    --raw-text-h3: 1.5rem;
+    --raw-text-display: 4rem;
+    --raw-text-h1: 3.25rem;
+    --raw-text-h2: 2.5rem;
+    --raw-text-h3: 1.75rem;
   }
 }
 
 @media (max-width: 640px) {
   :root {
-    --raw-text-display: 2.5rem;
-    --raw-text-h1: 2rem;
-    --raw-text-h2: 1.75rem;
-    --raw-text-h3: 1.375rem;
+    --raw-text-display: 2.9rem;
+    --raw-text-h1: 2.4rem;
+    --raw-text-h2: 2rem;
+    --raw-text-h3: 1.5rem;
     --raw-text-lead: 1rem;
   }
 }
@@ -270,6 +281,8 @@
     var(--raw-color-sky-deep),
     var(--raw-color-violet-deep)
   );
+
+  --shell: var(--raw-shell);
 
   --radius-panel: var(--raw-radius-panel);
   --radius-card: var(--raw-radius-card);
@@ -751,6 +764,27 @@ body {
     border-radius: 18px;
   }
 
+  /* --- The shell -----------------------------------------------------------
+     One measure for the whole page. Every section's content sits in this, so
+     the left and right edges line up down the entire scroll — which is most
+     of what makes a long page read as one composition rather than a stack of
+     unrelated bands. */
+  .shell {
+    width: var(--shell);
+    margin-inline: auto;
+  }
+
+  /* --- Hard section breaks -------------------------------------------------
+     The reference alternates full-bleed WHITE sections against the tinted
+     ground, edge to edge, with no rounding between them. That hard break is
+     what gives a long page its rhythm — and it is also what makes the pastel
+     cards work, since a pastel on the tinted ground is nearly the same
+     lightness as the ground (measured: sky pastel sat 0.5 L* BELOW the old
+     ground, which is why those cards disappeared). Pastels belong on white. */
+  .band-white {
+    background: var(--raw-surface-tile);
+  }
+
   /* --- Glass ---------------------------------------------------------------
      Translucent white over a blur. The nav sits on this because it crosses
      both the light ground and the hero video: a solid fill reads as a lid
@@ -760,7 +794,6 @@ body {
     background: var(--raw-surface-glass);
     -webkit-backdrop-filter: blur(24px) saturate(1.4);
     backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid var(--raw-surface-glass-edge);
   }
 
   /* --- Pastel card grounds -------------------------------------------------
