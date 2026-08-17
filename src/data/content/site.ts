@@ -139,3 +139,229 @@ export const footer = {
     "Aplify turns a messy ATS feed into a candidate experience people actually finish.",
   email: "hello@aplify.co.uk",
 };
+
+/* --------------------------------------------------------------------------
+   The story: what arrives, what we do to it, what it becomes.
+   -------------------------------------------------------------------------- */
+
+export const story = {
+  eyebrow: "The problem",
+  lines: ["Your feed arrives", "fragmented"],
+  standfirst:
+    "Publish it straight to a career site and you either lose candidates or clean it by hand — every time a job changes.",
+  /** One region, three spellings. One city, twice in a single field. */
+  rows: [
+    {
+      raw: "NURSE — Bristol, Bristol, BS1",
+      clean: "Nurse — Bristol, BS1",
+      rawRegion: "SOUTH WEST",
+      region: "South West",
+      rawSalary: "24000-26000",
+      salary: "£24,000–£26,000",
+    },
+    {
+      raw: "Support Worker (Days)",
+      clean: "Support Worker (Days)",
+      rawRegion: "Southwest",
+      region: "South West",
+      rawSalary: "£24k-£26k",
+      salary: "£24,000–£26,000",
+    },
+    {
+      raw: "HCA - weston super mare",
+      clean: "Healthcare Assistant — Weston-super-Mare",
+      rawRegion: "S.W.",
+      region: "South West",
+      rawSalary: "Up to £26,000 DOE",
+      salary: "Up to £26,000",
+    },
+  ],
+  footnote:
+    "Illustrative feed data — one region, three spellings; one city, listed twice in a single field. The same three roles, cleaned on import.",
+};
+
+export const payoff = {
+  eyebrow: "The payoff",
+  lines: ["One application,", "zero redirects"],
+  linesSm: ["One", "application,", "zero redirects"],
+  standfirst:
+    "Candidates search, filter and apply without ever leaving your career site — no redirect, no account, no half-finished forms abandoned somewhere else.",
+  chips: [
+    "On-page",
+    "No ATS redirect",
+    "No account",
+    "Anonymous apply",
+    "Field-level PII encryption",
+  ],
+};
+
+export const howItWorks = {
+  eyebrow: "How it works",
+  lines: ["Six stages, raw feed", "to finished application"],
+  linesSm: ["Six stages,", "raw feed to", "application"],
+  standfirst:
+    "Everything between an ATS export and a candidate pressing send.",
+  stages: [
+    {
+      n: "01",
+      title: "Ingest",
+      sub: "Pull jobs straight from your ATS",
+      body: "XML, JSON or CSV from any number of sources, on a schedule or on demand. Field mapping is configuration, not development.",
+      points: ["Multi-format import", "Configurable mapping", "Authenticated feeds"],
+    },
+    {
+      n: "02",
+      title: "Clean & enrich",
+      sub: "Fix what the feed got wrong",
+      body: "Salaries normalised, duplicated text stripped from titles, messy regions mapped to a consistent set — then AI rewrites each description to your tone of voice.",
+      points: ["Salary and region normalisation", "AI rewriting to your EVP", "Job family classification"],
+    },
+    {
+      n: "03",
+      title: "Present",
+      sub: "Publish it on your own site",
+      body: "Full-text search, geo search with a configurable radius, an interactive map and detail pages — embedded on your career site.",
+      points: ["Keyword and salary filtering", "Postcode and map search", "One campaign to a national board"],
+    },
+    {
+      n: "04",
+      title: "Convert",
+      sub: "Let candidates finish without leaving",
+      body: "Applications and event registrations happen on the page. Each company controls which fields appear, with pre-qualification gating anyone ineligible before the full form.",
+      points: ["On-page Easy Apply", "Customisable fields", "Pre-qualification screening"],
+    },
+    {
+      n: "05",
+      title: "Manage",
+      sub: "Action and report on everything",
+      body: "Recruiters triage through a full status workflow, with source tracking on every submission so paid social, job boards and QR codes compare by channel.",
+      points: ["Submitted to accepted", "Source tracking", "Branded candidate emails"],
+    },
+    {
+      n: "06",
+      title: "Syndicate",
+      sub: "Send the clean feed back out",
+      body: "Once a feed is clean it is an asset. Aplify tailors it per destination and publishes it as an API-key-protected XML feed.",
+      points: ["Custom outbound mapping", "XML protected by API key", "Errors stripped before they leave"],
+    },
+  ],
+};
+
+export const demos = {
+  jobSearch: {
+    eyebrow: "Job search",
+    lines: ["The search your", "candidates would get"],
+    linesSm: ["The search", "your", "candidates get"],
+    standfirst:
+      "Three views of one filtered set — grid, list and map — running the way it would run on your career site.",
+    shot: { url: "yourcompany.co.uk/careers", placeholder: "Job search — grid, list and map" },
+  },
+  aiEnrichment: {
+    eyebrow: "AI enrichment",
+    lines: ["Written for candidates,", "not for the file"],
+    linesSm: ["Written for", "candidates,", "not the file"],
+    standfirst:
+      "ATS descriptions were written to satisfy a process. Aplify rewrites every one to your tone of voice on import.",
+    shot: { url: "app.aplify.co.uk/jobs", placeholder: "Description rewrite — before and after" },
+  },
+  dashboard: {
+    eyebrow: "For your recruiters",
+    lines: ["One place to", "action all of it"],
+    linesSm: ["One place", "to action", "all of it"],
+    standfirst:
+      "Applications and registrations arrive in the same dashboard and move through a status workflow your team controls.",
+    shot: { url: "app.aplify.co.uk/applications", placeholder: "Recruiter dashboard — applications" },
+  },
+};
+
+export const security = {
+  eyebrow: "Security & GDPR",
+  lines: ["Built for data", "you cannot lose"],
+  linesSm: ["Built for", "data you", "cannot lose"],
+  standfirst:
+    "Candidate data is the most sensitive thing a recruiter holds. It is treated that way at every layer.",
+  points: [
+    {
+      title: "Field-level PII encryption",
+      body: "Personal fields are encrypted individually, not just at rest on the disk.",
+      ground: "sky" as const,
+    },
+    {
+      title: "Scoped to the company",
+      body: "Every query is scoped by company; an out-of-scope record does not resolve.",
+      ground: "violet" as const,
+    },
+    {
+      title: "Anonymous by default",
+      body: "Candidates apply without creating an account, so there is no credential to lose.",
+      ground: "mint" as const,
+    },
+    {
+      title: "Retention you control",
+      body: "Retention windows and deletion are configured per company, not assumed.",
+      ground: "amber" as const,
+    },
+  ],
+};
+
+export const integrations = {
+  eyebrow: "Integrations",
+  lines: ["Works with the", "ATS you already have"],
+  linesSm: ["Works with", "your ATS"],
+  standfirst:
+    "Aplify sits between your ATS and your candidates. It does not replace anything you already run.",
+  items: [
+    "Any ATS exporting XML, JSON or CSV",
+    "Native integration where an API exists",
+    "Outbound XML feeds to job boards",
+    "Calendar and event registration",
+    "Branded transactional email",
+    "Source tracking for paid channels",
+  ],
+};
+
+export const roadmap = {
+  eyebrow: "Roadmap",
+  lines: ["What is coming next"],
+  standfirst: "Shipped continuously, informed by the recruiters using it.",
+  items: [
+    { when: "Now", what: "Feed ingestion, enrichment, search, Easy Apply, events, syndication" },
+    { when: "Next", what: "Deeper native ATS integrations and richer channel reporting" },
+    { when: "Later", what: "Candidate matching and talent-pool re-engagement" },
+  ],
+};
+
+export const proof = {
+  eyebrow: "Application drop-off rate",
+  before: { value: "85%", label: "Before Easy Apply" },
+  after: { value: "30%", label: "After Easy Apply" },
+  figure: "30",
+  unit: "%",
+  client: "Brandon Trust",
+};
+
+export const testimonials = {
+  eyebrow: "In their words",
+  lines: ["What changed for", "the teams using it"],
+  linesSm: ["What changed", "for their", "teams"],
+  quotes: [
+    {
+      quote:
+        "We stopped losing people at the handover. The application finishes where the candidate started, and that alone changed our numbers.",
+      name: "Resourcing Lead",
+      org: "Brandon Trust",
+    },
+    {
+      quote:
+        "Our feed used to need a manual clean every week. Now it arrives tidy and the adverts read like we wrote them, because they do.",
+      name: "Talent Acquisition Manager",
+      org: "Cygnet",
+    },
+    {
+      quote:
+        "Being able to compare paid social against job boards by actual applications, not clicks, is the part our finance team cares about.",
+      name: "Head of Recruitment",
+      org: "HC-One",
+    },
+  ],
+};

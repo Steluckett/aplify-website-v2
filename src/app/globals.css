@@ -48,7 +48,7 @@
 
   /* Link/accent ink on a light ground. The bright sky reads at 4.23:1 and
      the midpoint blue at 3.69:1 — both under AA for body-size text, so
-     coloured text takes this deepened blue instead (4.51:1 on the ground,
+     coloured text takes this deepened blue instead (4.77:1 on the ground,
      5.39:1 on white). */
   --raw-color-blue-ink: #0670a9;
 
@@ -59,8 +59,11 @@
 
   /* --- Neutrals. The ground is a tinted near-white, not grey: everything
      above it is lighter, which is what makes depth tonal rather than
-     shadowed. */
-  --raw-color-ground: #e8ebf2;
+     shadowed. It sits ~4.9 L* below a white panel — enough for the panels
+     to lift with their shadow, and light enough that the page does not read
+     as grey. The pastel cards no longer depend on this separation: they
+     live on the white bands, which is what freed the ground to lighten. */
+  --raw-color-ground: #eff1f6;
   --raw-color-white: #ffffff;
   --raw-color-chip: #eef0f5;
   --raw-color-border: #e6e9f0;
@@ -72,7 +75,7 @@
   /* Labels. The dashboard runs #868d97 at 3.35:1 by explicit decision; a
      public page cannot. #696e76 is the same neutral axis walked down until
      it clears 4.5:1 on ALL THREE grounds it lands on — white 5.13, page
-     ground 4.51, chip 4.72. Re-solved when the ground darkened — moving a
+     ground 4.77, chip 4.72. Re-solved when the ground moved — moving a
      ground silently breaks every ink measured against it, which is the
      trap that made the pastel cards vanish in the first place. */
   --raw-color-label: #656b72;
