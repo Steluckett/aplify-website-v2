@@ -1,0 +1,241 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   APLIFY — dark-luxury, product-first.
+
+   The page is near-black end to end. The only bright surfaces are the product
+   screens themselves, framed in browser/phone chrome and lit from behind, so
+   colour arrives almost entirely from the UI *inside* the mockups. Light is
+   surgical, never structural.
+
+   Two contexts:
+     :root        — the dark page.
+     .screen      — inside a product frame; flips the same roles back to light
+                    so the demos read as real client-facing UI.
+   Every colour below clears WCAG AA on the surface it is used on (checked at
+   #08080a / #101014 / #17171d).
+   --------------------------------------------------------------------------- */
+:root {
+  /* Ground and raised surfaces. */
+  --canvas: #08080a;
+  --surface: #101014;
+  --surface-raised: #17171d;
+
+  /* Ink. `soft` is the floor — 5.5:1 even on the highest surface. */
+  --ink: #f5f5f7;
+  --ink-muted: #a8a8b3;
+  --ink-soft: #8e8e99;
+
+  /* Hairlines. */
+  --hairline: rgb(255 255 255 / 0.09);
+  --hairline-strong: rgb(255 255 255 / 0.16);
+
+  /* Brand. `brand` is a fill that carries white text (5.67:1); `brand-light`
+     is the on-dark accent for text and rules (5.56:1+); `signal` is Aplify's
+     cyan, reserved for brand moments — the wordmark dot and the particle
+     head — and never used as UI colour. */
+  --brand: #2563c9;
+  --brand-light: #5790e6;
+  --signal: #02dafd;
+
+  /* Light values, for use inside `.screen` and the rare light inset. */
+  --paper: #ffffff;
+  --paper-sunk: #f4f4f4;
+  --paper-ink: #0a0a0a;
+  --paper-ink-soft: #5f6572; /* 5.85 on white, 5.32 on #f4f4f4 — AA */
+  --paper-hairline: #e6e8ec;
+
+  /* Ambient light behind a product shot: the glow that makes a screen read as
+     lit rather than pasted on. */
+  --glow-product: radial-gradient(
+    ellipse 70% 60% at 50% 45%,
+    rgb(37 99 201 / 0.28) 0%,
+    rgb(37 99 201 / 0.1) 45%,
+    transparent 72%
+  );
+
+  /* Hero canvas — black, with a deep-blue pool behind the particle head.
+     Deliberately wide and low-contrast: a tighter ellipse reads as a visible
+     disc floating on the black rather than depth behind the subject. */
+  --hero-glow: radial-gradient(
+    ellipse 95% 80% at 50% 64%,
+    #061626 0%,
+    #030a14 40%,
+    #000000 78%
+  );
+
+  /* Read by the WebGL scene through `getComputedStyle`, not by markup — a
+     shader cannot resolve a CSS variable, so these stay tokens here and are
+     parsed once at mount. Mirrored in hero-scene.config.ts. */
+  --scene-key: #0787b8;
+  --scene-rim: #02dafd;
+  --scene-fill: #020a16;
+
+  /* Radii. */
+  --radius-card: 1.25rem;
+  --radius-card-lg: 1.75rem;
+  --radius-pill: 62.5rem;
+
+  /* Type scale, as raw values.
+     These live here as well as in `@theme inline` below because `inline` does
+     NOT emit its entries to :root — it inlines them into the utilities it
+     generates. Anything that needs `var(...)` in hand-written CSS (the
+     `.eyebrow` class, inline styles) has to read these. Markup should use the
+     generated utilities — `text-hero`, `text-h2`, `text-body` — rather than
+     `text-[length:var(--text-h2)]`, which silently resolves to nothing.
+
+     THREE tiers with real jumps, so a glance ranks the page. `rem` is
+     viewport-scaled by the adaptive grid below, so these already respond;
+     only the two giant display sizes use vw directly. */
+  --raw-text-hero: 9vw;
+  --raw-text-piece: 7.5vw;
+  --raw-text-h2: 3.25rem;
+  --raw-text-h3: 1.375rem;
+  --raw-text-body: 0.9375rem;
+  --raw-text-caption: 0.75rem;
+}
+
+/* Inside a product frame — the demo is a real client-facing UI, so it is
+   light. Only the roles flip; every utility bound below follows the cascade. */
+.screen {
+  --canvas: var(--paper);
+  --surface: var(--paper-sunk);
+  --surface-raised: var(--paper);
+  --ink: var(--paper-ink);
+  --ink-muted: var(--paper-ink-soft);
+  --ink-soft: var(--paper-ink-soft);
+  --hairline: var(--paper-hairline);
+  --hairline-strong: #d7dae1;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-soft: var(--ink-soft);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-brand: var(--brand);
+  --color-brand-light: var(--brand-light);
+  --color-signal: var(--signal);
+  --color-paper: var(--paper);
+  --color-paper-ink: var(--paper-ink);
+
+  --radius-card: var(--radius-card);
+  --radius-card-lg: var(--radius-card-lg);
+  --radius-pill: var(--radius-pill);
+
+  /* Two faces doing different jobs. Instrument Serif is display only — it
+     never sets body copy. */
+  --font-display: var(--font-instrument);
+  --font-sans: var(--font-onest);
+
+  /* Generates the `text-hero` / `text-piece` / `text-h2` / `text-h3` /
+     `text-body` / `text-caption` utilities. Values come from the raw tier so
+     both the utilities and hand-written `var()` reads stay in step. */
+  --text-hero: var(--raw-text-hero);
+  --text-piece: var(--raw-text-piece);
+  --text-h2: var(--raw-text-h2);
+  --text-h3: var(--raw-text-h3);
+  --text-body: var(--raw-text-body);
+  --text-caption: var(--raw-text-caption);
+
+  --tracking-eyebrow: 0.22em;
+
+  --ease-entrance: cubic-bezier(0.2, 0, 0, 1);
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  /* `--font-onest` directly, not the `--font-sans` alias: `@theme inline`
+     bindings are inlined into utilities rather than emitted at :root, so the
+     alias would resolve to Tailwind's default stack here. */
+  font-family: var(--font-onest), sans-serif;
+  min-height: 100vh;
+}
+
+@layer base {
+  /* Adaptive scaling grid — scales the root font-size with the viewport so a
+     rem-based layout stays proportional. Each breakpoint divides FONT_BASE
+     (16px) by the design base width its range was laid out at:
+       font-size: 16 * 100 / baseWidth  (vw)
+     Above 1920px the AdaptiveGrid component takes over (scale-up).
+     Keep in sync with src/components/common/grid/grid.config.ts. */
+  html {
+    font-size: 16px;
+  }
+
+  @media (max-width: 1920px) {
+    html {
+      font-size: 0.833333vw; /* 16 * 100 / 1920 */
+    }
+  }
+
+  @media (max-width: 1440px) {
+    html {
+      font-size: 1.111111vw; /* 16 * 100 / 1440 */
+    }
+  }
+
+  @media (max-width: 1024px) {
+    html {
+      font-size: 1.5625vw; /* 16 * 100 / 1024 */
+    }
+  }
+
+  @media (max-width: 640px) {
+    html {
+      font-size: 4.444444vw; /* 16 * 100 / 360 */
+    }
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand-light);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--brand);
+    color: #ffffff;
+  }
+}
+
+@layer components {
+  /* Display type. Instrument Serif is a high-contrast face: it needs negative
+     tracking and tight leading at size, and it must never be faux-bolded. */
+  .display {
+    font-family: var(--font-instrument), Georgia, serif;
+    font-weight: 400;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+  }
+
+  /* Section eyebrow — the quietest thing on screen (handover §10.1). */
+  .eyebrow {
+    font-size: var(--raw-text-caption);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--ink-soft);
+  }
+
+  /* Very fine film grain over the dark ground. Without it large black fields
+     band on 8-bit displays and read as flat rather than deep. Pure CSS, no
+     asset, and it sits under everything at very low opacity. */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
