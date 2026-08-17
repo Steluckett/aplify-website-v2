@@ -21,9 +21,9 @@ export interface NavBarProps {
  * The floating glass nav.
  *
  * Structurally the reference's: one rounded bar inset from the page edges,
- * wordmark at the left behind a hairline, links centred, a single filled pill
- * at the right. Two things make it ours — the wordmark, and the fact that the
- * pill carries the spectrum sweep rather than a flat violet.
+ * wordmark at the left, links centred, a single filled pill at the right.
+ * No border and no internal divider — the bar is defined by its blur and its
+ * shadow alone, so it reads as a pane of glass rather than a boxed toolbar.
  *
  * It is GLASS rather than solid white because it crosses the hero video: a
  * solid bar reads as a lid laid over the imagery, and a transparent one loses
@@ -61,10 +61,6 @@ export const NavBar = ({ items, ctaLabel, ctaHref }: NavBarProps) => {
             className="h-[1.5rem] w-auto"
           />
         </Link>
-
-        {/* The hairline is the reference's device: it separates identity from
-            navigation so the wordmark does not read as the first link. */}
-        <span className="ml-4 hidden h-7 w-px flex-none bg-hairline lg:block" aria-hidden />
 
         <ul className="hidden flex-1 items-center justify-center gap-1 lg:flex">
           {items.map((item) => (

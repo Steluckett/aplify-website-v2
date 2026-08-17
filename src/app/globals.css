@@ -196,9 +196,9 @@
      dashboard's; the 32px panel is the marketing register's outermost
      surface, which the dashboard has no equivalent of. */
   /* The page's measure. Wide and immersive rather than a centred column —
-     90vw so the layout breathes with the window, capped so a 27" display
+     95vw so the layout breathes with the window, capped so a 27" display
      gets a composition rather than a stretched one. */
-  --raw-shell: min(90vw, 1440px);
+  --raw-shell: min(95vw, 1440px);
 
   --raw-radius-panel: 2rem; /* 32px — full-width section panels */
   --raw-radius-card: 1.375rem; /* 22px */
@@ -493,12 +493,40 @@ body {
   /* A heading's ink DISSOLVES into blue across its last word — a blend, not
      a two-colour split. Wrap only the final word. Page and section headings
      only: a record's name is data and takes no tip. */
+  /* The gradient tip: a heading's ink DISSOLVES into blue, a blend rather
+     than a two-colour split.
+
+     It has to be painted on the innermost span — the one holding the glyphs —
+     NOT on the line. `background-clip: text` does not paint through a
+     descendant that has its own transform, and the text engine transforms
+     every line to animate it, so a tip set on the line clips to nothing and
+     the words disappear entirely. That failure is silent and total, which is
+     why the fallback colour below is set first and unconditionally: if the
+     clip ever stops painting again, the text goes solid blue instead of
+     invisible. */
   .grad-tip {
-    background: linear-gradient(100deg, var(--ink-heading) 0%, var(--accent-mid) 92%);
+    color: var(--accent-mid);
+  }
+
+  .grad-tip .line-word > *,
+  .grad-tip > span > span > .line-word {
+    background-image: linear-gradient(
+      100deg,
+      var(--ink-heading) 0%,
+      var(--accent-mid) 92%
+    );
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    color: transparent;
+  }
+
+  /* Closing display leading WITHOUT touching line-height. Each stacked line
+     keeps its 1.1 box — which is what the reveal clips to, and going under
+     that shaves descenders — and the lines are pulled together with negative
+     margin instead. Optical leading lands near 0.98; the clip box does not
+     move. Change the margin, never the line-height. */
+  .lines-tight > * + * {
+    margin-top: -0.2em;
   }
 
   .eyebrow {
@@ -732,6 +760,13 @@ body {
     background: var(--accent-grad-solid);
     color: #fff;
     box-shadow: 0 6px 16px rgb(60 120 235 / 0.25);
+  }
+
+  /* The hero's one action. Bigger than a UI button because it is the only
+     thing being asked on the whole first screen. */
+  .btn-lg {
+    padding: 1.05em 2.1em;
+    font-size: var(--raw-text-body);
   }
 
   .btn-secondary {

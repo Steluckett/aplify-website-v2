@@ -43,7 +43,7 @@ export const SectionIntro = ({
   children,
 }: SectionIntroProps) => {
   const centred = align === "center";
-  const headingClass = `display text-h1 ${centred ? "text-center" : ""}`;
+  const headingClass = `display lines-tight text-h1 ${centred ? "text-center" : ""}`;
   // TextEngine's container is flex, so `text-align` alone cannot align it —
   // the justify has to land on that container, which is what StackedLines
   // forwards its `lineClassName` to.
