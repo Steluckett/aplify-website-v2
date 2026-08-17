@@ -2,65 +2,79 @@
 
 import { ScreenCard } from "@/components/ui/screen-card";
 import { SectionIntro } from "@/components/ui/section-intro";
+import { jobSearchContent } from "@/data/content/job-search";
 import { demos } from "@/data/content/site";
 
-type Demo = (typeof demos)[keyof typeof demos];
+import { AiRewriteDemo } from "./demos/ai-rewrite";
+import { DashboardDemo } from "./demos/dashboard";
+import { JobSearchDemo } from "./demos/job-search";
 
 /**
  * The three product sections.
  *
- * Identical composition each time — centred intro, then one large framed
- * screen — because they are the same kind of claim three times, and varying
- * the layout would imply a difference that is not there. What varies is the
- * band: they alternate white and ground so the run of three does not read as
- * one long section.
+ * These are the page's argument, so they are the real thing rather than
+ * pictures of it: search, filter, apply, rewrite and triage all work here.
+ * A screenshot of software asks to be believed; software asks to be used.
  *
- * Each currently holds a designed placeholder. The live demos from the
- * previous build (job search with grid/list/map, Easy Apply, the AI rewrite
- * and the recruiter triage table) drop into these frames in place of the
- * placeholder — the frame, the wash and the register are already correct, so
- * wiring them in is a swap rather than a rebuild.
+ * Two of the three sit inside browser chrome, because they are screens a
+ * client's visitor or recruiter would actually be looking at, and the frame
+ * is what says whose site it is. The AI rewrite is not a screen — it is a
+ * before-and-after comparison — so it carries the wash-and-inset composition
+ * directly instead of pretending to be a browser window.
+ *
+ * `.screen` inside the frame drops everything to Aurora's UI scale, which is
+ * what stops a live demo reading as more marketing page.
  */
-const DemoSection = ({
-  id,
-  demo,
-  band,
-  ground,
-}: {
-  id: string;
-  demo: Demo;
-  band: boolean;
-  ground: "wash" | "soft";
-}) => (
-  <section id={id} className={`${band ? "band-white" : ""} py-24 lg:py-32`}>
-    <div className="shell">
-      <SectionIntro
-        eyebrow={demo.eyebrow}
-        lines={[...demo.lines]}
-        linesSm={[...demo.linesSm]}
-        standfirst={demo.standfirst}
-      />
-      <div className="mt-16">
-        <ScreenCard
-          ground={ground}
-          url={demo.shot.url}
-          placeholder={demo.shot.placeholder}
-          ratio="16 / 9"
-        />
-      </div>
-    </div>
-  </section>
-);
-
 export const Product = () => (
   <>
-    <DemoSection id="job-search" demo={demos.jobSearch} band ground="wash" />
-    <DemoSection
-      id="ai-enrichment"
-      demo={demos.aiEnrichment}
-      band={false}
-      ground="soft"
-    />
-    <DemoSection id="dashboard" demo={demos.dashboard} band ground="wash" />
+    <section id="job-search" className="band-white py-24 lg:py-32">
+      <div className="shell">
+        <SectionIntro
+          eyebrow={demos.jobSearch.eyebrow}
+          lines={[...demos.jobSearch.lines]}
+          linesSm={[...demos.jobSearch.linesSm]}
+          standfirst={demos.jobSearch.standfirst}
+        />
+        <div className="mt-16">
+          <ScreenCard ground="wash" url={demos.jobSearch.shot.url}>
+            <JobSearchDemo />
+          </ScreenCard>
+          {/* The roles are invented and the page must say so — a demo that
+              looks this much like the product is exactly the one that needs
+              its sample data disclosed. */}
+          <p className="mx-auto mt-6 max-w-[52rem] text-center text-sm text-ink-label">
+            {jobSearchContent.captions.demo}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-enrichment" className="py-24 lg:py-32">
+      <div className="shell">
+        <SectionIntro
+          eyebrow={demos.aiEnrichment.eyebrow}
+          lines={[...demos.aiEnrichment.lines]}
+          linesSm={[...demos.aiEnrichment.linesSm]}
+          standfirst={demos.aiEnrichment.standfirst}
+        />
+        <AiRewriteDemo className="mt-16" />
+      </div>
+    </section>
+
+    <section id="dashboard" className="band-white py-24 lg:py-32">
+      <div className="shell">
+        <SectionIntro
+          eyebrow={demos.dashboard.eyebrow}
+          lines={[...demos.dashboard.lines]}
+          linesSm={[...demos.dashboard.linesSm]}
+          standfirst={demos.dashboard.standfirst}
+        />
+        <div className="mt-16">
+          <ScreenCard ground="wash" url={demos.dashboard.shot.url}>
+            <DashboardDemo />
+          </ScreenCard>
+        </div>
+      </div>
+    </section>
   </>
 );
