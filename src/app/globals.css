@@ -161,7 +161,13 @@
      18px leads and 16px body under 96px headings, and that gap is what read
      as "off": the headings were not too loud so much as the text was too
      quiet to answer them. */
-  --raw-text-display: 4.5rem; /* 72px — hero */
+  /* The hero is the one place we go past Workable. Their h1 is 72px; ours is
+     96px, and it holds now for a reason it would not have before — the lead
+     under it is 24px rather than 18px, so the ratio between headline and
+     copy is 4:1 instead of 5.3:1. The hero was never too big on its own; it
+     was too big for the text beneath it. Section heads stay at their 56px,
+     which keeps a clear step down from the hero. */
+  --raw-text-display: 6rem; /* 96px — hero */
   --raw-text-h1: 3.5rem; /* 56px — section heads */
   --raw-text-h2: 2.5rem; /* 40px */
   --raw-text-h3: 2rem; /* 32px — card titles */
@@ -249,7 +255,7 @@
    already small enough that the re-basing is what you want. */
 @media (max-width: 1024px) {
   :root {
-    --raw-text-display: 3.25rem;
+    --raw-text-display: 4rem;
     --raw-text-h1: 2.75rem;
     --raw-text-h2: 2rem;
     --raw-text-h3: 1.625rem;
@@ -259,7 +265,7 @@
 
 @media (max-width: 640px) {
   :root {
-    --raw-text-display: 2.5rem;
+    --raw-text-display: 2.9rem;
     --raw-text-h1: 2rem;
     --raw-text-h2: 1.75rem;
     --raw-text-h3: 1.375rem;
