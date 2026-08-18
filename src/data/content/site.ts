@@ -111,8 +111,8 @@ export const capabilities = {
         /* Filename says job-description; the artwork is the apply flow.
            Alt describes what is actually on screen. */
         src: "/assets/steps/job-description.png",
-        w: 1314,
-        h: 1895,
+        w: 1382,
+        h: 1955,
         /* A full form needs the width to stay legible. */
         widthPct: 80,
         alt: "The Easy Apply flow: the role being applied for, two pre-qualification questions, then a details form with name, email, phone, location, CV upload and a submit button.",
