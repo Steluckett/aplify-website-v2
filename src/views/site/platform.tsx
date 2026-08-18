@@ -213,8 +213,8 @@ const Capabilities = () => (
                       <Image
                         src={step.shot.src}
                         alt={step.shot.alt}
-                        width={585}
-                        height={1069}
+                        width={step.shot.w}
+                        height={step.shot.h}
                         sizes="(max-width: 1024px) 60vw, 400px"
                         className="absolute top-10 left-1/2 w-[60%] -translate-x-1/2 drop-shadow-[0_24px_60px_rgba(16,19,26,0.28)]"
                       />

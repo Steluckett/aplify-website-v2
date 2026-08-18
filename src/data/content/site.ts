@@ -93,6 +93,8 @@ export const capabilities = {
         /* Loose artwork, no browser frame — it is a phone screen, and a
            browser bar around a phone would be a lie about what it is. */
         src: "/assets/steps/search-mobile.png",
+        w: 585,
+        h: 1069,
         alt: "Job search on a phone: keyword and location fields, a search button, 48 roles sorted by distance, and two job cards with salary and category.",
         loose: true,
       },
@@ -103,7 +105,15 @@ export const capabilities = {
       title: "Apply without leaving",
       body: "The application form is on the page, not behind a redirect. Pre-qualification runs first, so anyone who cannot be offered the role finds out in two questions rather than after twenty minutes of typing — and each company chooses which fields it actually needs.",
       points: ["No ATS redirect", "No account to create", "Pre-qualification first"],
-      shot: { url: "yourcompany.co.uk/careers/apply", placeholder: "Easy Apply form" },
+      shot: {
+        /* Filename says job-description; the artwork is the apply flow.
+           Alt describes what is actually on screen. */
+        src: "/assets/steps/job-description.png",
+        w: 1314,
+        h: 1895,
+        alt: "The Easy Apply flow: the role being applied for, two pre-qualification questions, then a details form with name, email, phone, location, CV upload and a submit button.",
+        loose: true,
+      },
     },
     {
       n: "03",
