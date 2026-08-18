@@ -88,7 +88,7 @@ const FeatureBento = () => (
                 arrangement. */}
             <div className="grid content-start gap-10">
               <Reveal variant="rise">
-                <div className="grain bg-05 rounded-panel p-8 lg:p-10">
+                <div className="grain bg-09 rounded-panel p-8 lg:p-10">
                   <ScreenCard
                     ground="none"
                     chrome={false}
