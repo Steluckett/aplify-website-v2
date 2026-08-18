@@ -85,7 +85,7 @@ export const ScreenCard = ({
   return (
     <Reveal variant="rise" className={className}>
       <div className={`${groundClass} rounded-panel ${padClass}`}>
-        <div className="frame">
+        <div className={`frame ${chrome ? "" : "frame-bare"}`}>
           {chrome && url ? (
             <div className="frame-bar">
               <div className="frame-dots" aria-hidden>
@@ -100,7 +100,7 @@ export const ScreenCard = ({
           ) : null}
 
           <div
-            className="screen relative w-full overflow-hidden bg-white"
+            className={`screen relative w-full ${chrome ? "overflow-hidden bg-white" : ""}`}
             style={{ aspectRatio: children ? undefined : ratio } as CSSProperties}
           >
             {children ?? null}

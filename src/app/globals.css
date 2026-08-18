@@ -961,6 +961,21 @@ body {
     overflow: hidden;
   }
 
+  /* Chrome-less artwork. Both fills go transparent so a PNG with soft or
+     semi-transparent edges blends into the wash instead of being cut out
+     against a hard rectangle — the fills exist to back a screenshot that
+     fills its box edge to edge, and artwork like this does not.
+     `overflow: hidden` also goes: it would clip the very edge pixels the
+     transparency was drawn for. The shadow stays. */
+  .frame-bare {
+    background: transparent;
+    overflow: visible;
+  }
+
+  .frame-bare > .screen {
+    background: transparent;
+  }
+
   .frame-bar {
     display: flex;
     align-items: center;
