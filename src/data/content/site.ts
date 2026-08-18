@@ -133,7 +133,18 @@ export const capabilities = {
       title: "Kept informed",
       body: "Every status change sends a branded email in your own voice, so a candidate is never left guessing whether anyone read their application. Silence is the single most common reason people say they would not apply to an employer twice.",
       points: ["Branded templates", "Every status change", "Your tone of voice"],
-      shot: { url: "app.aplify.co.uk/emails", placeholder: "Candidate status email" },
+      shot: {
+        src: "/assets/steps/application-received.png",
+        alt: "The confirmation screen after applying: a green tick, \u201cApplication received\u201d, a line telling Jamie the application is with the hiring team and a confirmation email is on its way, and buttons to browse more roles or track the application.",
+        loose: true,
+        w: 1662,
+        h: 1307,
+        /* Landscape, so it does not run off the card the way the two portrait
+           shots do — it is centred and shown whole instead. A confirmation is
+           a complete moment; cropping it would undercut the point. */
+        widthPct: 88,
+        fit: "center" as const,
+      },
     },
   ],
 };

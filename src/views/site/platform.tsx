@@ -217,7 +217,11 @@ const Capabilities = () => (
                         height={step.shot.h}
                         sizes="(max-width: 1024px) 80vw, 520px"
                         style={{ width: `${step.shot.widthPct}%` }}
-                        className="absolute top-10 left-1/2 -translate-x-1/2 drop-shadow-[0_24px_60px_rgba(16,19,26,0.28)]"
+                        className={`absolute left-1/2 -translate-x-1/2 drop-shadow-[0_24px_60px_rgba(16,19,26,0.28)] ${
+                          "fit" in step.shot && step.shot.fit === "center"
+                            ? "top-1/2 -translate-y-1/2"
+                            : "top-10"
+                        }`}
                       />
                     ) : (
                       <ScreenCard
