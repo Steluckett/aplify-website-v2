@@ -1,24 +1,26 @@
 /**
  * Blob background reference.
  *
- * Ten numbered grounds built from our own palette, in the manner of the
+ * Fifteen numbered grounds built from our own palette, in the manner of the
  * Workable reference: three soft radial fields over a base, finished with
  * film grain. Ask for one by number — "use 04 behind the security section".
  *
  * Every contrast figure printed here was computed at the WORST point of the
  * background, not an average: where all three blobs overlap on a light
  * ground, and where none of them reach on a dark one. An average would say
- * all ten are fine, and three of them are not.
+ * they are all fine, and three of them are not.
  *
  * Server component — nothing here is interactive.
  */
 
-type Band = "soft" | "vivid" | "deep";
+type Band = "soft" | "vivid" | "deep" | "deep-card";
 
 interface Ground {
   id: string;
   name: string;
   band: Band;
+  /** The light ground it is derived from, for the deep-card set. */
+  parent?: string;
   /** Contrast at the background's worst point. */
   heading: number;
   body: number;
@@ -117,12 +119,66 @@ const GROUNDS: Ground[] = [
     white: 18.69,
     note: "Brand navy with jewel fields. The page's dark moment, if it takes one.",
   },
+  {
+    id: "11",
+    name: "Meadow deep",
+    band: "deep-card",
+    parent: "02 Meadow",
+    heading: 1.33,
+    body: 1.1,
+    white: 6.1,
+    note: "Mint and sky over deep teal. The coolest and quietest of the five.",
+  },
+  {
+    id: "12",
+    name: "Dawn deep",
+    band: "deep-card",
+    parent: "01 Dawn",
+    heading: 1.18,
+    body: 1.05,
+    white: 7.83,
+    note: "Brand sky and violet over navy. The closest to the product's own colour.",
+  },
+  {
+    id: "13",
+    name: "Blush deep",
+    band: "deep-card",
+    parent: "03 Blush",
+    heading: 1.21,
+    body: 1.07,
+    white: 8.11,
+    note: "Amber and rose over plum. The only warm ground in the deep set.",
+  },
+  {
+    id: "14",
+    name: "Spectrum deep",
+    band: "deep-card",
+    parent: "06 Spectrum",
+    heading: 1.21,
+    body: 1.06,
+    white: 8.22,
+    note: "The loudest of the deep set — sky, violet and rose together.",
+  },
+  {
+    id: "15",
+    name: "Orchard deep",
+    band: "deep-card",
+    parent: "05 Orchard",
+    heading: 1.31,
+    body: 1.09,
+    white: 7.47,
+    note: "Amber and teal over bronze. Reads more muted than its light parent where the fields overlap.",
+  },
 ];
 
 const BAND_COPY: Record<Band, { label: string; verdict: string }> = {
   soft: { label: "Soft", verdict: "Text safe — headings and body copy" },
   vivid: { label: "Vivid", verdict: "Cards only — body copy fails on it" },
   deep: { label: "Deep", verdict: "White ink only — pure white, never faded" },
+  "deep-card": {
+    label: "Deep · card",
+    verdict: "Built for card grounds — white ink also clears",
+  },
 };
 
 const Metric = ({ label, value, pass }: { label: string; value: number; pass: boolean }) => (
@@ -138,7 +194,7 @@ const Metric = ({ label, value, pass }: { label: string; value: number; pass: bo
 );
 
 const Swatch = ({ g }: { g: Ground }) => {
-  const deep = g.band === "deep";
+  const deep = g.band === "deep" || g.band === "deep-card";
   return (
     <section className="tile overflow-hidden rounded-panel">
       {/* The ground itself, shown at a size you can actually judge, with a
@@ -170,13 +226,18 @@ const Swatch = ({ g }: { g: Ground }) => {
 
         <div className="tile mt-8 w-fit rounded-sm px-5 py-4">
           <p className="text-sm font-medium text-ink">A card on the ground</p>
-          <p className="mt-1 text-xs text-ink-label">Always safe, on any of the ten.</p>
+          <p className="mt-1 text-xs text-ink-label">Always safe, on any of the fifteen.</p>
         </div>
       </div>
 
       <div className="p-6">
         <p className="text-sm font-medium">{BAND_COPY[g.band].verdict}</p>
         <p className="mt-2 text-xs leading-[1.6] text-ink-label">{g.note}</p>
+        {g.parent ? (
+          <p className="mt-2 text-xs text-ink-label">
+            Deep counterpart of <span className="text-ink">{g.parent}</span>.
+          </p>
+        ) : null}
         <div className="mt-4">
           <Metric label="Heading ink" value={g.heading} pass={g.heading >= 4.5} />
           <Metric label="Body ink" value={g.body} pass={g.body >= 4.5} />
@@ -197,7 +258,8 @@ export const BackgroundsView = () => (
       <p className="eyebrow">Reference</p>
       <h1 className="display lines-tight mt-5 text-h1">Blob grounds</h1>
       <p className="mt-6 text-lead leading-[1.6] text-ink-body">
-        Ten numbered backgrounds from our own palette. Ask for one by number.
+        Fifteen numbered backgrounds from our own palette. Ask for one by
+        number.
         Every figure below is measured at the background&rsquo;s worst point —
         where all three fields overlap on a light ground, and where none of them
         reach on a dark one.

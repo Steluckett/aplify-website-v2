@@ -1050,6 +1050,55 @@ body {
       #041324;
   }
 
+  /* The deep counterparts of the light five, added for CARD grounds. Same
+     hue families, inverted construction: the base is now the darkest point
+     and the blobs LIGHTEN it, so the worst case for white ink is where all
+     three overlap rather than where none reach. Measured there:
+       11 Meadow deep    6.10    13 Blush deep     8.11    15 Orchard deep 7.47
+       12 Dawn deep      7.83    14 Spectrum deep  8.22
+     All clear white comfortably, so a heading on one of these is safe even
+     though they are meant to sit under a card. */
+
+  .bg-11 {
+    background:
+      radial-gradient(64% 62% at 6% 8%, rgb(13 148 136 / 0.62), transparent 62%),
+      radial-gradient(58% 56% at 96% 0%, rgb(8 121 184 / 0.46), transparent 62%),
+      radial-gradient(62% 58% at 50% 106%, rgb(80 68 214 / 0.3), transparent 62%),
+      #08312f;
+  }
+
+  .bg-12 {
+    background:
+      radial-gradient(66% 62% at 4% 2%, rgb(8 121 184 / 0.58), transparent 62%),
+      radial-gradient(60% 58% at 98% 10%, rgb(80 68 214 / 0.52), transparent 62%),
+      radial-gradient(62% 58% at 52% 106%, rgb(59 63 176 / 0.34), transparent 62%),
+      #0d1f4d;
+  }
+
+  .bg-13 {
+    background:
+      radial-gradient(62% 60% at 2% 6%, rgb(180 83 9 / 0.5), transparent 62%),
+      radial-gradient(58% 56% at 96% 2%, rgb(190 24 93 / 0.46), transparent 62%),
+      radial-gradient(62% 58% at 54% 106%, rgb(80 68 214 / 0.34), transparent 62%),
+      #3d1730;
+  }
+
+  .bg-14 {
+    background:
+      radial-gradient(66% 62% at 6% 0%, rgb(8 121 184 / 0.56), transparent 62%),
+      radial-gradient(60% 58% at 94% 12%, rgb(80 68 214 / 0.54), transparent 62%),
+      radial-gradient(60% 56% at 48% 106%, rgb(190 24 93 / 0.34), transparent 62%),
+      #2b1657;
+  }
+
+  .bg-15 {
+    background:
+      radial-gradient(62% 60% at 2% 4%, rgb(180 83 9 / 0.54), transparent 62%),
+      radial-gradient(58% 56% at 98% 6%, rgb(13 148 136 / 0.44), transparent 62%),
+      radial-gradient(62% 58% at 52% 106%, rgb(109 40 217 / 0.32), transparent 62%),
+      #3a2708;
+  }
+
   /* Film grain. Very fine, very low opacity — without it a large gradient
      field bands visibly on 8-bit displays and reads as flat plastic. Pure
      CSS, no asset, and it sits above the colour but below content. */
