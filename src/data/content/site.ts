@@ -95,6 +95,8 @@ export const capabilities = {
         src: "/assets/steps/search-mobile.png",
         w: 585,
         h: 1069,
+        /* A phone is narrow; more than this and it reads as a tablet. */
+        widthPct: 60,
         alt: "Job search on a phone: keyword and location fields, a search button, 48 roles sorted by distance, and two job cards with salary and category.",
         loose: true,
       },
@@ -111,6 +113,8 @@ export const capabilities = {
         src: "/assets/steps/job-description.png",
         w: 1314,
         h: 1895,
+        /* A full form needs the width to stay legible. */
+        widthPct: 80,
         alt: "The Easy Apply flow: the role being applied for, two pre-qualification questions, then a details form with name, email, phone, location, CV upload and a submit button.",
         loose: true,
       },

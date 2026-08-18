@@ -215,8 +215,9 @@ const Capabilities = () => (
                         alt={step.shot.alt}
                         width={step.shot.w}
                         height={step.shot.h}
-                        sizes="(max-width: 1024px) 60vw, 400px"
-                        className="absolute top-10 left-1/2 w-[60%] -translate-x-1/2 drop-shadow-[0_24px_60px_rgba(16,19,26,0.28)]"
+                        sizes="(max-width: 1024px) 80vw, 520px"
+                        style={{ width: `${step.shot.widthPct}%` }}
+                        className="absolute top-10 left-1/2 -translate-x-1/2 drop-shadow-[0_24px_60px_rgba(16,19,26,0.28)]"
                       />
                     ) : (
                       <ScreenCard
