@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { CSSProperties, ReactNode } from "react";
 
 import { Reveal } from "@/components/ui/reveal";
@@ -9,8 +10,13 @@ export interface ScreenCardProps {
   url?: string;
   /** Aspect ratio of the screen area, e.g. "16 / 10". */
   ratio?: string;
-  /** Live UI. Omit to render the designed placeholder instead. */
+  /** Live UI. Omit to render an image, or the designed placeholder. */
   children?: ReactNode;
+  /** A finished image, e.g. "/assets/hero/hero.png". Beats the placeholder. */
+  src?: string;
+  /** Describe what the screen SHOWS, not that it is a screenshot. Empty
+   *  string is correct only when the shot is purely decorative. */
+  alt?: string;
   /** Placeholder caption — what will eventually sit here. */
   placeholder?: string;
   /** The card behind the frame. `wash` is the spectrum; the pastels are for
@@ -51,6 +57,8 @@ export const ScreenCard = ({
   url,
   ratio = "16 / 10",
   children,
+  src,
+  alt,
   placeholder = "Product shot",
   ground = "wash",
   pad = "tight",
@@ -87,7 +95,19 @@ export const ScreenCard = ({
             className="screen relative w-full overflow-hidden bg-white"
             style={{ aspectRatio: children ? undefined : ratio } as CSSProperties}
           >
-            {children ?? (
+            {children ?? null}
+
+            {!children && src ? (
+              <Image
+                src={src}
+                alt={alt ?? ""}
+                fill
+                sizes="(max-width: 1024px) 100vw, 1100px"
+                className="object-cover"
+              />
+            ) : null}
+
+            {!children && !src ? (
               <div className="placeholder absolute inset-0">
                 <span className="icon-chip" aria-hidden>
                   <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
@@ -111,7 +131,7 @@ export const ScreenCard = ({
                 <p className="text-ui-sm font-medium text-ink">{placeholder}</p>
                 <p className="text-ui-xs text-ink-label">Image to follow</p>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
