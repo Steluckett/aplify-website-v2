@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { Reveal } from "@/components/ui/reveal";
 import { ScreenCard } from "@/components/ui/screen-card";
 import { SectionIntro } from "@/components/ui/section-intro";
@@ -169,7 +171,10 @@ const Capabilities = () => (
           const shotFirst = i % 2 === 1;
           return (
             <Reveal key={step.n} variant="up">
-              <article className="card-quiet rounded-panel p-5 sm:p-8 lg:p-10">
+              {/* overflow-hidden so a loose shot can run off its gradient
+                  card without landing on the next step. It bleeds past the
+                  colour and is cut by the row instead. */}
+              <article className="card-quiet relative overflow-hidden rounded-panel p-5 sm:p-8 lg:p-10">
                 <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14">
                   <div className={shotFirst ? "lg:order-2" : ""}>
                     <p className="figure text-h2 text-ink/25">{step.n}</p>
@@ -190,18 +195,37 @@ const Capabilities = () => (
                       inside grey panels, where a pale ground has nothing to
                       push against. All four are image-only surfaces — the
                       frame and placeholder carry their own fills, so no text
-                      ever lands on the gradient. */}
+                      ever lands on the gradient.
+
+                      A `loose` shot has no browser frame and is anchored to
+                      the card's foot, running past it. The card therefore has
+                      a fixed height and the image is taken out of flow, since
+                      an in-flow image would simply make the card taller
+                      instead of bleeding out of it. */}
                   <div
-                    className={`grain bg-${step.bg} rounded-panel p-6 sm:p-8 ${
-                      shotFirst ? "lg:order-1" : ""
-                    }`}
+                    className={`grain bg-${step.bg} relative rounded-panel ${
+                      "loose" in step.shot && step.shot.loose
+                        ? "h-[26rem] sm:h-[30rem]"
+                        : "p-6 sm:p-8"
+                    } ${shotFirst ? "lg:order-1" : ""}`}
                   >
-                    <ScreenCard
-                      ground="none"
-                      url={step.shot.url}
-                      placeholder={step.shot.placeholder}
-                      ratio="4 / 3"
-                    />
+                    {"src" in step.shot && step.shot.src ? (
+                      <Image
+                        src={step.shot.src}
+                        alt={step.shot.alt}
+                        width={585}
+                        height={1069}
+                        sizes="(max-width: 1024px) 60vw, 400px"
+                        className="absolute top-10 left-1/2 w-[60%] -translate-x-1/2 drop-shadow-[0_24px_60px_rgba(16,19,26,0.28)]"
+                      />
+                    ) : (
+                      <ScreenCard
+                        ground="none"
+                        url={step.shot.url}
+                        placeholder={step.shot.placeholder}
+                        ratio="4 / 3"
+                      />
+                    )}
                   </div>
                 </div>
               </article>

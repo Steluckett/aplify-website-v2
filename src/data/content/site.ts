@@ -89,7 +89,13 @@ export const capabilities = {
       title: "Find the right job",
       body: "Full-text search across every live role, narrowed by region, salary band and contract type. Candidates who only know the town they can get to use postcode search with a radius, or the map — which is often the only filter that matters when the job is shift work.",
       points: ["Keyword and salary filtering", "Postcode search with radius", "Interactive map"],
-      shot: { url: "yourcompany.co.uk/careers", placeholder: "Search and filters" },
+      shot: {
+        /* Loose artwork, no browser frame — it is a phone screen, and a
+           browser bar around a phone would be a lie about what it is. */
+        src: "/assets/steps/search-mobile.png",
+        alt: "Job search on a phone: keyword and location fields, a search button, 48 roles sorted by distance, and two job cards with salary and category.",
+        loose: true,
+      },
     },
     {
       n: "02",
