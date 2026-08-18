@@ -13,7 +13,7 @@ import { payoff, story } from "@/data/content/site";
  * are the whole argument, and nobody has to read a paragraph to get it.
  */
 export const Story = () => (
-  <section id="problem" className="band-white py-24 lg:py-32">
+  <section id="problem" className="band-white py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={story.eyebrow}
@@ -79,7 +79,7 @@ export const Story = () => (
  * as marks than as sentences.
  */
 export const Payoff = () => (
-  <section id="payoff" className="py-24 lg:py-32">
+  <section id="payoff" className="py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={payoff.eyebrow}

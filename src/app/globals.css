@@ -723,10 +723,19 @@ body {
      Declared BEFORE the data-tint rules on purpose: those carry equal
      specificity, so source order is what lets a classification chip keep its
      own colour here. */
-  .wash > .chip,
+  .wash .chip,
   .wash-soft .chip,
   .inset-glass .chip {
     background: var(--raw-surface-tile);
+  }
+
+  /* ...but a chip back on a WHITE inset returns to the neutral wash. The
+     white pill only makes sense against tint; on white it would vanish.
+     Equal specificity to the rule above, so source order decides — and the
+     data-tint rules below come last so classification keeps its colour on
+     either ground. */
+  .inset-tile .chip {
+    background: var(--surface-chip);
   }
 
   .chip[data-state]::before {

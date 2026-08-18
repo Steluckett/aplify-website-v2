@@ -27,7 +27,7 @@ import { JobSearchDemo } from "./demos/job-search";
  */
 export const Product = () => (
   <>
-    <section id="job-search" className="band-white py-24 lg:py-32">
+    <section id="job-search" className="band-white py-26">
       <div className="shell">
         <SectionIntro
           eyebrow={demos.jobSearch.eyebrow}
@@ -49,7 +49,7 @@ export const Product = () => (
       </div>
     </section>
 
-    <section id="ai-enrichment" className="py-24 lg:py-32">
+    <section id="ai-enrichment" className="py-26">
       <div className="shell">
         <SectionIntro
           eyebrow={demos.aiEnrichment.eyebrow}
@@ -61,7 +61,7 @@ export const Product = () => (
       </div>
     </section>
 
-    <section id="dashboard" className="band-white py-24 lg:py-32">
+    <section id="dashboard" className="band-white py-26">
       <div className="shell">
         <SectionIntro
           eyebrow={demos.dashboard.eyebrow}

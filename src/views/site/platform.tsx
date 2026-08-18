@@ -49,7 +49,7 @@ const Icon = ({ name }: { name: string }) => (
  * than treating four things as equals.
  */
 const FeatureBento = () => (
-  <section id="platform" className="py-24 lg:py-32">
+  <section id="platform" className="py-26">
     <div className="shell">
       <Reveal variant="fade">
         <div className="band-white rounded-panel px-6 py-16 shadow-group sm:px-12 lg:px-16 lg:py-20">
@@ -60,7 +60,7 @@ const FeatureBento = () => (
             standfirst={featureBento.standfirst}
           />
 
-          <div className="mt-16 grid grid-cols-1 gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-[1.15fr_0.85fr]">
             <Reveal variant="rise">
               <article className="wash-soft flex h-full flex-col rounded-panel p-8 lg:p-10">
                 <h3 className="display text-h3">{featureBento.lead.title}</h3>
@@ -78,7 +78,7 @@ const FeatureBento = () => (
               </article>
             </Reveal>
 
-            <div className="grid grid-cols-1 gap-5">
+            <div className="grid grid-cols-1 gap-10">
               {featureBento.items.map((item, i) => (
                 <Reveal key={item.title} variant="up" delay={i * 90}>
                   <article className="flex h-full flex-col justify-center rounded-panel bg-surface-chip p-8 lg:p-10">
@@ -119,7 +119,7 @@ const FeatureBento = () => (
  * surfaces inside one panel, which is the layering the whole page runs on.
  */
 const Capabilities = () => (
-  <section id="candidates" className="band-white py-24 lg:py-32">
+  <section id="candidates" className="band-white py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={capabilities.eyebrow}
@@ -127,7 +127,7 @@ const Capabilities = () => (
         standfirst={capabilities.standfirst}
       />
 
-      <div className="mt-16 space-y-5">
+      <div className="mt-16 space-y-10">
         {capabilities.steps.map((step, i) => {
           const shotFirst = i % 2 === 1;
           return (

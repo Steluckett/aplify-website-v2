@@ -17,7 +17,7 @@ import { howItWorks } from "@/data/content/site";
  * the last two.
  */
 export const HowItWorks = () => (
-  <section id="how-it-works" className="py-24 lg:py-32">
+  <section id="how-it-works" className="py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={howItWorks.eyebrow}
@@ -26,7 +26,7 @@ export const HowItWorks = () => (
         standfirst={howItWorks.standfirst}
       />
 
-      <div className="mt-16 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
         {howItWorks.stages.map((stage, i) => (
           <Reveal key={stage.n} variant="up" delay={(i % 3) * 80}>
             <article className="tile flex h-full flex-col rounded-panel p-8 lg:p-10">

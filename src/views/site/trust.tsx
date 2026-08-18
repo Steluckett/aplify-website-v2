@@ -6,7 +6,7 @@ import { integrations, proof, roadmap, security, testimonials } from "@/data/con
 
 /** Security — the pastel four, on white so the tints separate. */
 const Security = () => (
-  <section id="security" className="band-white py-24 lg:py-32">
+  <section id="security" className="band-white py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={security.eyebrow}
@@ -14,7 +14,7 @@ const Security = () => (
         linesSm={security.linesSm}
         standfirst={security.standfirst}
       />
-      <div className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-16 grid grid-cols-1 gap-10 sm:grid-cols-2 xl:grid-cols-4">
         {security.points.map((point, i) => (
           <Reveal key={point.title} variant="up" delay={i * 80}>
             <article className={`pastel-${point.ground} h-full rounded-panel p-8 lg:p-10`}>
@@ -33,7 +33,7 @@ const Security = () => (
  * than bullets — the same information, with somewhere for the eye to rest.
  */
 const Integrations = () => (
-  <section id="integrations" className="py-24 lg:py-32">
+  <section id="integrations" className="py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={integrations.eyebrow}
@@ -70,14 +70,14 @@ const Integrations = () => (
 
 /** Roadmap — three rows, quiet on purpose. It is a promise, not a feature. */
 const Roadmap = () => (
-  <section id="roadmap" className="band-white py-24 lg:py-32">
+  <section id="roadmap" className="band-white py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={roadmap.eyebrow}
         lines={roadmap.lines}
         standfirst={roadmap.standfirst}
       />
-      <div className="mt-14 grid grid-cols-1 gap-5 lg:grid-cols-3">
+      <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-3">
         {roadmap.items.map((item, i) => (
           <Reveal key={item.when} variant="up" delay={i * 80}>
             <article className="h-full rounded-panel bg-surface-chip p-8">
@@ -96,7 +96,7 @@ const Roadmap = () => (
  * surface — this is the dark moment, and there is exactly one.
  */
 const Proof = () => (
-  <section id="proof" className="py-24 lg:py-32">
+  <section id="proof" className="py-26">
     <div className="shell">
       <Reveal variant="rise">
         <div className="dark-moment px-8 py-20 text-center lg:py-28">
@@ -126,14 +126,14 @@ const Proof = () => (
  * display register at card scale, attribution quiet beneath a rule.
  */
 const Testimonials = () => (
-  <section id="testimonials" className="band-white py-24 lg:py-32">
+  <section id="testimonials" className="band-white py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={testimonials.eyebrow}
         lines={testimonials.lines}
         linesSm={testimonials.linesSm}
       />
-      <div className="mt-16 grid grid-cols-1 gap-5 lg:grid-cols-3">
+      <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-3">
         {testimonials.quotes.map((q, i) => (
           <Reveal key={q.org} variant="up" delay={i * 90}>
             <figure className="wash-soft flex h-full flex-col rounded-panel p-8 lg:p-10">

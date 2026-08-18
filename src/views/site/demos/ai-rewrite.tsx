@@ -69,9 +69,12 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
 
   return (
     <div className={className}>
-      {/* Wash + inset is law. Glass, not white — the control row is pills. */}
+      {/* Wash + inset, with the WHITE CARDS as the inset rather than a glass
+          panel holding them. The rule exists so content is never laid straight
+          onto the wash; two job cards already satisfy it, and wrapping them in
+          a second surface was a box inside a box. */}
       <div className="wash wash-lg rounded-panel">
-        <div className="inset-glass p-4 sm:p-5">
+        <div>
           <div className="grid gap-3 md:grid-cols-2">
             {aiRewriteContent.jobs.map((job, index) => (
               <RewriteCard

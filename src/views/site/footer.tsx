@@ -19,7 +19,7 @@ import { footer } from "@/data/content/site";
  */
 export const SiteFooter = () => (
   <>
-    <section id="demo" className="py-24 lg:py-32">
+    <section id="demo" className="py-26">
       <div className="shell">
         <SectionIntro
           lines={[...footer.cta.lines]}
