@@ -186,9 +186,11 @@ const Capabilities = () => (
                     </ul>
                   </div>
 
-                  {/* Each shot gets its own light blob ground. They are all
-                      "image only" surfaces — no copy sits on them — so even
-                      04, whose body ink fails, is safe here. */}
+                  {/* Each shot gets its own DEEP blob ground. These rows sit
+                      inside grey panels, where a pale ground has nothing to
+                      push against. All four are image-only surfaces — the
+                      frame and placeholder carry their own fills, so no text
+                      ever lands on the gradient. */}
                   <div
                     className={`grain bg-${step.bg} rounded-panel p-6 sm:p-8 ${
                       shotFirst ? "lg:order-1" : ""

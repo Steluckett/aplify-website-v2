@@ -78,12 +78,14 @@ export const capabilities = {
   standfirst:
     "The whole candidate journey happens on your own site, in your own brand — and every step of it is a place people usually drop out.",
   /** Rendered as alternating copy/image rows, so each step gets a shot.
-   *  `bg` is the blob ground behind that row's shot — four different light
-   *  ones, so the four steps read as four moments rather than a list. */
+   *  `bg` is the blob ground behind that row's shot. These are the DEEP
+   *  card grounds, not the light ones: each row sits inside a grey panel,
+   *  and a pale ground inside grey has nothing to push against. Dark
+   *  grounds also let a light screenshot read as lit rather than pasted. */
   steps: [
     {
       n: "01",
-      bg: "01",
+      bg: "12",
       title: "Find the right job",
       body: "Full-text search across every live role, narrowed by region, salary band and contract type. Candidates who only know the town they can get to use postcode search with a radius, or the map — which is often the only filter that matters when the job is shift work.",
       points: ["Keyword and salary filtering", "Postcode search with radius", "Interactive map"],
@@ -91,7 +93,7 @@ export const capabilities = {
     },
     {
       n: "02",
-      bg: "02",
+      bg: "11",
       title: "Apply without leaving",
       body: "The application form is on the page, not behind a redirect. Pre-qualification runs first, so anyone who cannot be offered the role finds out in two questions rather than after twenty minutes of typing — and each company chooses which fields it actually needs.",
       points: ["No ATS redirect", "No account to create", "Pre-qualification first"],
@@ -99,7 +101,7 @@ export const capabilities = {
     },
     {
       n: "03",
-      bg: "03",
+      bg: "13",
       title: "Register for events",
       body: "Open days and assessment centres get the same low-friction flow on their own tab, with places tracked and attendance recorded against the candidate afterwards — so an event stops being a spreadsheet that lives on somebody's desktop.",
       points: ["Own tab, same flow", "Places tracked", "Attendance recorded"],
@@ -107,7 +109,7 @@ export const capabilities = {
     },
     {
       n: "04",
-      bg: "04",
+      bg: "14",
       title: "Kept informed",
       body: "Every status change sends a branded email in your own voice, so a candidate is never left guessing whether anyone read their application. Silence is the single most common reason people say they would not apply to an employer twice.",
       points: ["Branded templates", "Every status change", "Your tone of voice"],
