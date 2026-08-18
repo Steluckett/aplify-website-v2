@@ -36,8 +36,18 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
+  // iCloud Drive syncs this project (it lives under ~/Desktop, and Desktop
+  // sync is on). `.next` is rewritten on every build, so iCloud regularly
+  // loses the race and writes conflict copies named "<file> 2.ts". Because
+  // `include` pulls in .next/types/**, one of those duplicates is enough to
+  // fail the whole typecheck with a duplicate-identifier error that points at
+  // a file nobody wrote. Excluding the pattern makes the build survive it.
+  // The real fix is to move the repo off the synced Desktop.
   "exclude": [
     "node_modules",
-    "reference"
+    "reference",
+    "**/* 2.ts",
+    "**/* 2.tsx",
+    "**/* [0-9].ts"
   ]
 }
