@@ -51,7 +51,9 @@ const ICONS: Record<string, React.ReactNode> = {
 
 const Icon = ({ name }: { name: string }) => (
   <span className="icon-chip" aria-hidden>
-    <svg viewBox="0 0 24 24" className="h-5 w-5">
+    {/* fill="none" is load bearing: without it any CLOSED path in the set
+        fills solid black. The line-only icons looked fine and hid it. */}
+    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
       {ICONS[name]}
     </svg>
   </span>
