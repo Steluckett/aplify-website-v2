@@ -70,9 +70,11 @@ const FeatureBento = () => (
                 <div className="mt-10">
                   <ScreenCard
                     ground="none"
-                    url={featureBento.lead.shot.url}
-                    placeholder={featureBento.lead.shot.placeholder}
-                    ratio="16 / 10"
+                    chrome={false}
+                    src={featureBento.lead.shot.src}
+                    alt={featureBento.lead.shot.alt}
+                    /* The artwork's own 1662x1307, so nothing is cropped. */
+                    ratio="1662 / 1307"
                   />
                 </div>
               </article>

@@ -46,7 +46,10 @@ export const featureBento = {
   lead: {
     title: "Feeds cleaned on every import",
     body: "Salaries normalised, titles tidied, regions standardised, descriptions rewritten to your tone of voice. No spreadsheets, no manual passes.",
-    shot: { url: "app.aplify.co.uk/feeds", placeholder: "Feed import and mapping" },
+    shot: {
+      src: "/assets/platform/feed-import.png",
+      alt: "Aplify's feed mapping screen: a progress strip reading feed added, structure analysed, mappings reviewed and imports, above a table mapping source fields such as job_id and location_postcode onto Aplify's own fields.",
+    },
   },
   /** The stacked column beside it. */
   items: [
