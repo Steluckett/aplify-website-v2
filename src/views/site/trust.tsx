@@ -41,7 +41,13 @@ const Integrations = () => (
         linesSm={integrations.linesSm}
         standfirst={integrations.standfirst}
       />
-      <Reveal variant="rise" className="mt-16">
+      <Reveal variant="up" className="mt-10">
+        <p className="mx-auto max-w-[46rem] text-center text-body leading-[1.6] text-ink-body">
+          {integrations.lead}
+        </p>
+      </Reveal>
+
+      <Reveal variant="rise" className="mt-12">
         <ul className="tile grid grid-cols-1 gap-x-12 rounded-panel px-8 py-4 sm:grid-cols-2 lg:px-12">
           {integrations.items.map((item) => (
             <li
@@ -142,7 +148,7 @@ const Testimonials = () => (
         {testimonials.quotes.map((q, i) => (
           <Reveal key={q.org} variant="up" delay={i * 90}>
             <figure className="wash-soft flex h-full flex-col rounded-panel p-8 lg:p-10">
-              <blockquote className="display text-h4 leading-[1.35] text-ink-heading">
+              <blockquote className="text-lead leading-[1.5] text-ink-heading">
                 “{q.quote}”
               </blockquote>
               <figcaption className="mt-auto flex items-center gap-3 border-t border-hairline pt-6">

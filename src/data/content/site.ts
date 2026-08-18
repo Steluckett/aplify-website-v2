@@ -361,24 +361,42 @@ export const integrations = {
   linesSm: ["Works with", "your ATS"],
   standfirst:
     "Aplify sits between your ATS and your candidates. It does not replace anything you already run.",
+  /**
+   * Eploy is the ONE named third-party product (V2_HANDOVER §5), text only,
+   * never the logo. The wording below is the handover's, which keeps it
+   * accurate without over-promising a queue of integrations that do not exist.
+   */
+  lead: "Native ATS integration is live today with Eploy. Other systems are added as clients need them — if yours isn't connected yet, that's a conversation we have with you rather than a queue you wait in.",
   items: [
-    "Any ATS exporting XML, JSON or CSV",
-    "Native integration where an API exists",
-    "Outbound XML feeds to job boards",
-    "Calendar and event registration",
-    "Branded transactional email",
-    "Source tracking for paid channels",
+    "Ingests XML, JSON or CSV from any ATS",
+    "Applications pushed straight into your ATS",
+    "Or triaged in the Aplify dashboard",
+    "Or linked out to your existing form",
+    "Outbound XML feeds, protected by API key",
+    "Branded candidate email at every stage",
   ],
 };
 
 export const roadmap = {
   eyebrow: "Roadmap",
-  lines: ["What is coming next"],
-  standfirst: "Shipped continuously, informed by the recruiters using it.",
+  lines: ["Being built next"],
+  standfirst:
+    "Not yet available — listed so you know where the platform is going before you commit.",
+  /**
+   * EXACTLY these two. V2_HANDOVER §1 says "Only these two", and §5 says
+   * nothing outside the approved inventory may be presented as fact.
+   * Native ATS integration is SHIPPED, not roadmap — putting it here inverts
+   * a positioning decision the handover calls deal-closing.
+   */
   items: [
-    { when: "Now", what: "Feed ingestion, enrichment, search, Easy Apply, events, syndication" },
-    { when: "Next", what: "Deeper native ATS integrations and richer channel reporting" },
-    { when: "Later", what: "Candidate matching and talent-pool re-engagement" },
+    {
+      when: "Feed-level reporting",
+      what: "Reporting per feed and across multiple feeds, so customers running several can compare performance in one view rather than a feed at a time.",
+    },
+    {
+      when: "Google for Jobs",
+      what: "Structured job data so vacancies surface in Google's dedicated jobs search alongside the rest of the career site.",
+    },
   ],
 };
 
@@ -395,23 +413,32 @@ export const testimonials = {
   eyebrow: "In their words",
   lines: ["What changed for", "the teams using it"],
   linesSm: ["What changed", "for their", "teams"],
+  /**
+   * REAL, CLEARED QUOTES — verbatim from V2_HANDOVER §5, which states they are
+   * "all real, all cleared, all available as recorded voiceovers" and that
+   * "nothing outside this list may be presented as fact".
+   *
+   * Do not paraphrase these, do not write new ones, and do not attribute
+   * anything to a named company that did not come from that list. Recordings
+   * of all three are in public/testimonial_voiceovers/.
+   */
   quotes: [
     {
       quote:
-        "We stopped losing people at the handover. The application finishes where the candidate started, and that alone changed our numbers.",
-      name: "Resourcing Lead",
+        "Aplify has helped us significantly reduce application drop-out by making the whole process quicker and more accessible. More candidates are now completing their applications, giving our recruitment team a stronger pool of people to engage with.",
+      name: "Louise Mitchell",
       org: "Brandon Trust",
     },
     {
       quote:
-        "Our feed used to need a manual clean every week. Now it arrives tidy and the adverts read like we wrote them, because they do.",
-      name: "Talent Acquisition Manager",
-      org: "Cygnet",
+        "The Aplify dashboard is incredibly straightforward to use. Our recruitment team can quickly review and manage applications without unnecessary complexity, helping everyone work more efficiently and keep candidates moving through the process.",
+      name: "Ben Hopwell",
+      org: "Cygnet Group",
     },
     {
       quote:
-        "Being able to compare paid social against job boards by actual applications, not clicks, is the part our finance team cares about.",
-      name: "Head of Recruitment",
+        "Aplify makes applying for a role feel quick, simple and intuitive. Candidates can complete their application without navigating a long or complicated process, creating a much more positive experience from the very first interaction.",
+      name: "Sammi Yates",
       org: "HC-One",
     },
   ],
