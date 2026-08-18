@@ -19,7 +19,7 @@ const Security = () => (
           <Reveal key={point.title} variant="up" delay={i * 80}>
             <article className={`pastel-${point.ground} h-full rounded-panel p-8 lg:p-10`}>
               <h3 className="display text-h4">{point.title}</h3>
-              <p className="mt-3 text-body leading-[1.6] text-ink-body">{point.body}</p>
+              <p className="mt-5 text-body leading-[1.6] text-ink-body">{point.body}</p>
             </article>
           </Reveal>
         ))}
@@ -46,7 +46,7 @@ const Integrations = () => (
           {integrations.items.map((item) => (
             <li
               key={item}
-              className="flex items-center gap-4 border-b border-hairline py-5 last:border-b-0 sm:[&:nth-last-child(2)]:border-b-0"
+              className="flex items-center gap-5 border-b border-hairline py-6 last:border-b-0 sm:[&:nth-last-child(2)]:border-b-0"
             >
               <span className="icon-chip h-8 w-8" aria-hidden>
                 <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
@@ -82,7 +82,7 @@ const Roadmap = () => (
           <Reveal key={item.when} variant="up" delay={i * 80}>
             <article className="h-full rounded-panel bg-surface-chip p-8">
               <p className="eyebrow">{item.when}</p>
-              <p className="mt-4 text-body leading-[1.6] text-ink-body">{item.what}</p>
+              <p className="mt-6 text-body leading-[1.6] text-ink-body">{item.what}</p>
             </article>
           </Reveal>
         ))}

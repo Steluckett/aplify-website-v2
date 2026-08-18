@@ -26,7 +26,7 @@ export const Story = () => (
           <div className="inset-tile overflow-hidden">
             {/* Column heads say which side is which — without them the table
                 reads as two unrelated lists. */}
-            <div className="grid grid-cols-1 gap-2 border-b border-hairline px-6 py-5 sm:grid-cols-2 sm:px-8">
+            <div className="grid grid-cols-1 gap-10 border-b border-hairline px-8 py-6 sm:grid-cols-2 sm:px-10">
               <p className="eyebrow">Straight from the ATS</p>
               <p className="eyebrow">Published by Aplify</p>
             </div>
@@ -35,7 +35,7 @@ export const Story = () => (
               {story.rows.map((row) => (
                 <li
                   key={row.raw}
-                  className="grid grid-cols-1 gap-6 px-6 py-6 sm:grid-cols-2 sm:px-8"
+                  className="grid grid-cols-1 gap-10 px-8 py-8 sm:grid-cols-2 sm:px-10"
                 >
                   <div className="space-y-2">
                     <p className="text-ui-base text-ink-label line-through decoration-ink-label/40">

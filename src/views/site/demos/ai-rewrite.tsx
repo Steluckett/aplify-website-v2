@@ -75,7 +75,7 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
           a second surface was a box inside a box. */}
       <div className="wash wash-lg rounded-panel">
         <div>
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-10 md:grid-cols-2">
             {aiRewriteContent.jobs.map((job, index) => (
               <RewriteCard
                 key={job.afterTitle}
@@ -86,7 +86,7 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
             ))}
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
             <button
               type="button"
               onClick={() => setRewritten((value) => !value)}
@@ -100,7 +100,7 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
             </p>
           </div>
 
-          <ul className="mt-4 flex flex-wrap gap-2">
+          <ul className="mt-8 flex flex-wrap gap-2">
             {aiRewriteContent.capabilities.map((capability) => (
               <li key={capability}>
                 <span className="chip">{capability}</span>
@@ -153,7 +153,7 @@ const RewriteCard = ({ job, rewritten, delay }: RewriteCardProps) => {
           gridArea: "1 / 1",
         }}
         aria-hidden={rewritten}
-        className="flex flex-col p-5"
+        className="flex flex-col p-8"
       >
         <figcaption className="flex items-center gap-3">
           <span className="icon-chip h-9 w-9">
@@ -163,7 +163,7 @@ const RewriteCard = ({ job, rewritten, delay }: RewriteCardProps) => {
             {aiRewriteContent.beforeLabel}
           </span>
         </figcaption>
-        <p className="mt-4 text-ui-sm leading-[1.7] text-ink-label">{job.before}</p>
+        <p className="mt-6 text-sm leading-[1.7] text-ink-label">{job.before}</p>
       </animated.figure>
 
       <animated.figure
@@ -173,7 +173,7 @@ const RewriteCard = ({ job, rewritten, delay }: RewriteCardProps) => {
           gridArea: "1 / 1",
         }}
         aria-hidden={!rewritten}
-        className="flex flex-col p-5"
+        className="flex flex-col p-8"
       >
         <figcaption className="flex items-center gap-3">
           <span className="icon-chip h-9 w-9" data-ai>
@@ -183,10 +183,10 @@ const RewriteCard = ({ job, rewritten, delay }: RewriteCardProps) => {
             {aiRewriteContent.afterLabel}
           </span>
         </figcaption>
-        <h4 className="mt-4 text-ui-lg font-medium tracking-tight text-ink-heading">
+        <h4 className="mt-6 text-ui-lg font-medium tracking-tight text-ink-heading">
           {job.afterTitle}
         </h4>
-        <p className="mt-2 text-ui-base leading-[1.6] text-ink-body">{job.afterBody}</p>
+        <p className="mt-3 text-sm leading-[1.6] text-ink-body">{job.afterBody}</p>
         <ul className="mt-4 flex flex-wrap gap-2">
           {metaParts.map((part, index) => (
             <li key={part}>

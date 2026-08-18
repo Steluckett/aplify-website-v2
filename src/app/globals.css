@@ -198,8 +198,25 @@
   --raw-leading-display: 1.1;
   --raw-leading-body: 1.6;
 
-  /* --- Space. The dashboard's eight steps, plus two section-scale steps the
-     marketing register needs and a tool never does. */
+  /* --- Space.
+     THE PAGE'S SPACING RULE, measured off workable.com at 1440 and applied
+     everywhere outside a `.screen`:
+
+       104px  between sections          (py-26, one value — no lg: step)
+        64px  section intro to content  (mt-16)
+        40px  between cards in a grid   (gap-10)
+        32px  card padding, and between groups inside a card
+        24px  between a heading and its copy
+        16px  between tightly-bound lines (a label and its value)
+
+     The dashboard is denser than all of this ON PURPOSE — a recruiter sits in
+     it all day and wants more on screen. A visitor reads this page once, so
+     it can afford air. When something here feels cramped the answer is almost
+     always that it is still carrying dashboard spacing; check whether it sits
+     inside `.screen`, because that is the only place the tight values belong.
+
+     The dashboard's eight steps, plus two section-scale steps the marketing
+     register needs and a tool never does. */
   --raw-space-1: 0.25rem;
   --raw-space-2: 0.5rem;
   --raw-space-3: 0.75rem;

@@ -64,7 +64,7 @@ const FeatureBento = () => (
             <Reveal variant="rise">
               <article className="wash-soft flex h-full flex-col rounded-panel p-8 lg:p-10">
                 <h3 className="display text-h3">{featureBento.lead.title}</h3>
-                <p className="mt-4 max-w-[34rem] text-body leading-[1.6] text-ink-body">
+                <p className="mt-6 max-w-[34rem] text-body leading-[1.6] text-ink-body">
                   {featureBento.lead.body}
                 </p>
                 <div className="mt-10">
@@ -82,11 +82,11 @@ const FeatureBento = () => (
               {featureBento.items.map((item, i) => (
                 <Reveal key={item.title} variant="up" delay={i * 90}>
                   <article className="flex h-full flex-col justify-center rounded-panel bg-surface-chip p-8 lg:p-10">
-                    <div className="flex items-start gap-5">
+                    <div className="flex items-start gap-6">
                       <Icon name={item.icon} />
                       <div>
                         <h3 className="display text-h4">{item.title}</h3>
-                        <p className="mt-3 text-body leading-[1.6] text-ink-body">
+                        <p className="mt-4 text-body leading-[1.6] text-ink-body">
                           {item.body}
                         </p>
                       </div>
