@@ -65,7 +65,7 @@ export const Story = () => (
       </Reveal>
 
       <Reveal variant="fade" delay={120}>
-        <p className="mx-auto mt-6 max-w-[52rem] text-center text-sm text-ink-label">
+        <p className="mx-auto mt-6 max-w-[52rem] text-center text-xs text-ink-label">
           {story.footnote}
         </p>
       </Reveal>

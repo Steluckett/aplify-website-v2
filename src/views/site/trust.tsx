@@ -114,7 +114,7 @@ const Proof = () => (
               {proof.after.value} {proof.after.label}
             </span>
           </div>
-          <p className="mt-10 text-sm text-white/45">{proof.client}</p>
+          <p className="mt-10 text-xs text-white/45">{proof.client}</p>
         </div>
       </Reveal>
     </div>

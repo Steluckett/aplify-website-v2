@@ -42,7 +42,7 @@ export const Product = () => (
           {/* The roles are invented and the page must say so — a demo that
               looks this much like the product is exactly the one that needs
               its sample data disclosed. */}
-          <p className="mx-auto mt-6 max-w-[52rem] text-center text-sm text-ink-label">
+          <p className="mx-auto mt-6 max-w-[52rem] text-center text-xs text-ink-label">
             {jobSearchContent.captions.demo}
           </p>
         </div>

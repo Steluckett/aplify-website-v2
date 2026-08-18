@@ -89,10 +89,10 @@ export const SiteFooter = () => (
           </div>
 
           <div className="relative flex flex-wrap items-center justify-between gap-4 border-t border-hairline px-8 py-6 sm:px-12">
-            <p className="text-sm text-ink-label">
+            <p className="text-xs text-ink-label">
               © {new Date().getFullYear()} Aplify. All rights reserved.
             </p>
-            <p className="text-sm text-ink-label">Built in the UK</p>
+            <p className="text-xs text-ink-label">Built in the UK</p>
           </div>
         </div>
       </Reveal>
