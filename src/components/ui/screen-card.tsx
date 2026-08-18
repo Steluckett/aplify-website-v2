@@ -8,6 +8,13 @@ import { Reveal } from "@/components/ui/reveal";
 export interface ScreenCardProps {
   /** Address-bar text. Says whose site this is running on. */
   url?: string;
+  /**
+   * Browser chrome around the screen. On for a shot that needs to say "this
+   * is running on the client's own domain"; OFF for artwork that already
+   * carries its own framing, where a fake browser bar would be a second,
+   * competing frame around it.
+   */
+  chrome?: boolean;
   /** Aspect ratio of the screen area, e.g. "16 / 10". */
   ratio?: string;
   /** Live UI. Omit to render an image, or the designed placeholder. */
@@ -55,6 +62,7 @@ const GROUND_CLASS: Record<NonNullable<ScreenCardProps["ground"]>, string> = {
  */
 export const ScreenCard = ({
   url,
+  chrome = true,
   ratio = "16 / 10",
   children,
   src,
@@ -78,7 +86,7 @@ export const ScreenCard = ({
     <Reveal variant="rise" className={className}>
       <div className={`${groundClass} rounded-panel ${padClass}`}>
         <div className="frame">
-          {url ? (
+          {chrome && url ? (
             <div className="frame-bar">
               <div className="frame-dots" aria-hidden>
                 <span />
@@ -102,8 +110,8 @@ export const ScreenCard = ({
                 src={src}
                 alt={alt ?? ""}
                 fill
-                sizes="(max-width: 1024px) 100vw, 1100px"
-                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 1400px"
+                className={chrome ? "object-cover" : "object-contain"}
               />
             ) : null}
 

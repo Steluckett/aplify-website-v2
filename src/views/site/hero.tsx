@@ -84,9 +84,11 @@ export const Hero = () => (
       <ScreenCard
         ground="wash"
         pad="generous"
-        url={hero.shot.url}
-        placeholder={hero.shot.placeholder}
-        ratio="16 / 9"
+        chrome={false}
+        src={hero.shot.src}
+        alt={hero.shot.alt}
+        /* The artwork's own 1662x1200, so nothing is cropped. */
+        ratio="1662 / 1200"
       />
     </SpringTrigger>
   </section>

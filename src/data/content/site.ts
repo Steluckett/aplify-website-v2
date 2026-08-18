@@ -28,8 +28,11 @@ export const hero = {
   cta: { label: "Book a demo", href: "#demo" },
   secondary: { label: "See it working", href: "#job-search" },
   shot: {
-    url: "yourcompany.co.uk/careers",
-    placeholder: "Job search on a client's career site",
+    src: "/assets/hero/company-home-screen-hero.png",
+    /* Describes what the artwork SHOWS. It carries the hero's argument
+       visually, so it is content rather than decoration and needs real
+       alt text. */
+    alt: "The Aplify dashboard home screen: a jobs and applications summary, a live-now panel, and setup cards.",
   },
 };
 
