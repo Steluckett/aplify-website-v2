@@ -29,6 +29,24 @@ const ICONS: Record<string, React.ReactNode> = {
       strokeLinecap="round"
     />
   ),
+  /* Import: something arriving and being caught. */
+  feed: (
+    <>
+      <path
+        d="M12 3v9m0 0l3.4-3.4M12 12L8.6 8.6"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4 15v2.5A2.5 2.5 0 006.5 20h11a2.5 2.5 0 002.5-2.5V15"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </>
+  ),
 };
 
 const Icon = ({ name }: { name: string }) => (
@@ -82,10 +100,15 @@ const FeatureBento = () => (
 
               <Reveal variant="up" delay={90}>
                 <article className="card-quiet rounded-panel p-8 lg:p-10">
-                  <h3 className="display text-h4">{featureBento.lead.title}</h3>
-                  <p className="mt-4 text-body leading-[1.6] text-ink-body">
-                    {featureBento.lead.body}
-                  </p>
+                  <div className="flex items-start gap-6">
+                    <Icon name={featureBento.lead.icon} />
+                    <div>
+                      <h3 className="display text-h4">{featureBento.lead.title}</h3>
+                      <p className="mt-4 text-body leading-[1.6] text-ink-body">
+                        {featureBento.lead.body}
+                      </p>
+                    </div>
+                  </div>
                 </article>
               </Reveal>
             </div>

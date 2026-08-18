@@ -44,6 +44,7 @@ export const featureBento = {
     "One side never touches a candidate. The other is everything a candidate ever sees. Both run off the same cleaned data.",
   /** The lead card — big, with a product shot inset into it. */
   lead: {
+    icon: "feed",
     title: "Feeds cleaned on every import",
     body: "Salaries normalised, titles tidied, regions standardised, descriptions rewritten to your tone of voice. No spreadsheets, no manual passes.",
     shot: {
