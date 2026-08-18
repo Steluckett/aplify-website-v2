@@ -22,7 +22,7 @@ export const Story = () => (
       />
 
       <Reveal variant="rise" className="mt-16">
-        <div className="wash rounded-panel">
+        <div className="wash wash-lg rounded-panel">
           <div className="inset-tile overflow-hidden">
             {/* Column heads say which side is which — without them the table
                 reads as two unrelated lists. */}

@@ -70,7 +70,7 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
   return (
     <div className={className}>
       {/* Wash + inset is law. Glass, not white — the control row is pills. */}
-      <div className="wash rounded-panel">
+      <div className="wash wash-lg rounded-panel">
         <div className="inset-glass p-4 sm:p-5">
           <div className="grid gap-3 md:grid-cols-2">
             {aiRewriteContent.jobs.map((job, index) => (

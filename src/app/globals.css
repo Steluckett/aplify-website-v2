@@ -714,6 +714,21 @@ body {
     font-size: var(--raw-text-ui-2xs);
   }
 
+  /* A chip sitting on a TINTED surface takes a white pill.
+     The neutral chip wash (#eef0f5) was chosen to read quietly on white; over
+     the spectrum wash it turns muddy and fights the colour behind it. This is
+     the same contextual-ground rule the dashboard uses — the chip's job is to
+     read as a pill, and which fill achieves that depends on what it is on.
+
+     Declared BEFORE the data-tint rules on purpose: those carry equal
+     specificity, so source order is what lets a classification chip keep its
+     own colour here. */
+  .wash > .chip,
+  .wash-soft .chip,
+  .inset-glass .chip {
+    background: var(--raw-surface-tile);
+  }
+
   .chip[data-state]::before {
     content: "";
     width: 7px;
