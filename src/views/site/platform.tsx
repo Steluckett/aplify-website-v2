@@ -61,16 +61,14 @@ const FeatureBento = () => (
           />
 
           <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-            <Reveal variant="rise">
-              <article
-                className="card-vivid flex h-full flex-col rounded-panel p-8 lg:p-10"
-                data-hue="brand"
-              >
-                <h3 className="display text-h3">{featureBento.lead.title}</h3>
-                <p className="mt-6 max-w-[34rem] text-body leading-[1.6] text-ink-body">
-                  {featureBento.lead.body}
-                </p>
-                <div className="mt-10">
+            {/* Left column mirrors the right: the shot gets its own card on a
+                deep ground, and the copy sits UNDER it as a quiet card of the
+                same family. The picture card is then surrounded by grey ones
+                rather than swallowing the copy, which is the reference's
+                arrangement. */}
+            <div className="grid content-start gap-10">
+              <Reveal variant="rise">
+                <div className="grain bg-13 rounded-panel p-8 lg:p-10">
                   <ScreenCard
                     ground="none"
                     chrome={false}
@@ -80,8 +78,17 @@ const FeatureBento = () => (
                     ratio="1662 / 1307"
                   />
                 </div>
-              </article>
-            </Reveal>
+              </Reveal>
+
+              <Reveal variant="up" delay={90}>
+                <article className="card-quiet rounded-panel p-8 lg:p-10">
+                  <h3 className="display text-h4">{featureBento.lead.title}</h3>
+                  <p className="mt-4 text-body leading-[1.6] text-ink-body">
+                    {featureBento.lead.body}
+                  </p>
+                </article>
+              </Reveal>
+            </div>
 
             <div className="grid grid-cols-1 gap-10">
               {featureBento.items.map((item, i) => (
