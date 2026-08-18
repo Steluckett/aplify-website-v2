@@ -951,6 +951,57 @@ body {
     background: var(--raw-color-pastel-amber);
   }
 
+  /* --- Vivid cards ---------------------------------------------------------
+     A saturated gradient ground carrying WHITE text, for the places the page
+     needs a jolt of colour rather than another pale surface.
+
+     Every stop is deepened until white clears 4.5:1 on it — the check has to
+     be per stop, not on the average, because a gradient's lightest point is
+     what fails. Measured, worst end first:
+       brand   #0879b8 4.73  ->  #5044d6 6.69
+       teal    #0f766e 5.47  ->  #0879b8 4.73
+       violet  #5044d6 6.69  ->  #9d2a7a 6.89
+       indigo  #3b3fb0 8.32  ->  #0f766e 5.47
+
+     The ink tokens are re-pointed rather than the text being recoloured at
+     each call site, so `text-ink-body` and friends keep working and simply
+     resolve light inside this card.
+
+     All of that ink is PURE WHITE on purpose. White at 88% composites to
+     4.05:1 on the brand gradient's sky end and fails — so hierarchy here
+     comes from weight and size, never from fading the copy. */
+  .card-vivid {
+    background: linear-gradient(150deg, var(--_from), var(--_to));
+    --ink-heading: #ffffff;
+    --ink: #ffffff;
+    --ink-body: #ffffff;
+    --ink-label: #ffffff;
+    color: #ffffff;
+  }
+
+  .card-vivid[data-hue="brand"] {
+    --_from: #0879b8;
+    --_to: #5044d6;
+  }
+  .card-vivid[data-hue="teal"] {
+    --_from: #0f766e;
+    --_to: #0879b8;
+  }
+  .card-vivid[data-hue="violet"] {
+    --_from: #5044d6;
+    --_to: #9d2a7a;
+  }
+  .card-vivid[data-hue="indigo"] {
+    --_from: #3b3fb0;
+    --_to: #0f766e;
+  }
+
+  /* Body copy on a vivid card is white but wants to sit back a little. Weight
+     does that job, since opacity cannot without failing contrast. */
+  .card-vivid .text-body {
+    font-weight: 380;
+  }
+
   /* A softer wash than the full spectrum one — for large card grounds where
      the full wash would shout. Directional, so a row of them has movement. */
   .wash-soft {

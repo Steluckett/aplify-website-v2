@@ -62,7 +62,10 @@ const FeatureBento = () => (
 
           <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-[1.15fr_0.85fr]">
             <Reveal variant="rise">
-              <article className="wash-soft flex h-full flex-col rounded-panel p-8 lg:p-10">
+              <article
+                className="card-vivid flex h-full flex-col rounded-panel p-8 lg:p-10"
+                data-hue="brand"
+              >
                 <h3 className="display text-h3">{featureBento.lead.title}</h3>
                 <p className="mt-6 max-w-[34rem] text-body leading-[1.6] text-ink-body">
                   {featureBento.lead.body}
