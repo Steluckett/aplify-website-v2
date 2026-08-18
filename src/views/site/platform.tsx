@@ -186,14 +186,21 @@ const Capabilities = () => (
                     </ul>
                   </div>
 
-                  <ScreenCard
-                    ground="wash"
-                    pad="generous"
-                    url={step.shot.url}
-                    placeholder={step.shot.placeholder}
-                    ratio="4 / 3"
-                    className={shotFirst ? "lg:order-1" : ""}
-                  />
+                  {/* Each shot gets its own light blob ground. They are all
+                      "image only" surfaces — no copy sits on them — so even
+                      04, whose body ink fails, is safe here. */}
+                  <div
+                    className={`grain bg-${step.bg} rounded-panel p-6 sm:p-8 ${
+                      shotFirst ? "lg:order-1" : ""
+                    }`}
+                  >
+                    <ScreenCard
+                      ground="none"
+                      url={step.shot.url}
+                      placeholder={step.shot.placeholder}
+                      ratio="4 / 3"
+                    />
+                  </div>
                 </div>
               </article>
             </Reveal>
