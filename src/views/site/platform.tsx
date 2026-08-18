@@ -81,7 +81,7 @@ const FeatureBento = () => (
             <div className="grid grid-cols-1 gap-10">
               {featureBento.items.map((item, i) => (
                 <Reveal key={item.title} variant="up" delay={i * 90}>
-                  <article className="flex h-full flex-col justify-center rounded-panel bg-surface-chip p-8 lg:p-10">
+                  <article className="flex h-full flex-col justify-center card-quiet rounded-panel p-8 lg:p-10">
                     <div className="flex items-start gap-6">
                       <Icon name={item.icon} />
                       <div>
@@ -132,7 +132,7 @@ const Capabilities = () => (
           const shotFirst = i % 2 === 1;
           return (
             <Reveal key={step.n} variant="up">
-              <article className="rounded-panel bg-surface-chip p-5 sm:p-8 lg:p-10">
+              <article className="card-quiet rounded-panel p-5 sm:p-8 lg:p-10">
                 <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14">
                   <div className={shotFirst ? "lg:order-2" : ""}>
                     <p className="figure text-h2 text-ink/25">{step.n}</p>

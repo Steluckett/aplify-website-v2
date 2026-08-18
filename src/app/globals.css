@@ -817,6 +817,14 @@ body {
     border-radius: var(--radius-pill);
     background: var(--surface-chip);
     color: var(--accent-mid);
+    /* A hairline INSIDE the circle, so the chip carries its own edge and does
+       not depend on what it happens to be sitting on. The fill alone measures
+       ΔL* 0.00 against a quiet grey card — not low contrast, the same colour —
+       and a contextual fix was worse: selectors that whiten a chip on a washed
+       surface also catch chips nested in white cards inside that wash, which
+       made five more disappear. One self-sufficient recipe beats five rules
+       about grounds. */
+    box-shadow: inset 0 0 0 1px rgb(16 19 26 / 0.1);
   }
 
   /* The one chip that carries the sweep. It means "a model wrote this" and
@@ -908,6 +916,12 @@ body {
      ground, which is why those cards disappeared). Pastels belong on white. */
   .band-white {
     background: var(--raw-surface-tile);
+  }
+
+  /* A quiet card: the grey step between a white tile and the page ground.
+     Used inside white panels, where a white card would vanish. */
+  .card-quiet {
+    background: var(--surface-chip);
   }
 
   /* --- Glass ---------------------------------------------------------------

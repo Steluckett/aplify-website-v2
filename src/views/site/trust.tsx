@@ -80,7 +80,7 @@ const Roadmap = () => (
       <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-3">
         {roadmap.items.map((item, i) => (
           <Reveal key={item.when} variant="up" delay={i * 80}>
-            <article className="h-full rounded-panel bg-surface-chip p-8">
+            <article className="h-full card-quiet rounded-panel p-8">
               <p className="eyebrow">{item.when}</p>
               <p className="mt-6 text-body leading-[1.6] text-ink-body">{item.what}</p>
             </article>
