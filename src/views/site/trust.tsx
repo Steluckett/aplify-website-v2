@@ -92,21 +92,26 @@ const Roadmap = () => (
 );
 
 /**
- * The proof. One figure, given the whole width and the page's only navy
- * surface — this is the dark moment, and there is exactly one.
+ * The proof. One figure, given the whole width and the page's only dark
+ * surface — ground 10, Midnight, and there is exactly one.
+ *
+ * Every faded white here was raised to 80%. Midnight is not flat: where its
+ * three fields stack it lightens to #3650ab, and the 45% white that measured
+ * 4.49:1 on the old navy measures 2.78:1 there. A blob ground breaks any
+ * opacity that was tuned against a solid colour.
  */
 const Proof = () => (
   <section id="proof" className="py-26">
     <div className="shell">
       <Reveal variant="rise">
-        <div className="dark-moment px-8 py-20 text-center lg:py-28">
-          <p className="eyebrow justify-center !text-white/55">{proof.eyebrow}</p>
+        <div className="grain bg-10 rounded-panel px-8 py-20 text-center lg:py-28">
+          <p className="eyebrow justify-center !text-white/80">{proof.eyebrow}</p>
           <p className="figure mt-8 text-[clamp(5rem,14vw,11rem)] text-white">
             {proof.figure}
-            <span className="figure-unit !text-white/50">{proof.unit}</span>
+            <span className="figure-unit !text-white/80">{proof.unit}</span>
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-body">
-            <span className="text-white/45 line-through">
+            <span className="text-white/80 line-through">
               {proof.before.value} {proof.before.label}
             </span>
             <span aria-hidden className="h-px w-10 bg-white/25" />
@@ -114,7 +119,7 @@ const Proof = () => (
               {proof.after.value} {proof.after.label}
             </span>
           </div>
-          <p className="mt-10 text-xs text-white/45">{proof.client}</p>
+          <p className="mt-10 text-xs text-white/80">{proof.client}</p>
         </div>
       </Reveal>
     </div>

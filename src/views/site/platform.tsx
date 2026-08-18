@@ -60,7 +60,12 @@ const Icon = ({ name }: { name: string }) => (
 );
 
 /**
- * The bento, inside a white mega-panel.
+ * The bento, inside a white mega-panel, on Orchard.
+ *
+ * Ground 05 is a "cards only" vivid — its body ink measures 3.65:1 and fails.
+ * That is fine here because nothing sits directly on it: the intro and the
+ * cards are all inside the white panel, and the Orchard shows as the band
+ * around it. If the panel ever comes off, the standfirst has to go with it.
  *
  * The reference's move, and the reason its cards have any weight: the panel is
  * white, so the cards inside it must go GREY rather than white or they vanish
@@ -69,7 +74,7 @@ const Icon = ({ name }: { name: string }) => (
  * than treating four things as equals.
  */
 const FeatureBento = () => (
-  <section id="platform" className="py-26">
+  <section id="platform" className="grain bg-05 py-26">
     <div className="shell">
       <Reveal variant="fade">
         <div className="band-white rounded-panel px-6 py-16 shadow-group sm:px-12 lg:px-16 lg:py-20">
