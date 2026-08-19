@@ -109,6 +109,23 @@ negative margin instead.
 - **Verify on the right port.** 3100 is dev, 3200 is a production build
   (`aplify-v2-prod` in `.claude/launch.json`). Stephen watches 3100. Say which
   port a claim was verified on.
+- **`npm run build` kills a running dev server.** Both write to `.next`, so a
+  production build clobbers the dev server's chunks and 3100 starts serving a
+  truncated CSS bundle — the page keeps its DOM and its section IDs, so it
+  looks alive, but every element computes to zero height. It does not
+  self-heal; touching a file will not bring it back. Restart the dev server.
+  Either stop 3100 before building, or verify on 3200 only.
+- **A collapsed page is a build problem, not a layout problem.** The tell is
+  `document.querySelector('main').getBoundingClientRect().height === 0` while
+  `innerText` still has content. Check that before debugging any CSS.
+- **A `rem` height cannot hold a fixed aspect ratio.** The root font-size is
+  fluid (`globals.css`, set in `vw` across four bands), so `1rem` is 14.4px at
+  1728 and 12.6px at 1512, while the shell caps at 1440. Size image grounds
+  with `aspect-[…]`. See ADR-0027.
+- **Centre artwork on its content, not its canvas.** `event-registration.png`
+  has 24px of margin on the left and 95px on the right, so centring the file
+  left it visibly left-hung. Measure the alpha bounding box before trusting
+  that a shot is off-centre because of CSS.
 - **The browser pane's screenshots fail** on some scroll positions, returning
   blank while the DOM is provably fine. Measure with `getComputedStyle` /
   `getBoundingClientRect` rather than trusting a capture.
@@ -132,11 +149,24 @@ demos live and interactive, reskinned into Aurora), security, integrations,
 roadmap, proof, testimonials, footer. Plus `/styleguide` and `/backgrounds`.
 
 **Outstanding:**
-- Step 03 of the candidate journey still has a designed placeholder — Stephen
-  is supplying artwork.
 - The OG share card renders in Onest because Satori cannot read a variable
-  `woff2`. Needs a static Inter instance.
-- `src/views/home/` can be deleted.
+  `woff2`. Needs a static Inter instance — there is no static Inter in
+  `src/app/fonts/` yet, only `inter-var.woff2`. It also still draws its
+  headline from `src/data/content/hero.ts` (the dead build's copy, reading
+  "MORE CANDIDATES. LESS FRICTION.") rather than from `site.ts`, so the card
+  is off-message before the font is even considered.
+- `src/views/home/` can be deleted — but `opengraph-image.tsx` imports
+  `content/hero.ts`, so repoint that at `site.ts` first or the delete breaks
+  the build. Deleting also orphans `closing.ts`, `platform.ts`, `spine.ts`
+  and `stage-data.ts`.
+- The cookie banner and preferences modal link to `/privacy-policy`, which
+  404s. Needs the page, a real external URL, or the link removing.
+- `jamie.okafor@email.com` appears in the step 03 and step 04 artwork.
+  `email.com` is a live domain; content rule §6.5 requires invented people on
+  reserved `example.*` domains. Needs re-exporting from source.
+- `event-registration.png` is off-centre inside its own canvas and is
+  currently corrected by `nudgeXPct: 2.26` in `site.ts`. Re-export it with
+  even margins and delete the value.
 - Indexing is disabled everywhere. Set `ALLOW_INDEXING=true` in Vercel when
   the site is genuinely ready to be found.
 

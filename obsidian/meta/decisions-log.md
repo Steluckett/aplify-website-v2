@@ -1,12 +1,53 @@
 ---
 tags: [meta, decision]
-updated: 2026-08-04
+updated: 2026-08-19
 ---
 
 # Decisions Log (ADRs)
 
 Architecture Decision Records. Each entry captures a choice, its context, and its
 consequences. Use [[templates/adr-note]] for new entries. Newest first.
+
+---
+
+## ADR-0027 — Image grounds are sized by aspect ratio, never by a rem height
+
+- **Status:** Accepted
+- **Date:** 2026-08-19
+
+**Context.** The four candidate-journey shot grounds in `src/views/site/platform.tsx`
+were sized `h-[26rem] sm:h-[30rem]`. Step 04's artwork was being clipped 12px top
+and bottom at a 1728px viewport and 41px at 1512px — against the intent recorded
+in its own data comment, that a confirmation is a complete moment and cropping it
+undercuts the point.
+
+The cause is ADR-0008's adaptive scaling grid. Because the root font-size is set
+in `vw` across four bands, `1rem` is 14.4px at 1728 and 12.6px at 1512. A `rem`
+height therefore moves with the viewport while an image's aspect ratio does not,
+and the shell caps at `min(95vw, 1440px)`, so the box's width and height stop
+scaling together above the cap. Any fixed `rem` height will drift against fixed
+artwork; the only question is at which widths it happens to look right.
+
+**Decision.** Size an image ground with `aspect-[…]`, not a height. A ratio cannot
+drift, because both sides scale from the same width. Grounds that share a grid
+column then share a height at every viewport automatically, with no per-step
+tuning and no magic numbers to re-check per band.
+
+Shots that must be shown whole are capped on **both** axes (`maxWidth` +
+`maxHeight` percentages, `w-auto h-auto`), so whichever axis binds first, any
+artwork ratio fits by construction. Shots that deliberately bleed keep a
+width-only size and run off the foot of the ground.
+
+**Consequences.** Row height is now a property of the ratio rather than of the
+tallest artwork, so new artwork drops in without a layout pass. The ratio itself
+is constrained by the *widest* artwork in the set — at 5/4, step 03's 1.87:1
+event shot fills 68% of the ground's height, and anything squarer leaves it
+looking lost. Ratio changes are therefore a set-wide decision, not a per-row one.
+
+Where artwork is off-centre inside its own canvas, correct it with a measured
+`nudgeXPct` in the content data rather than by hand-tuning the size — centring
+the file otherwise centres its empty margin too. See [[design-system]] and
+ADR-0008.
 
 ---
 
