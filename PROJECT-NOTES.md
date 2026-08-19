@@ -155,11 +155,30 @@ candidate journey, six stages, job search / AI rewrite / dashboard (all four
 demos live and interactive, reskinned into Aurora), security, integrations,
 roadmap, proof, testimonials, footer. Plus `/styleguide` and `/backgrounds`.
 
-**Outstanding:**
-- `src/views/home/` can now be deleted — the OG card no longer imports
-  `content/hero.ts`, so nothing live depends on it. Deleting the folder
-  orphans `hero.ts`, `closing.ts`, `platform.ts`, `spine.ts` and
-  `stage-data.ts`, which go with it.
+**Deliberately retained — do not "clean up":**
+
+`src/views/home/` was deleted on 2026-08-19, which orphaned thirteen modules.
+They are kept **on purpose**, pending work on the job-search demo and the
+recruiter dashboard, because several are the obvious parts to reach for:
+
+| Kept | |
+|---|---|
+| `components/ui/carousel-dots`, `hooks/use-carousel` | paging a demo |
+| `components/ui/product-shot` | framed product screenshots |
+| `components/ui/section-head`, `components/ui/pill-button` | section furniture |
+| `hooks/use-scroll-progress` | scroll-driven set pieces (the vendored `ProgressTrigger` does not fire for a `top top`→`bottom bottom` pin — see the changelog) |
+| `hooks/use-contact-modal` | the demo CTA |
+| `src/lib/scene/*` + `three` ^0.185.1 | the particle hero. Least likely of the group to serve either surface, but Stephen's call and it stays until he says otherwise. |
+| `components/animation/springs/handle` | inside the `#do-not-modify` folder — needs sign-off regardless (AGENTS.md rule 2) |
+
+`three` currently has **zero importers**. That is expected, not a bug to fix.
+
+**Starting points for that work:** the demos already live in
+`src/views/site/demos/` — `job-search.tsx`, `job-map.tsx`, `easy-apply.tsx`,
+`dashboard.tsx`, `ai-rewrite.tsx` — with their data in
+`src/data/content/job-search.ts`, `job-data.ts`, `uk-map-data.ts`,
+`dashboard-data.ts` and `ai-rewrite.ts`. Draw product surfaces against
+`APLIFY-PRODUCT-UI-SPEC.md`.
 - The cookie banner and preferences modal link to `/privacy-policy`, which
   404s. Needs the page, a real external URL, or the link removing.
 - `jamie.okafor@email.com` appears in the step 03 and step 04 artwork.
