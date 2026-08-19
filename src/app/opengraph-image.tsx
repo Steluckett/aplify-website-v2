@@ -1,23 +1,35 @@
 import { ImageResponse } from "next/og";
 
-import { heroContent } from "@/data/content/hero";
-import { ACCENT, CANVAS, FOREGROUND, MUTED, brandFonts, markDataUri } from "@/lib/brand";
+import { hero } from "@/data/content/site";
+import { ACCENT, SHARE, brandFonts, markDataUri } from "@/lib/brand";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = "The recruitment experience candidates actually finish.";
 
 /**
- * Share card, built from the site's own parts: the mark, the headline exactly
- * as the hero sets it, the lead copy, and the accent ramp as a rule along the
- * bottom. Nothing here is invented copy — the strings come from the same
- * content module the page renders.
+ * Share card — the image Slack, LinkedIn, WhatsApp and a Google result show
+ * when the link is pasted. Never seen on the site itself.
  *
- * The mark uses the celled cut: at this size the construction is the point.
+ * Built from the site's own parts: the mark, the headline exactly as the hero
+ * sets it, the standfirst, and the accent ramp as a rule along the foot.
+ * Nothing here is invented copy — every string comes from the same content
+ * module the page renders, which is the point of importing `site.ts` rather
+ * than restating anything. The card previously drew from `content/hero.ts`,
+ * the dead build's copy, and so read "MORE CANDIDATES. LESS FRICTION." against
+ * a live hero of "More candidates, less friction". Two sources meant two
+ * headlines; one source cannot drift.
+ *
+ * The ground is the page's own, not the black of the dark-luxury build. A card
+ * is a promise about what the reader is about to land on, and landing
+ * somewhere that looks like a different company is the one thing it must not
+ * do. Contrast measured on this ground: heading 16.55:1, body 7.09:1.
  */
 export default async function OpenGraphImage() {
-  const [mark, fonts] = await Promise.all([markDataUri(), brandFonts()]);
-  const headline = heroContent.titleLines.map((line) => line.toUpperCase());
+  const [mark, fonts] = await Promise.all([
+    markDataUri(false, "dark"),
+    brandFonts(),
+  ]);
 
   return new ImageResponse(
     (
@@ -28,23 +40,23 @@ export default async function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: CANVAS,
+          background: SHARE.ground,
           padding: "64px 72px",
         }}
       >
-        <img src={mark} width={84} height={84} alt="" />
+        <img src={mark} width={132} height={44} alt="" />
 
         <div style={{ display: "flex", flexDirection: "column" }}>
-          {headline.map((line) => (
+          {hero.lines.map((line) => (
             <div
               key={line}
               style={{
-                fontFamily: "Onest",
-                fontWeight: 500,
-                fontSize: 76,
-                lineHeight: 1.04,
-                color: FOREGROUND,
-                letterSpacing: "-0.01em",
+                fontFamily: "Inter Display",
+                fontSize: 84,
+                lineHeight: 1.06,
+                /* The page's display tracking. */
+                letterSpacing: "-0.035em",
+                color: SHARE.heading,
               }}
             >
               {line}
@@ -52,21 +64,23 @@ export default async function OpenGraphImage() {
           ))}
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           <div
             style={{
-              fontFamily: "Onest",
-              fontSize: 22,
-              color: MUTED,
+              fontFamily: "Inter Text",
+              fontSize: 24,
+              lineHeight: 1.5,
+              maxWidth: 900,
+              color: SHARE.body,
             }}
           >
-            {heroContent.context}
+            {hero.standfirst}
           </div>
           <div
             style={{
-              height: 3,
+              height: 4,
               width: "100%",
-              background: `linear-gradient(90deg, ${ACCENT.start} 0%, ${ACCENT.middle} 45%, ${ACCENT.end} 100%)`,
+              background: `linear-gradient(90deg, ${ACCENT.start} 0%, ${ACCENT.end} 100%)`,
             }}
           />
         </div>

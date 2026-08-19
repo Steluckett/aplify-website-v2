@@ -12,27 +12,51 @@ import { join } from "node:path";
 
 const root = process.cwd();
 
-/** The site's own accent ramp, shared with the CTA and the mark. */
+/**
+ * The site's accent ramp — sky to violet, the same pair `globals.css` binds to
+ * `--accent-start` / `--accent-end`. The card used to carry a cyan ramp left
+ * over from the dark-luxury build; these are the live values.
+ */
 export const ACCENT = {
-  start: "#6bfdff",
-  middle: "#02dafd",
-  end: "#2f6bff",
+  start: "#0ea5e9",
+  end: "#5b4ee0",
 } as const;
 
+/**
+ * Share-card palette, read off `globals.css` rather than picked: the page's
+ * ground, its heading ink and its running-copy ink. Measured on this ground —
+ * heading 16.55:1, body 7.09:1, both AAA.
+ */
+export const SHARE = {
+  ground: "#eff1f6", // --raw-color-ground
+  heading: "#0c1220", // --raw-color-heading
+  body: "#4a515c", // --raw-color-body
+} as const;
+
+/**
+ * The home-screen tile's ground. Deliberately still black: an app icon is a
+ * tile in a grid of other tiles, not a surface of the site, and the light
+ * wordmark needs something to sit on. Nothing else uses this.
+ */
 export const CANVAS = "#000000";
-export const FOREGROUND = "#ffffff";
-export const MUTED = "rgba(255,255,255,0.4)";
 
 /**
  * The mark as a data URI.
  *
  * @param compact - the small-size cut, arms closed. Below roughly 48px the
  *   celled version's gaps stop resolving and it reads as a smudge.
+ * @param tone - which ground the mark will sit on. `light` is the light-on-dark
+ *   wordmark (the app icon's black tile); `dark` is the dark-on-light one the
+ *   share card needs.
  */
-export const markDataUri = async (compact = false): Promise<string> => {
+export const markDataUri = async (
+  compact = false,
+  tone: "light" | "dark" = "light",
+): Promise<string> => {
   // Aplify ships one wordmark; the compact cut falls back to the same file.
   void compact;
-  const svg = await readFile(join(root, "public", "aplify-light.svg"), "utf8");
+  const file = tone === "dark" ? "aplify-dark.svg" : "aplify-light.svg";
+  const svg = await readFile(join(root, "public", file), "utf8");
   return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 };
 
@@ -57,6 +81,22 @@ const font = async (file: string, name: string, weight: 400 | 500) => {
   };
 };
 
-/** The one face the generated images use. */
+/**
+ * Inter, in the site's own two cuts.
+ *
+ * Satori cannot read a variable `woff2`, which is why the card rendered in
+ * Onest for so long — `inter-var.woff2` loaded fine for the browser and not at
+ * all here. These are static instances cut from that same file with
+ * `fontTools.varLib.instancer`, pinned to the axis positions the page uses:
+ * display at wght 550 / opsz 32, running copy at wght 400 / opsz 14. Same
+ * source file, so no second licence and nothing new to fetch.
+ *
+ * They are registered as two families rather than two weights because each
+ * carries one cut, and matching by family is unambiguous where matching by
+ * numeric weight is not.
+ */
 export const brandFonts = async (): Promise<LoadedFont[]> =>
-  Promise.all([font("Onest-Medium.ttf", "Onest", 500)]);
+  Promise.all([
+    font("Inter-Display-550.ttf", "Inter Display", 400),
+    font("Inter-Text-400.ttf", "Inter Text", 400),
+  ]);
