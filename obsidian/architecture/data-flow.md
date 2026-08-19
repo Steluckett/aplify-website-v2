@@ -87,8 +87,12 @@ Global animation behaviour (mobile disable, breakpoint) is read from
 ## Page data flow
 
 ```
-app/page.tsx  →  views/home.tsx  →  composed components
+app/page.tsx  →  views/site/  →  section components  →  data/content/site.ts
 ```
+
+Copy is the leaf, not the root: every string the page renders comes from
+`src/data/content/site.ts`, and `app/opengraph-image.tsx` reads the same module
+so the share card cannot drift from the hero.
 
 Per the [[component-conventions]]:
 - **No hardcoded content** in components — data comes from props or hooks.

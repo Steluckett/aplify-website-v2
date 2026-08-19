@@ -29,7 +29,7 @@ app/layout.tsx ──────────────► RootLayout
    │     └─ {children}
    │           │
    │           ▼
-   │        app/page.tsx ──► delegates to ──► views/home.tsx (HomeView)
+   │        app/page.tsx ──► delegates to ──► views/site/ (SiteView)
    │           │
    │           ▼
    │        composed UI = spring animation components + text engine
@@ -69,8 +69,9 @@ Rendered page — Server Components by default; "use client" only at animation l
 | File | Role |
 |------|------|
 | `src/app/layout.tsx` | Root layout, font, provider tree |
-| `src/app/page.tsx` | Home route → `HomeView` |
-| `src/views/home.tsx` | Demo view showcasing the animation system |
+| `src/app/page.tsx` | Home route → `SiteView` |
+| `src/views/site/` | The marketing page, section by section |
+| `src/data/content/site.ts` | All page copy — the single source for every string |
 | `src/layouts/scroll-layout.tsx` | Lenis integration |
 | `src/lib/springs/config.ts` | Global animation config |
 

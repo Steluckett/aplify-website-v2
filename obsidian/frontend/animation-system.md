@@ -134,8 +134,12 @@ can happen:
 
 Use the ref instead: `api.stop(true)` on the way out (the `true` is the cancel —
 plain `stop()` will not drop the queued starts), and state `from`/`to` outright
-on the way in so both ends are put back every time. `views/home/hero/hero-cta.tsx`
-is the worked example.
+on the way in so both ends are put back every time.
+
+> The worked example used to be `views/home/hero/hero-cta.tsx`, which went with
+> the dark-luxury build. The rule outlived the file; nothing in `views/site/`
+> currently drives a spring imperatively, so there is no live example to point
+> at. Restate `from`/`to` if you add one.
 
 ## Underlying hooks
 

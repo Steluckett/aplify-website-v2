@@ -47,12 +47,15 @@ src/
 │   └── favicon.ico
 │
 ├── views/                  # Page-level components — one per route
-│   └── home/               # A view may be a folder; sections co-locate (ADR-0018)
-│       ├── index.tsx       # HomeView (Server Component)
-│       └── hero/           # Section components — feature-specific, not shared
+│   ├── site/               # A view may be a folder; sections co-locate (ADR-0018)
+│   │   ├── index.tsx       # SiteView — composes the page, route `/`
+│   │   ├── hero.tsx        # One file per section
+│   │   └── demos/          # The four live interactive demos
+│   ├── styleguide/         # → /styleguide
+│   └── backgrounds/        # → /backgrounds, the 15 numbered blob grounds
 │
-├── data/mocks/             # Placeholder content, passed to sections as props
-│   └── home.ts
+├── data/content/           # All copy. site.ts is the single source for the page
+│   └── site.ts             # — app/opengraph-image.tsx reads it too
 │
 ├── layouts/                # Reusable layout wrappers
 │   └── scroll-layout.tsx   # Lenis smooth-scroll wrapper

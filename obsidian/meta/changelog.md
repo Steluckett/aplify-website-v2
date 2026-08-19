@@ -778,3 +778,21 @@ This is a human-curated log — not a mirror of `git log`.
 > [!note]
 > The starter shipped with: Next.js 16.2, React 19.2, Tailwind v4, `@react-spring/web`,
 > `spring-text-engine`, Lenis, and Zustand. See [[tech-stack]] for the current state.
+
+## 2026-08-19
+
+- **Deleted the dark-luxury build.** `src/views/home/` (27 files, ~4,970 lines)
+  and the five content modules only it imported — `hero.ts`, `closing.ts`,
+  `platform.ts`, `spine.ts`, `stage-data.ts`. Unblocked by repointing the share
+  card at `site.ts`. Thirteen modules and the `three` dependency are now
+  orphaned but left in place pending a decision.
+- **Share card rebuilt.** Inter via static instances cut from `inter-var.woff2`
+  with `fontTools.varLib.instancer` (Satori cannot read a variable `woff2`);
+  the page's own ground and accent ramp; copy from `site.ts` so it cannot drift
+  from the hero. `apple-icon` unchanged.
+- **Candidate-journey grounds sized by aspect ratio**, not a rem height — see
+  ADR-0027. Step 03's artwork landed.
+- **Restored "or campaign landing page"** in five places (V2_HANDOVER §6.2).
+- **Vault reconciled** to the real route map: `/` renders `SiteView` from
+  `src/views/site/`. Notes had described the starter's empty `views/home.tsx`
+  since before the Aurora rebuild.

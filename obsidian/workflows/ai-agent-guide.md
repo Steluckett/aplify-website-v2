@@ -15,9 +15,12 @@ Rules of engagement for AI agents (Claude Code, Cursor) working in this repo.
 > relevant spec before writing code. Heed deprecation notices.**
 
 > [!tip] Where to start
-> The home view (`src/views/home.tsx`, route `/`) ships **empty**. If the project
-> is empty and no other instructions are provided, **start developing in the home
-> view on route `/`**. Follow [[new-page]] to build it out.
+> **This project is no longer empty.** Route `/` renders `SiteView` from
+> `src/views/site/`, the Aplify marketing page. Start by reading
+> `PROJECT-NOTES.md` at the repo root — it is the live handover — then
+> `V2_HANDOVER.md` §5 and §6, which govern every factual claim and are binding.
+> The starter's advice to "start developing in the empty home view" no longer
+> applies; [[new-page]] is for adding a *new* route, not for building `/`.
 
 ## Source-of-truth hierarchy
 

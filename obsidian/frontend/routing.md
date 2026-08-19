@@ -18,24 +18,30 @@ Next.js 16 App Router. The defining convention: **routes delegate to views**.
 
 ```tsx
 // src/app/page.tsx
-import { HomeView } from "@/views/home";
+import { SiteView } from "@/views/site";
 
 export default function Home() {
-  return <HomeView />;
+  return <SiteView />;
 }
 ```
 
-All layout and UI logic lives in `src/views/home.tsx` (`HomeView`). The view is
-a **Server Component**; isolate any client-only animation in a leaf component —
-see [[component-conventions]] hard rule #6. `HomeView` currently ships **empty**:
-if the project is empty and no other instructions are provided, start developing
-here on route `/` (see [[ai-agent-guide]] / [[new-page]]).
+All layout and UI logic lives in `src/views/site/` (`SiteView`), which composes
+the page section by section. The view is a **Server Component**; isolate any
+client-only animation in a leaf component — see [[component-conventions]] hard
+rule #6.
+
+> The starter's empty `views/home.tsx` is long gone. So is the dark-luxury
+> build that briefly occupied `src/views/home/` — deleted once the share card
+> stopped importing its content module. Notes describing either are describing
+> history.
 
 ## Current routes
 
 | Route | File | View |
 |-------|------|------|
-| `/` | `src/app/page.tsx` | `views/home.tsx` → `HomeView` |
+| `/` | `src/app/page.tsx` | `views/site/` → `SiteView` |
+| `/styleguide` | `src/app/styleguide/page.tsx` | `views/styleguide/` |
+| `/backgrounds` | `src/app/backgrounds/page.tsx` | `views/backgrounds/` — the 15 numbered blob grounds |
 
 ## Special files
 

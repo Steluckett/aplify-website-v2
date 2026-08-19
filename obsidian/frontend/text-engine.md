@@ -187,8 +187,9 @@ than the intended ancestor, which lands it somewhere else entirely.
 ```
 
 **Scroll-driven progress** — `mode="progress"` with `type="interpolate"` (smooth)
-or `type="toggle"` (snap), plus `start`/`end` trigger positions. Used in
-`views/home.tsx`.
+or `type="toggle"` (snap), plus `start`/`end` trigger positions. The live
+worked example is the hero's parallax in `views/site/hero.tsx`, which uses the
+sibling `SpringTrigger` with `mode="scrub"` and the same `start`/`end` grammar.
 
 **Factory shorthand** — `tengine.h2` returns a pre-tagged `TextEngine`:
 ```tsx
