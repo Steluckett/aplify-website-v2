@@ -19,8 +19,20 @@ const ICONS: Record<string, React.ReactNode> = {
   ),
   search: (
     <>
-      <circle cx="11" cy="11" r="6" stroke="currentColor" strokeWidth="1.6" fill="none" />
-      <path d="M15.5 15.5L20 20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <circle
+        cx="11"
+        cy="11"
+        r="6"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        fill="none"
+      />
+      <path
+        d="M15.5 15.5L20 20"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
     </>
   ),
   chart: (
@@ -30,6 +42,55 @@ const ICONS: Record<string, React.ReactNode> = {
       strokeWidth="1.8"
       strokeLinecap="round"
     />
+  ),
+  /* Sources: several feeds converging into one. */
+  sources: (
+    <>
+      <path
+        d="M4 6h5a4 4 0 014 4v4a4 4 0 004 4h3M4 12h5M4 18h5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <circle cx="20" cy="18" r="1.6" fill="currentColor" stroke="none" />
+    </>
+  ),
+  /* Export: the mirror of `feed` — the same tray, the arrow leaving it. */
+  export: (
+    <>
+      <path
+        d="M12 12V3m0 0L8.6 6.4M12 3l3.4 3.4"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4 15v2.5A2.5 2.5 0 006.5 20h11a2.5 2.5 0 002.5-2.5V15"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </>
+  ),
+  /* Rewrite, with the guardrail implied: a nib, not a wand. */
+  rewrite: (
+    <>
+      <path
+        d="M4 20l1-4L15.5 5.5a2.1 2.1 0 013 3L8 19l-4 1z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path
+        d="M14 7l3 3"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </>
   ),
   /* Import: something arriving and being caught. */
   feed: (
@@ -70,7 +131,7 @@ const Icon = ({ name }: { name: string }) => (
  * the screen in it, and the grid should say which idea is load bearing rather
  * than treating four things as equals.
  */
-const FeatureBento = () => (
+export const FeatureBento = () => (
   <section id="platform" className="py-26">
     <div className="shell">
       <Reveal variant="fade">
@@ -107,7 +168,9 @@ const FeatureBento = () => (
                   <div className="flex items-start gap-6">
                     <Icon name={featureBento.lead.icon} />
                     <div>
-                      <h3 className="display text-h4">{featureBento.lead.title}</h3>
+                      <h3 className="display text-h4">
+                        {featureBento.lead.title}
+                      </h3>
                       <p className="mt-4 text-body leading-[1.6] text-ink-body">
                         {featureBento.lead.body}
                       </p>
@@ -157,7 +220,7 @@ const FeatureBento = () => (
  * The panel is the quiet grey; the shot inside it sits on the wash. Two
  * surfaces inside one panel, which is the layering the whole page runs on.
  */
-const Capabilities = () => (
+export const Capabilities = () => (
   <section id="candidates" className="band-white py-26">
     <div className="shell">
       <SectionIntro
@@ -192,7 +255,9 @@ const Capabilities = () => (
                   >
                     <p className="figure text-h2 text-ink/25">{step.n}</p>
                     <h3 className="display mt-6 text-h3">{step.title}</h3>
-                    <p className="mt-5 text-body leading-[1.6] text-ink-body">{step.body}</p>
+                    <p className="mt-5 text-body leading-[1.6] text-ink-body">
+                      {step.body}
+                    </p>
                     <ul className="mt-7 flex flex-wrap gap-2">
                       {step.points.map((point) => (
                         <li key={point} className="chip bg-surface-raised">
@@ -271,11 +336,4 @@ const Capabilities = () => (
       </div>
     </div>
   </section>
-);
-
-export const Platform = () => (
-  <>
-    <FeatureBento />
-    <Capabilities />
-  </>
 );

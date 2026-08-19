@@ -2,11 +2,17 @@
 
 import { Reveal } from "@/components/ui/reveal";
 import { SectionIntro } from "@/components/ui/section-intro";
-import { integrations, proof, roadmap, security, testimonials } from "@/data/content/site";
+import {
+  integrations,
+  proof,
+  roadmap,
+  security,
+  testimonials,
+} from "@/data/content/site";
 
 /** Security — the pastel four, on white so the tints separate. */
-const Security = () => (
-  <section id="security" className="band-white py-26">
+export const Security = () => (
+  <section id="security" className="py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={security.eyebrow}
@@ -17,9 +23,13 @@ const Security = () => (
       <div className="mt-16 grid grid-cols-1 gap-10 sm:grid-cols-2 xl:grid-cols-4">
         {security.points.map((point, i) => (
           <Reveal key={point.title} variant="up" delay={i * 80}>
-            <article className={`pastel-${point.ground} h-full rounded-panel p-8 lg:p-10`}>
+            <article
+              className={`pastel-${point.ground} h-full rounded-panel p-8 lg:p-10`}
+            >
               <h3 className="display text-h4">{point.title}</h3>
-              <p className="mt-5 text-body leading-[1.6] text-ink-body">{point.body}</p>
+              <p className="mt-5 text-body leading-[1.6] text-ink-body">
+                {point.body}
+              </p>
             </article>
           </Reveal>
         ))}
@@ -32,8 +42,8 @@ const Security = () => (
  * Integrations. A list, but set as a two-column rule-separated table rather
  * than bullets — the same information, with somewhere for the eye to rest.
  */
-const Integrations = () => (
-  <section id="integrations" className="py-26">
+export const Integrations = () => (
+  <section id="integrations" className="band-white py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={integrations.eyebrow}
@@ -75,7 +85,7 @@ const Integrations = () => (
 );
 
 /** Roadmap — three rows, quiet on purpose. It is a promise, not a feature. */
-const Roadmap = () => (
+export const Roadmap = () => (
   <section id="roadmap" className="band-white py-26">
     <div className="shell">
       <SectionIntro
@@ -88,7 +98,9 @@ const Roadmap = () => (
           <Reveal key={item.when} variant="up" delay={i * 80}>
             <article className="h-full card-quiet rounded-panel p-8">
               <p className="eyebrow">{item.when}</p>
-              <p className="mt-6 text-body leading-[1.6] text-ink-body">{item.what}</p>
+              <p className="mt-6 text-body leading-[1.6] text-ink-body">
+                {item.what}
+              </p>
             </article>
           </Reveal>
         ))}
@@ -106,12 +118,14 @@ const Roadmap = () => (
  * 4.49:1 on the old navy measures 2.78:1 there. A blob ground breaks any
  * opacity that was tuned against a solid colour.
  */
-const Proof = () => (
-  <section id="proof" className="py-26">
+export const Proof = () => (
+  <section id="proof" className="band-white py-26">
     <div className="shell">
       <Reveal variant="rise">
         <div className="grain bg-10 rounded-panel px-8 py-20 text-center lg:py-28">
-          <p className="eyebrow justify-center !text-white/80">{proof.eyebrow}</p>
+          <p className="eyebrow justify-center !text-white/80">
+            {proof.eyebrow}
+          </p>
           <p className="figure mt-8 text-[clamp(5rem,14vw,11rem)] text-white">
             {proof.figure}
             <span className="figure-unit !text-white/80">{proof.unit}</span>
@@ -136,8 +150,8 @@ const Proof = () => (
  * Testimonials, inheriting the card language exactly — the quote set in the
  * display register at card scale, attribution quiet beneath a rule.
  */
-const Testimonials = () => (
-  <section id="testimonials" className="band-white py-26">
+export const Testimonials = () => (
+  <section id="testimonials" className="py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={testimonials.eyebrow}
@@ -152,12 +166,19 @@ const Testimonials = () => (
                 “{q.quote}”
               </blockquote>
               <figcaption className="mt-auto flex items-center gap-3 border-t border-hairline pt-6">
-                <span className="icon-chip h-10 w-10 text-ui-sm font-medium" aria-hidden>
+                <span
+                  className="icon-chip h-10 w-10 text-ui-sm font-medium"
+                  aria-hidden
+                >
                   {q.org.slice(0, 1)}
                 </span>
                 <span>
-                  <span className="block text-ui-base font-medium text-ink">{q.name}</span>
-                  <span className="block text-ui-sm text-ink-label">{q.org}</span>
+                  <span className="block text-ui-base font-medium text-ink">
+                    {q.name}
+                  </span>
+                  <span className="block text-ui-sm text-ink-label">
+                    {q.org}
+                  </span>
                 </span>
               </figcaption>
             </figure>
@@ -166,14 +187,4 @@ const Testimonials = () => (
       </div>
     </div>
   </section>
-);
-
-export const Trust = () => (
-  <>
-    <Security />
-    <Integrations />
-    <Roadmap />
-    <Proof />
-    <Testimonials />
-  </>
 );

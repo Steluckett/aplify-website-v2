@@ -22,7 +22,10 @@ import { hero } from "@/data/content/site";
  * motion left here now the footage has gone.
  */
 export const Hero = () => (
-  <section id="home" className="relative isolate overflow-hidden pb-24 lg:pb-32">
+  <section
+    id="home"
+    className="relative isolate overflow-hidden pb-24 lg:pb-32"
+  >
     {/* The glow behind the nav and the headline. The reference pools violet
         here; ours is blue, because blue is the brand's and the violet end of
         the sweep is already carrying the buttons. Two stacked radials rather

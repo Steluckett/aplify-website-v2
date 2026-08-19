@@ -19,7 +19,7 @@ import { footer } from "@/data/content/site";
  */
 export const SiteFooter = () => (
   <>
-    <section id="demo" className="py-26">
+    <section id="demo" className="band-white py-26">
       <div className="shell">
         <SectionIntro
           lines={[...footer.cta.lines]}
@@ -70,7 +70,9 @@ export const SiteFooter = () => (
             <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
               {footer.columns.map((col) => (
                 <nav key={col.heading} aria-label={col.heading}>
-                  <h2 className="text-sm font-medium text-ink">{col.heading}</h2>
+                  <h2 className="text-sm font-medium text-ink">
+                    {col.heading}
+                  </h2>
                   <ul className="mt-4 space-y-3">
                     {col.links.map((link) => (
                       <li key={link.label}>

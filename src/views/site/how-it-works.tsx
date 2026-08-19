@@ -32,8 +32,12 @@ export const HowItWorks = () => (
             <article className="tile flex h-full flex-col rounded-panel p-8 lg:p-10">
               <p className="figure text-h2 text-ink/25">{stage.n}</p>
               <h3 className="display mt-8 text-h3">{stage.title}</h3>
-              <p className="mt-3 text-body font-medium text-ink-accent">{stage.sub}</p>
-              <p className="mt-6 text-body leading-[1.6] text-ink-body">{stage.body}</p>
+              <p className="mt-3 text-body font-medium text-ink-accent">
+                {stage.sub}
+              </p>
+              <p className="mt-6 text-body leading-[1.6] text-ink-body">
+                {stage.body}
+              </p>
 
               <ul className="mt-auto flex flex-wrap gap-2 pt-8">
                 {stage.points.map((point) => (

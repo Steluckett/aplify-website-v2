@@ -49,7 +49,9 @@ export const Story = () => (
                   </div>
 
                   <div className="space-y-2">
-                    <p className="text-ui-base font-medium text-ink">{row.clean}</p>
+                    <p className="text-ui-base font-medium text-ink">
+                      {row.clean}
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       <span className="chip" data-tint="sky">
                         {row.region}

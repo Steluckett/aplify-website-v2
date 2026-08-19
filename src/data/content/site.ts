@@ -46,12 +46,39 @@ export const hero = {
   },
 };
 
-export const featureBento = {
-  eyebrow: "The platform",
-  lines: ["One platform,", "two audiences"],
-  linesSm: ["One platform,", "two", "audiences"],
+/**
+ * The map. Promoted out of the bento's standfirst, where §7's structural claim
+ * — the sentence that makes the product legible in one read — was doing its
+ * work as supporting text in the fourth section. It is the second thing on the
+ * page now, because a reader who has not been told there are two halves reads
+ * the rest as one muddled thing. The headline is §10's own worked example of
+ * what a good headline looks like.
+ */
+export const siteMap = {
+  eyebrow: "Where it sits",
+  lines: ["Between your ATS", "and your candidates"],
+  linesSm: ["Between", "your ATS and", "your candidates"],
   standfirst:
     "One side never touches a candidate. The other is everything a candidate ever sees. Both run off the same cleaned data.",
+} as const;
+
+/**
+ * The platform, as the foundation everything else stands on.
+ *
+ * This was "One platform, two audiences" — a bento whose four cards were one
+ * from each territory: feed cleaning, apply, search, channel tracking. It was
+ * the section that mixed the two halves most, and it announced the structural
+ * claim a second time now that the claim has its own band.
+ *
+ * The layout is unchanged. The cards are now all upstream: pull it in, fix it,
+ * send it back out. Nothing here has met a candidate.
+ */
+export const featureBento = {
+  eyebrow: "The platform",
+  lines: ["Everything upstream", "of your careers page"],
+  linesSm: ["Everything", "upstream of your", "careers page"],
+  standfirst:
+    "Your jobs arrive however your ATS produces them and leave consistent, on-brand and publishable — without anyone opening a spreadsheet.",
   /** The lead card — big, with a product shot inset into it. */
   lead: {
     icon: "feed",
@@ -65,21 +92,39 @@ export const featureBento = {
   /** The stacked column beside it. */
   items: [
     {
-      title: "Apply without leaving",
-      body: "On-page and anonymous, with no account to create and no ATS redirect.",
-      icon: "cursor",
+      title: "Pulled from any ATS",
+      body: "XML, JSON or CSV, from any number of sources, on a schedule or on demand. Mapping a new field is configuration, not development.",
+      icon: "sources",
     },
     {
-      title: "Search that finds things",
-      body: "Keyword, region, salary and contract — plus postcode search and an interactive map.",
-      icon: "search",
+      title: "Sent back out clean",
+      body: "The tidied feed syndicates onward to job boards and aggregators, so one campaign reaches a national board without a second export.",
+      icon: "export",
     },
     {
-      title: "Measured by channel",
-      body: "Source tracking on every submission, so paid social, job boards and QR codes compare like for like.",
-      icon: "chart",
+      title: "Rewritten, never invented",
+      body: "The AI rewrites what the advert says and cannot add what it does not say. Salary, location and title come from your data, untouched.",
+      icon: "rewrite",
     },
   ],
+} as const;
+
+/**
+ * The second problem, which the page never actually stated.
+ *
+ * It had "the problem" (the feed) and "the payoff" (apply, solved) — so Easy
+ * Apply was answering a question nobody had been asked. Stated from the
+ * mechanism rather than from a number: §5 holds exactly one statistic, it is
+ * Brandon Trust's, and it has to stay paired with the phrase "application
+ * drop-off rate". Splitting it so the 85% opened this section would read as an
+ * industry figure. It lands whole, later, where it cannot be missed.
+ */
+export const dropOff = {
+  eyebrow: "The drop-off",
+  lines: ["They leave", "at the redirect"],
+  linesSm: ["They leave", "at the", "redirect"],
+  standfirst:
+    "A redirect to your ATS, an account to create, a form that asks again for everything the CV already says. Every step between the job and the submit button is somewhere to stop — and the people who stop are the ones you never hear from.",
 } as const;
 
 export const capabilities = {
@@ -98,7 +143,11 @@ export const capabilities = {
       bg: "12",
       title: "Find the right job",
       body: "Full-text search across every live role, narrowed by region, salary band and contract type. Candidates who only know the town they can get to use postcode search with a radius, or the map — which is often the only filter that matters when the job is shift work.",
-      points: ["Keyword and salary filtering", "Postcode search with radius", "Interactive map"],
+      points: [
+        "Keyword and salary filtering",
+        "Postcode search with radius",
+        "Interactive map",
+      ],
       shot: {
         /* Loose artwork, no browser frame — it is a phone screen, and a
            browser bar around a phone would be a lie about what it is. */
@@ -116,7 +165,11 @@ export const capabilities = {
       bg: "11",
       title: "Apply without leaving",
       body: "The application form is on the page, not behind a redirect. Pre-qualification runs first, so anyone who cannot be offered the role finds out in two questions rather than after twenty minutes of typing — and each company chooses which fields it actually needs.",
-      points: ["No ATS redirect", "No account to create", "Pre-qualification first"],
+      points: [
+        "No ATS redirect",
+        "No account to create",
+        "Pre-qualification first",
+      ],
       shot: {
         /* Filename says job-description; the artwork is the apply flow.
            Alt describes what is actually on screen. */
@@ -158,7 +211,11 @@ export const capabilities = {
       bg: "14",
       title: "Kept informed",
       body: "Every status change sends a branded email in your own voice, so a candidate is never left guessing whether anyone read their application. Silence is the single most common reason people say they would not apply to an employer twice.",
-      points: ["Branded templates", "Every status change", "Your tone of voice"],
+      points: [
+        "Branded templates",
+        "Every status change",
+        "Your tone of voice",
+      ],
       shot: {
         src: "/assets/steps/application-received.png",
         alt: "The confirmation screen after applying: a green tick, \u201cApplication received\u201d, a line telling Jamie the application is with the hiring team and a confirmation email is on its way, and buttons to browse more roles or track the application.",
@@ -226,7 +283,7 @@ export const story = {
   eyebrow: "The problem",
   lines: ["Your feed arrives", "fragmented"],
   standfirst:
-    "Publish it straight to a career site or campaign landing page and you either lose candidates or clean it by hand — every time a job changes.",
+    "Every time a job changes, somebody re-types it. Publish the feed as it arrives on a career site or campaign landing page and you are choosing between losing candidates and tidying it by hand — on every job, every time.",
   /** One region, three spellings. One city, twice in a single field. */
   rows: [
     {
@@ -278,49 +335,73 @@ export const howItWorks = {
   lines: ["Six stages, raw feed", "to finished application"],
   linesSm: ["Six stages,", "raw feed to", "application"],
   standfirst:
-    "Everything between an ATS export and a candidate pressing send.",
+    "From the feed landing in your inbox to a candidate pressing send.",
   stages: [
     {
       n: "01",
       title: "Ingest",
       sub: "Pull jobs straight from your ATS",
       body: "XML, JSON or CSV from any number of sources, on a schedule or on demand. Field mapping is configuration, not development.",
-      points: ["Multi-format import", "Configurable mapping", "Authenticated feeds"],
+      points: [
+        "Multi-format import",
+        "Configurable mapping",
+        "Authenticated feeds",
+      ],
     },
     {
       n: "02",
       title: "Clean & enrich",
       sub: "Fix what the feed got wrong",
       body: "Salaries normalised, duplicated text stripped from titles, messy regions mapped to a consistent set — then AI rewrites each description to your tone of voice.",
-      points: ["Salary and region normalisation", "AI rewriting to your EVP", "Job family classification"],
+      points: [
+        "Salary and region normalisation",
+        "AI rewriting to your EVP",
+        "Job family classification",
+      ],
     },
     {
       n: "03",
       title: "Present",
       sub: "Publish it on your own site",
       body: "Full-text search, geo search with a configurable radius, an interactive map and detail pages — all on your career site or campaign landing page.",
-      points: ["Keyword and salary filtering", "Postcode and map search", "One campaign to a national board"],
+      points: [
+        "Keyword and salary filtering",
+        "Postcode and map search",
+        "One campaign to a national board",
+      ],
     },
     {
       n: "04",
       title: "Convert",
       sub: "Let candidates finish without leaving",
       body: "Applications and event registrations happen on the page. Each company controls which fields appear, with pre-qualification gating anyone ineligible before the full form.",
-      points: ["On-page Easy Apply", "Customisable fields", "Pre-qualification screening"],
+      points: [
+        "On-page Easy Apply",
+        "Customisable fields",
+        "Pre-qualification screening",
+      ],
     },
     {
       n: "05",
       title: "Manage",
       sub: "Action and report on everything",
       body: "Recruiters triage through a full status workflow, with source tracking on every submission so paid social, job boards and QR codes compare by channel.",
-      points: ["Submitted to accepted", "Source tracking", "Branded candidate emails"],
+      points: [
+        "Submitted to accepted",
+        "Source tracking",
+        "Branded candidate emails",
+      ],
     },
     {
       n: "06",
       title: "Syndicate",
       sub: "Send the clean feed back out",
       body: "Once a feed is clean it is an asset. Aplify tailors it per destination and publishes it as an API-key-protected XML feed.",
-      points: ["Custom outbound mapping", "XML protected by API key", "Errors stripped before they leave"],
+      points: [
+        "Custom outbound mapping",
+        "XML protected by API key",
+        "Errors stripped before they leave",
+      ],
     },
   ],
 };
@@ -332,7 +413,10 @@ export const demos = {
     linesSm: ["The search", "your", "candidates get"],
     standfirst:
       "Three views of one filtered set — grid, list and map — running the way it would run on your career site or campaign landing page.",
-    shot: { url: "yourcompany.co.uk/careers", placeholder: "Job search — grid, list and map" },
+    shot: {
+      url: "yourcompany.co.uk/careers",
+      placeholder: "Job search — grid, list and map",
+    },
   },
   aiEnrichment: {
     eyebrow: "AI enrichment",
@@ -340,15 +424,21 @@ export const demos = {
     linesSm: ["Written for", "candidates,", "not the file"],
     standfirst:
       "ATS descriptions were written to satisfy a process. Aplify rewrites every one to your tone of voice on import.",
-    shot: { url: "app.aplify.co.uk/jobs", placeholder: "Description rewrite — before and after" },
+    shot: {
+      url: "app.aplify.co.uk/jobs",
+      placeholder: "Description rewrite — before and after",
+    },
   },
   dashboard: {
     eyebrow: "For your recruiters",
     lines: ["One place to", "action all of it"],
     linesSm: ["One place", "to action", "all of it"],
     standfirst:
-      "Applications and registrations arrive in the same dashboard and move through a status workflow your team controls.",
-    shot: { url: "app.aplify.co.uk/applications", placeholder: "Recruiter dashboard — applications" },
+      "Every application and every event registration lands in one place, and moves through a status workflow your team controls.",
+    shot: {
+      url: "app.aplify.co.uk/applications",
+      placeholder: "Recruiter dashboard — applications",
+    },
   },
 };
 
@@ -387,7 +477,7 @@ export const integrations = {
   lines: ["Works with the", "ATS you already have"],
   linesSm: ["Works with", "your ATS"],
   standfirst:
-    "Aplify sits between your ATS and your candidates. It does not replace anything you already run.",
+    "Nothing you already run gets replaced. Your ATS stays the system of record, and your team keeps the workflow it has.",
   /**
    * Eploy is the ONE named third-party product (V2_HANDOVER §5), text only,
    * never the logo. The wording below is the handover's, which keeps it
