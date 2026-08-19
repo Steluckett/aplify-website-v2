@@ -1,136 +1,145 @@
-# Aplify website V2 — project notes
+# Aplify site v2 — project notes
 
-Paste this into a new chat to pick the work up cold.
+Written so a fresh chat can pick this up without re-deriving anything. Read
+this, then `AGENTS.md`, then `APLIFY-PRODUCT-UI-SPEC.md` if you are drawing
+product surfaces.
 
 ---
 
 ## What this is
 
-The customer-facing one-scroll site for Aplify, a recruitment/job-feed SaaS.
-Rebuilt from scratch against the **MeetSync reference** Stephen supplied
-(behance.net/gallery/235730031), in the **Aurora** design system — the same
-skin the Helion admin dashboard ships. Both were drawn from that same
-reference, which is why the site and the product look like siblings rather
-than a translation.
+The customer-facing one-scroll page for Aplify, a recruitment/job-feed SaaS.
+Rebuilt from scratch during August 2026 against two references at once:
 
-**Not deployed to a production domain, not on GitHub.** Local git only.
+1. **A MeetSync AI Behance concept** Stephen supplied — the composition,
+   rhythm and card language.
+2. **Aurora**, the shipped design system of Aplify's own admin dashboard
+   (`~/Development/Aplify`, `app/assets/stylesheets/helion_aurora.css`).
 
-## Run it
+The key fact that makes the two compatible: **Aurora was itself drawn from
+that same MeetSync reference.** The dashboard README says so. So the site and
+the product are siblings, not a translation.
 
-```bash
-npm run dev -- -p 3100     # or the "aplify-v2" preview target
-npm run build && npm run start -- -p 3200   # "aplify-v2-prod"
-```
+**Workable** (workable.com) is the third reference, used only for type sizes
+and spacing rhythm, measured off their live homepage.
 
-- `/` — the site
-- `/styleguide` — every Aurora recipe, rendered from the real tokens
-- `/backgrounds` — the 15 numbered blob grounds, with measured contrast
+---
 
 ## Where things live
 
-| | |
-|---|---|
-| Token layer | `src/app/globals.css` — read the header comment first |
-| Page sections | `src/views/site/` |
-| Live demos | `src/views/site/demos/` |
-| Copy | `src/data/content/site.ts` |
-| Images | `public/assets/{hero,platform,steps}/` |
-| Product spec for other projects | `APLIFY-PRODUCT-UI-SPEC.md` |
-| Source of truth for claims | `V2_HANDOVER.md` |
-| Old dark build (dead) | `src/views/home/` — safe to delete |
+```
+src/app/globals.css          The whole design system. Three token tiers.
+src/views/site/              The page, section by section
+src/views/site/demos/        The four live interactive demos
+src/views/backgrounds/       /backgrounds — the 15 numbered blob grounds
+src/views/styleguide/        /styleguide — component reference
+src/data/content/site.ts     All page copy
+public/assets/               Images: hero/, platform/, steps/
+APLIFY-PRODUCT-UI-SPEC.md    Handoff sheet for other projects
+V2_HANDOVER.md               The source of truth for CLAIMS. See below.
+```
 
-## The hard rule — factual claims
+The old dark-luxury build is still in `src/views/home/` — dead, unrendered,
+kept only because it type-checks. Safe to delete.
 
-**`V2_HANDOVER.md` §5 is the complete inventory of what may be presented as
-fact.** Nothing outside it. I got this wrong twice and both reached the point
-of nearly going public:
+---
 
-- I **invented three testimonials** and attributed them to Brandon Trust,
-  Cygnet and HC-One with made-up job titles. The real ones are named, cleared,
-  and have recorded voiceovers in `public/testimonial_voiceovers/`.
-- I **invented a roadmap**, including "deeper native ATS integrations" — which
-  inverts a deliberate positioning decision, because native ATS integration is
-  **shipped, not roadmap**. The real roadmap is exactly two items.
+## Non-negotiables
 
-If you are writing copy for this site, check §5 first. One statistic
-(85% → 30% drop-off, Brandon Trust), three quotes, one named third-party
-product (Eploy, text only, never the logo).
+**1. Every factual claim comes from `V2_HANDOVER.md` §5.** It says: *"Nothing
+outside this list may be presented as fact. There is no second stat, no fourth
+quote, no other named integration."*
 
-## Design system, in brief
+The approved inventory is:
+- **One statistic** — Brandon Trust, application drop-off 85% → 30%.
+- **Three quotes** — Louise Mitchell (Brandon Trust), Ben Hopwell (Cygnet
+  Group), Sammi Yates (HC-One). Verbatim, all cleared, recordings in
+  `public/testimonial_voiceovers/`.
+- **One named third-party product** — Eploy. Text only, never the logo.
+- **Two roadmap items, only these two** — feed-level reporting, Google for
+  Jobs. Native ATS integration is SHIPPED, not roadmap.
 
-Full detail in `APLIFY-PRODUCT-UI-SPEC.md`. The load-bearing parts:
+I got this wrong once: I wrote three plausible testimonials myself and put
+them under those real company names, and invented a roadmap. Both were caught
+before deploying. **Do not paraphrase, extend or invent in this area.**
 
-- **Inter only.** Marketing scale 96/56/40/32/24/24/18/16/14/12 (hero down to
-  eyebrow); product scale inside `.screen` is 11–24px. Sizes came from
-  measuring workable.com; letter-spacing (−0.035em) and weight 550 are ours.
-- **Two registers.** `:root` is marketing, `.screen` is the product. When
-  something feels cramped it is usually still carrying dashboard values.
-- **Spacing:** 104 between sections · 64 intro→content · 40 between cards ·
-  32 card padding · 24 heading→copy · 16 tightly-bound lines.
-- **Depth is tonal**, three steps: ground `#eff1f6` < translucent group <
-  white tile. Shadow is secondary.
-- **Accent** is the sky→violet sweep. Two versions exist for a reason: the
-  bright pair is decorative, the deepened pair (`#0879b8 → #5044d6`) is the
-  only one that carries white text at AA.
-- **Blob grounds** `.bg-01`–`.bg-15` plus `.grain`. See `/backgrounds` — the
-  band tells you what ink can sit on it, and three of them cannot take body
-  copy at all.
+**2. Two registers.** `:root` is the marketing register (big type, generous
+spacing). `.screen` is the product register — Aurora's 11–24px UI scale,
+22/16/12 radii. Anything inside a device frame is `.screen`. When something
+feels cramped it is usually carrying dashboard values outside `.screen`.
 
-## Accessibility
+**3. Contrast is measured, never eyeballed.** WCAG AA on all text — the site
+is public, unlike the dashboard, which takes two informed exceptions.
 
-Public site, so **AA is held everywhere**, including four places where the
-dashboard takes a deliberate exception. Every colour decision in this repo was
-measured, not eyeballed. Three traps that actually bit:
+**4. Motion is spring-based** (`@react-spring/web` via
+`src/components/animation/springs/`). No CSS keyframes. `TextEngine` never
+uses `mode="manual"`, and its clipped-line reveal means display leading can
+never go below 1.1 — tightness comes from tracking and the `.lines-tight`
+negative margin instead.
 
-1. **A faded white on a gradient is not safe** because it was safe on a solid
-   colour. Check the gradient's lightest point.
-2. **Contrast on a gradient must be checked per stop.** An average passes
-   things that fail visibly at one end.
-3. **`getComputedStyle` reports only a surface's base colour**, so every
-   gradient on this page reads as white or transparent to an automated check.
+---
 
-## Current state
+## The design system in one page
 
-Built and working: nav, hero, problem table, payoff, platform bento, six
-stages, job search + Easy Apply + AI rewrite + recruiter dashboard (all four
-demos live and interactive), security, integrations, roadmap, proof,
-testimonials, footer.
+- **Type** — Inter only. Workable's ladder: hero 96px (our one deliberate
+  step past them), section heads 56, card titles 32, h4 24, lead 24, body 18,
+  small 16, fine 14, eyebrow 12. Weight 550 for display, tracking −0.035em.
+- **Ground** `#eff1f6`. Depth is tonal: ground < translucent group <
+  white tile. `.card-quiet` (#eef0f5) for cards inside white panels.
+- **Accent** sky `#0ea5e9` → violet `#5b4ee0`. Deepened pair
+  `#0879b8 → #5044d6` wherever white text sits on it.
+- **Spacing** — 104 between sections, 64 intro-to-content, 40 between cards,
+  32 card padding, 24 heading-to-copy, 16 tightly-bound lines.
+- **Shell** `min(95vw, 1440px)`.
+- **Backgrounds** — 15 numbered blob grounds at `/backgrounds`, with measured
+  contrast per band. In use: 09 platform card, 12/11/13/14 the four candidate
+  rows, 10 the stats section.
 
-**Artwork in:** hero, platform feed-import, candidate steps 01, 02, 04.
-**Still placeholder:** candidate step 03 (register for events).
+---
 
-## Outstanding
+## Traps already hit — do not rediscover these
 
-- **Step 03 artwork.** Portrait bleeds like 01/02, landscape centres like 04.
-- **OG share image** still renders in Onest — Satori cannot read a variable
-  `woff2`, so it needs a static Inter cut.
-- **`src/views/home/` is dead** and full of token names that no longer exist.
-  Safe to delete; kept only as a fallback.
 - **iCloud is syncing this repo** (it lives under `~/Desktop`). It writes
-  conflict copies like `routes.d 2.ts` into `.next` that break the typecheck.
-  `tsconfig.json` excludes `* ?.ts` as a guard, but the real fix is moving the
-  repo somewhere unsynced.
+  conflict copies named `file 2.ts` into `.next`, which fail the typecheck
+  pointing at files nobody wrote. `tsconfig.json` excludes `* ?.ts`. The real
+  fix is moving the repo off the Desktop.
+- **The dev server caches images in memory.** Replacing a file in `public/`
+  is not enough — restart the server or you will keep seeing the old one.
+  Clearing `.next/cache/images` alone does not do it.
+- **Verify on the right port.** 3100 is dev, 3200 is a production build
+  (`aplify-v2-prod` in `.claude/launch.json`). Stephen watches 3100. Say which
+  port a claim was verified on.
+- **The browser pane's screenshots fail** on some scroll positions, returning
+  blank while the DOM is provably fine. Measure with `getComputedStyle` /
+  `getBoundingClientRect` rather than trusting a capture.
+- **`getComputedStyle` cannot see gradients.** It reports a blob ground's base
+  colour, so a contrast audit built on it is blind to exactly the surfaces
+  this page leans on.
+- **Opacity tuned on a solid colour breaks on a gradient.** `white/45`
+  measured 4.49:1 on flat navy and 2.78:1 on Midnight.
+- **Dead Tailwind class names fail silently.** `text-background` survived a
+  token rewrite as an invisible button label.
+- **Drop images in `public/assets/…`, not `public/` root.** The page only
+  reads from the subfolders; a file in root does nothing, quietly.
 
-## Gotchas that cost real time
+---
 
-- **Replacing an image needs a dev server restart.** Next's optimiser caches
-  variants in memory; deleting `.next/cache/images` under a running server does
-  nothing. The tell is aspect ratio, not appearance.
-- **Port 3100 is dev, 3200 is the production build.** Dev has served stale CSS
-  and stale images more than once. When something looks wrong, 3200 is the
-  tiebreaker.
-- **`TextEngine`'s container is flex**, so `text-center` on the heading does
-  nothing — `justify-center` has to go on the engine's own container via
-  `StackedLines`' `lineClassName`.
-- **Never `line-height` below 1.1 on animated headings.** The reveal clips to
-  the line box and shaves descenders. Tighten with the `.lines-tight` negative
-  margin instead.
-- **A dead Tailwind class fails silently.** `text-background` survived a token
-  rewrite and rendered a button with invisible text.
+## State as of this handover
 
-## How Stephen works
+**Done:** the full page — hero, problem, payoff, platform bento, four-step
+candidate journey, six stages, job search / AI rewrite / dashboard (all four
+demos live and interactive, reskinned into Aurora), security, integrations,
+roadmap, proof, testimonials, footer. Plus `/styleguide` and `/backgrounds`.
 
-Step by step, confirmation before big moves. Show options rendered rather than
-described. Honest pushback over agreement — several of the best decisions here
-came from disagreeing and explaining why. Measure rather than eyeball, and say
-plainly what you could not verify.
+**Outstanding:**
+- Step 03 of the candidate journey still has a designed placeholder — Stephen
+  is supplying artwork.
+- The OG share card renders in Onest because Satori cannot read a variable
+  `woff2`. Needs a static Inter instance.
+- `src/views/home/` can be deleted.
+- Indexing is disabled everywhere. Set `ALLOW_INDEXING=true` in Vercel when
+  the site is genuinely ready to be found.
+
+**How Stephen works:** step by step, confirmation before big moves. Show
+options rather than describing them. Honest pushback over agreement. Verify
+rather than assume, and say plainly what could not be verified.
