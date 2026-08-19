@@ -5,6 +5,16 @@
  * short and centred, and the handover's are long and left-ranged. The argument
  * is unchanged — the sentences are shorter and the lists have become things
  * you look at rather than read.
+ *
+ * ONE PHRASE SURVIVES THE SHORTENING: never "career site" alone, always
+ * "career site or campaign landing page" (V2_HANDOVER §6.2). Campaign landing
+ * pages are a separately-sold use case, and the recruitment-operations buyer in
+ * §3 owns the campaign budget specifically — copy that only ever names the
+ * career site reads, to them, as being about somebody else's page. The first
+ * re-cut of this file dropped the phrase in all six places; it is not a
+ * candidate for trimming when a line runs long. The one deliberate exception is
+ * the Google for Jobs roadmap item, which describes where Google surfaces a
+ * job rather than where Aplify is deployed.
  */
 
 export const nav = {
@@ -24,7 +34,7 @@ export const hero = {
   lines: ["More candidates,", "less friction"],
   linesSm: ["More", "candidates,", "less friction"],
   standfirst:
-    "Search, application and event registration on your own career site — candidates never get handed off to an ATS.",
+    "Search, application and event registration on your own career site or campaign landing page — candidates never get handed off to an ATS.",
   cta: { label: "Book a demo", href: "#demo" },
   secondary: { label: "See it working", href: "#job-search" },
   shot: {
@@ -216,7 +226,7 @@ export const story = {
   eyebrow: "The problem",
   lines: ["Your feed arrives", "fragmented"],
   standfirst:
-    "Publish it straight to a career site and you either lose candidates or clean it by hand — every time a job changes.",
+    "Publish it straight to a career site or campaign landing page and you either lose candidates or clean it by hand — every time a job changes.",
   /** One region, three spellings. One city, twice in a single field. */
   rows: [
     {
@@ -253,7 +263,7 @@ export const payoff = {
   lines: ["One application,", "zero redirects"],
   linesSm: ["One", "application,", "zero redirects"],
   standfirst:
-    "Candidates search, filter and apply without ever leaving your career site — no redirect, no account, no half-finished forms abandoned somewhere else.",
+    "Candidates search, filter and apply without ever leaving your career site or campaign landing page — no redirect, no account, no half-finished forms abandoned somewhere else.",
   chips: [
     "On-page",
     "No ATS redirect",
@@ -288,7 +298,7 @@ export const howItWorks = {
       n: "03",
       title: "Present",
       sub: "Publish it on your own site",
-      body: "Full-text search, geo search with a configurable radius, an interactive map and detail pages — embedded on your career site.",
+      body: "Full-text search, geo search with a configurable radius, an interactive map and detail pages — all on your career site or campaign landing page.",
       points: ["Keyword and salary filtering", "Postcode and map search", "One campaign to a national board"],
     },
     {
@@ -321,7 +331,7 @@ export const demos = {
     lines: ["The search your", "candidates would get"],
     linesSm: ["The search", "your", "candidates get"],
     standfirst:
-      "Three views of one filtered set — grid, list and map — running the way it would run on your career site.",
+      "Three views of one filtered set — grid, list and map — running the way it would run on your career site or campaign landing page.",
     shot: { url: "yourcompany.co.uk/careers", placeholder: "Job search — grid, list and map" },
   },
   aiEnrichment: {
