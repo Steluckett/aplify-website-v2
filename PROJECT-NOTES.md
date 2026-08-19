@@ -81,6 +81,13 @@ negative margin instead.
 
 ## The design system in one page
 
+- **Generated images** (`opengraph-image`, `twitter-image`, `apple-icon`) run
+  through Satori, which **cannot read a variable `woff2`** — the browser's
+  `inter-var.woff2` is invisible to it. They use static instances cut from that
+  same file with `fontTools.varLib.instancer`: `Inter-Display-550.ttf`
+  (wght 550 / opsz 32) and `Inter-Text-400.ttf` (wght 400 / opsz 14). Re-cut
+  them if the type ramp changes. The share card takes its copy from `site.ts`,
+  never from a second string.
 - **Type** — Inter only. Workable's ladder: hero 96px (our one deliberate
   step past them), section heads 56, card titles 32, h4 24, lead 24, body 18,
   small 16, fine 14, eyebrow 12. Weight 550 for display, tracking −0.035em.
@@ -149,16 +156,10 @@ demos live and interactive, reskinned into Aurora), security, integrations,
 roadmap, proof, testimonials, footer. Plus `/styleguide` and `/backgrounds`.
 
 **Outstanding:**
-- The OG share card renders in Onest because Satori cannot read a variable
-  `woff2`. Needs a static Inter instance — there is no static Inter in
-  `src/app/fonts/` yet, only `inter-var.woff2`. It also still draws its
-  headline from `src/data/content/hero.ts` (the dead build's copy, reading
-  "MORE CANDIDATES. LESS FRICTION.") rather than from `site.ts`, so the card
-  is off-message before the font is even considered.
-- `src/views/home/` can be deleted — but `opengraph-image.tsx` imports
-  `content/hero.ts`, so repoint that at `site.ts` first or the delete breaks
-  the build. Deleting also orphans `closing.ts`, `platform.ts`, `spine.ts`
-  and `stage-data.ts`.
+- `src/views/home/` can now be deleted — the OG card no longer imports
+  `content/hero.ts`, so nothing live depends on it. Deleting the folder
+  orphans `hero.ts`, `closing.ts`, `platform.ts`, `spine.ts` and
+  `stage-data.ts`, which go with it.
 - The cookie banner and preferences modal link to `/privacy-policy`, which
   404s. Needs the page, a real external URL, or the link removing.
 - `jamie.okafor@email.com` appears in the step 03 and step 04 artwork.
