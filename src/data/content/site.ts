@@ -98,7 +98,7 @@ export const capabilities = {
         /* A phone is narrow; more than this and it reads as a tablet. */
         widthPct: 60,
         alt: "Job search on a phone: keyword and location fields, a search button, 48 roles sorted by distance, and two job cards with salary and category.",
-        loose: true,
+        fit: "bleed" as const,
       },
     },
     {
@@ -116,7 +116,7 @@ export const capabilities = {
         /* A full form needs the width to stay legible. */
         widthPct: 80,
         alt: "The Easy Apply flow: the role being applied for, two pre-qualification questions, then a details form with name, email, phone, location, CV upload and a submit button.",
-        loose: true,
+        fit: "bleed" as const,
       },
     },
     {
@@ -125,7 +125,23 @@ export const capabilities = {
       title: "Register for events",
       body: "Open days and assessment centres get the same low-friction flow on their own tab, with places tracked and attendance recorded against the candidate afterwards — so an event stops being a spreadsheet that lives on somebody's desktop.",
       points: ["Own tab, same flow", "Places tracked", "Attendance recorded"],
-      shot: { url: "yourcompany.co.uk/careers/events", placeholder: "Event registration" },
+      shot: {
+        src: "/assets/steps/event-registration.png",
+        w: 1595,
+        h: 852,
+        alt: "Registration for the Northbank Careers Open Day on Saturday 12 September 2026 in Manchester: a details form part-filled with a name and email address, and a confirmation card reading “You’re registered” with the place confirmed and added to the calendar.",
+        /* Shown whole. At 1.87:1 it is the widest of the four, so the box
+           sizes it by width and it sits shorter than step 04 — that is the
+           artwork's shape, not a layout fault. */
+        widthPct: 96,
+        heightPct: 82,
+        /* Measured, not eyeballed: the PNG's alpha bounding box sits 2.26%
+           left of its own canvas centre (24px margin left, 95px right), so
+           centring the file leaves the content looking left-hung. Remove this
+           when the artwork is re-exported with even margins. */
+        nudgeXPct: 2.26,
+        fit: "center" as const,
+      },
     },
     {
       n: "04",
@@ -136,13 +152,14 @@ export const capabilities = {
       shot: {
         src: "/assets/steps/application-received.png",
         alt: "The confirmation screen after applying: a green tick, \u201cApplication received\u201d, a line telling Jamie the application is with the hiring team and a confirmation email is on its way, and buttons to browse more roles or track the application.",
-        loose: true,
         w: 1662,
         h: 1307,
         /* Landscape, so it does not run off the card the way the two portrait
            shots do — it is centred and shown whole instead. A confirmation is
-           a complete moment; cropping it would undercut the point. */
-        widthPct: 88,
+           a complete moment; cropping it would undercut the point. At 1.27:1
+           the box sizes this one by HEIGHT, so widthPct is only a safety cap. */
+        widthPct: 96,
+        heightPct: 82,
         fit: "center" as const,
       },
     },

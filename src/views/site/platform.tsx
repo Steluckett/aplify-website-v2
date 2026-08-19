@@ -176,12 +176,23 @@ const Capabilities = () => (
                   colour and is cut by the row instead. */}
               <article className="card-quiet relative overflow-hidden rounded-panel p-5 sm:p-8 lg:p-10">
                 <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14">
-                  <div className={shotFirst ? "lg:order-2" : ""}>
+                  {/* The copy block is capped at its measure and CENTRED in
+                      its half, rather than sitting flush against the panel
+                      edge. Left-ranged text in a column wider than its measure
+                      pushes all the slack to one side, so the copy hugged the
+                      outer edge and opened a gap against the shot. Capping the
+                      grid item itself — not the paragraph — keeps numeral,
+                      heading, body and chips on one left edge and centres the
+                      whole block. The text stays ragged-right; only the block
+                      moves. */}
+                  <div
+                    className={`mx-auto w-full max-w-[34rem] ${
+                      shotFirst ? "lg:order-2" : ""
+                    }`}
+                  >
                     <p className="figure text-h2 text-ink/25">{step.n}</p>
                     <h3 className="display mt-6 text-h3">{step.title}</h3>
-                    <p className="mt-5 max-w-[34rem] text-body leading-[1.6] text-ink-body">
-                      {step.body}
-                    </p>
+                    <p className="mt-5 text-body leading-[1.6] text-ink-body">{step.body}</p>
                     <ul className="mt-7 flex flex-wrap gap-2">
                       {step.points.map((point) => (
                         <li key={point} className="chip bg-surface-raised">
@@ -193,44 +204,64 @@ const Capabilities = () => (
 
                   {/* Each shot gets its own DEEP blob ground. These rows sit
                       inside grey panels, where a pale ground has nothing to
-                      push against. All four are image-only surfaces — the
-                      frame and placeholder carry their own fills, so no text
-                      ever lands on the gradient.
+                      push against. All four are image-only surfaces, so no
+                      text ever lands on the gradient.
 
-                      A `loose` shot has no browser frame and is anchored to
-                      the card's foot, running past it. The card therefore has
-                      a fixed height and the image is taken out of flow, since
-                      an in-flow image would simply make the card taller
-                      instead of bleeding out of it. */}
+                      The ground is sized by ASPECT RATIO, never by a rem
+                      height. Two reasons. All four boxes then share a height
+                      at every width automatically, because they share a grid
+                      column. And the root font-size on this site is fluid
+                      (globals.css — it is set in `vw` across four bands), so
+                      a rem height drifts against an image's fixed aspect
+                      ratio as the viewport moves: the old `h-[30rem]` clipped
+                      step 04 by 12px at 1728 and by 41px at 1512. A ratio
+                      cannot drift, because both sides scale together.
+
+                      The image is absolutely positioned either way, so it
+                      never feeds back into the box's height:
+                      - `bleed`  anchored near the top, running off the foot
+                                 of the ground and cut by the row. Sized by
+                                 width; the overflow is the point.
+                      - `center` shown whole and centred, capped on BOTH axes
+                                 so any artwork ratio fits by construction.
+                                 The taller cap binds for a squarish shot, the
+                                 wider cap for a letterbox one. */}
                   <div
-                    className={`grain bg-${step.bg} relative rounded-panel ${
-                      "loose" in step.shot && step.shot.loose
-                        ? "h-[26rem] sm:h-[30rem]"
-                        : "p-6 sm:p-8"
-                    } ${shotFirst ? "lg:order-1" : ""}`}
+                    className={`grain bg-${step.bg} relative aspect-[5/4] rounded-panel ${
+                      shotFirst ? "lg:order-1" : ""
+                    }`}
                   >
-                    {"src" in step.shot && step.shot.src ? (
-                      <Image
-                        src={step.shot.src}
-                        alt={step.shot.alt}
-                        width={step.shot.w}
-                        height={step.shot.h}
-                        sizes="(max-width: 1024px) 80vw, 520px"
-                        style={{ width: `${step.shot.widthPct}%` }}
-                        className={`absolute left-1/2 -translate-x-1/2 drop-shadow-[0_24px_60px_rgba(16,19,26,0.28)] ${
-                          "fit" in step.shot && step.shot.fit === "center"
-                            ? "top-1/2 -translate-y-1/2"
-                            : "top-10"
-                        }`}
-                      />
-                    ) : (
-                      <ScreenCard
-                        ground="none"
-                        url={step.shot.url}
-                        placeholder={step.shot.placeholder}
-                        ratio="4 / 3"
-                      />
-                    )}
+                    <Image
+                      src={step.shot.src}
+                      alt={step.shot.alt}
+                      width={step.shot.w}
+                      height={step.shot.h}
+                      sizes="(max-width: 1024px) 80vw, 660px"
+                      style={
+                        step.shot.fit === "center"
+                          ? {
+                              maxWidth: `${step.shot.widthPct}%`,
+                              maxHeight: `${step.shot.heightPct}%`,
+                              /* Centre on the artwork's CONTENT, not on its
+                                 canvas. `nudgeXPct` is measured: the alpha
+                                 bounding box of step 03's PNG sits 2.26% left
+                                 of its own canvas centre (24px of margin on
+                                 the left against 95px on the right), so
+                                 centring the file centres the empty space with
+                                 it. Delete the value — not the mechanism —
+                                 once the artwork is re-exported centred. */
+                              transform: `translate(calc(-50% + ${
+                                step.shot.nudgeXPct ?? 0
+                              }%), -50%)`,
+                            }
+                          : { width: `${step.shot.widthPct}%` }
+                      }
+                      className={`absolute left-1/2 drop-shadow-[0_24px_60px_rgba(16,19,26,0.28)] ${
+                        step.shot.fit === "center"
+                          ? "top-1/2 h-auto w-auto"
+                          : "top-10 -translate-x-1/2"
+                      }`}
+                    />
                   </div>
                 </div>
               </article>
