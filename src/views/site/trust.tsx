@@ -12,7 +12,7 @@ import {
 
 /** Security — the pastel four, on white so the tints separate. */
 export const Security = () => (
-  <section id="security" className="py-26">
+  <section id="security" className="band-white py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={security.eyebrow}
@@ -43,7 +43,7 @@ export const Security = () => (
  * than bullets — the same information, with somewhere for the eye to rest.
  */
 export const Integrations = () => (
-  <section id="integrations" className="band-white py-26">
+  <section id="integrations" className="py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={integrations.eyebrow}
@@ -151,7 +151,7 @@ export const Proof = () => (
  * display register at card scale, attribution quiet beneath a rule.
  */
 export const Testimonials = () => (
-  <section id="testimonials" className="py-26">
+  <section id="testimonials" className="band-white py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={testimonials.eyebrow}

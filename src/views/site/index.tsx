@@ -36,10 +36,29 @@ import { Integrations, Proof, Roadmap, Security, Testimonials } from "./trust";
  * it works as the bridge out of the platform act and into the candidate one,
  * where anywhere else it would be the thing crossing the boundary.
  *
- * Bands alternate between the tinted ground and full-bleed white so the scroll
- * has rhythm. The alternation is a property of the ORDER, not of any section,
- * so moving a section means re-checking its `band-white` — the classes below
- * were reassigned wholesale when this order changed.
+ * BANDS ARE NOT FREE TO ALTERNATE. The rhythm of tinted against full-bleed
+ * white is the softer goal; four sections have a hard requirement, because
+ * their card surfaces are only separable on white:
+ *
+ *   #candidates  `card-quiet` (#eef0f5) — ΔE 0.35 on the tinted ground.
+ *   #roadmap      Mathematically invisible. Not "subtle": invisible.
+ *   #security    the pastel four — ΔE 4.3–11.8 on tint, 7.7–10.4 on white.
+ *   #testimonials a 10%-alpha gradient, which needs white underneath it.
+ *
+ * And #platform must stay TINTED for the opposite reason: it renders its own
+ * white mega-panel, which has nothing to lift off if the section is white too.
+ *
+ * This is a documented invariant, not a preference. `globals.css` lightened the
+ * page ground specifically because "the pastel cards no longer depend on this
+ * separation: they live on the white bands" — the ground and the cards were
+ * solved as a pair. Reordering the page in the previous commit broke it, and
+ * the tell was exactly what you would expect: the cards looked washed out and
+ * the ground read as heavy grey, when the ground is in fact L* 95.1.
+ *
+ * So: satisfy the five constraints above FIRST, then alternate whatever is
+ * left. Doing it the other way round is what went wrong. Pairs are acceptable
+ * where the constraints force them — the tail runs WW··WW· and the original
+ * page ran a white pair too.
  */
 export const SiteView = () => (
   <>
@@ -67,13 +86,13 @@ export const SiteView = () => (
       {/* The only hard number the site has, immediately after the claim it
           proves rather than nine sections later, behind the objections. */}
       <Proof />
+      <Testimonials />
 
       {/* Where the work lands, then the objections in §9's order. */}
       <DashboardSection />
       <Integrations />
       <Security />
       <Roadmap />
-      <Testimonials />
       <SiteFooter />
     </main>
   </>
