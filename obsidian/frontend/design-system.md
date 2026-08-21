@@ -244,11 +244,12 @@ a deep ground usually carries a **real button** too, and `btn-secondary` is a
 solid white pill. Two white pills of equal weight doing different jobs is the
 clash. Glass stays legible and stays subordinate.
 
-`--raw-surface-glass-dark` is `rgb(255 255 255 / 0.16)` with a `0.28` ring,
-solved against the extremes of the deep set at once: `--ink-on-dark` measures
-**7.84:1** over `bg-15`'s amber and **5.08:1** over `bg-07`'s violet, so one
-value serves all nine. The ring is an `inset` box-shadow rather than a border,
-because a border would add two pixels to every pill and shift the row.
+`--raw-surface-glass-dark` is `rgb(255 255 255 / 0.16)`, solved against the
+extremes of the deep set at once: `--ink-on-dark` measures **7.84:1** over
+`bg-15`'s amber and **5.08:1** over `bg-07`'s violet, so one value serves all
+nine. Fill and blur only — no ring. An earlier cut carried a 1px inset
+highlight to firm up the edge, and it read as a hairline outline: a row of
+chips looked drawn rather than lit.
 
 The fill cannot reach 3:1 against its ground — that is what makes it glass.
 It does not need to: a chip is a static label, not a control, so the bar that
