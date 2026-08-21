@@ -143,6 +143,13 @@ negative margin instead.
   measured 4.49:1 on flat navy and 2.78:1 on Midnight.
 - **Dead Tailwind class names fail silently.** `text-background` survived a
   token rewrite as an invisible button label.
+- **`border-<name>` with an unbound colour paints INK, not nothing.** Tailwind
+  v4 falls back to `currentColor`, so a border whose colour token was never
+  bound in `@theme` renders as a near-black hairline on a light card. The
+  hairline colour here is `--hairline` (`--raw-color-border` `#e6e9f0`) and it
+  has **no** `--color-*` binding, so `border-border` and `border-hairline` both
+  silently produce ink. Check `getComputedStyle(el).borderColor` against
+  `.color` — if they match, the token never resolved.
 - **Drop images in `public/assets/…`, not `public/` root.** The page only
   reads from the subfolders; a file in root does nothing, quietly.
 

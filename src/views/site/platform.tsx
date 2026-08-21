@@ -237,8 +237,10 @@ export const FeatureBento = () => (
  * The card is WHITE with a lift, not the quiet grey it was. Stacked, grey
  * cards on a white band had nothing between one card and the next and the pile
  * read as one soft mass. White separates each card from the one beneath it,
- * and the shadow is what draws the edge. The chips lose their white override
- * with it — a white pill on a white card would vanish, which is the same
+ * and the shadow alone draws the edge — no border. The reference carries one
+ * because its shadow is far subtler than `shadow-lift`; here it only added a
+ * hard line around something already lifted. The chips lose their white
+ * override too, because a white pill on a white card would vanish — the same
  * contextual-ground rule the chip system already documents.
  */
 const StepCard = ({
@@ -248,7 +250,7 @@ const StepCard = ({
   step: (typeof capabilities.steps)[number];
   shotFirst: boolean;
 }) => (
-  <article className="relative overflow-hidden rounded-panel border border-border bg-surface-raised p-5 shadow-lift sm:p-8 lg:p-10">
+  <article className="relative overflow-hidden rounded-panel bg-surface-raised p-5 shadow-lift sm:p-8 lg:p-10">
     <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14">
       {/* The copy block is capped at its measure and CENTRED in
               its half, rather than sitting flush against the panel
