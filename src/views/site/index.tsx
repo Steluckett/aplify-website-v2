@@ -40,13 +40,18 @@ import { Integrations, Proof, Roadmap, Security, Testimonials } from "./trust";
  * white is the softer goal; four sections have a hard requirement, because
  * their card surfaces are only separable on white:
  *
- *   #candidates  `card-quiet` (#eef0f5) — ΔE 0.35 on the tinted ground.
- *   #roadmap      Mathematically invisible. Not "subtle": invisible.
+ *   #roadmap     `card-quiet` (#eef0f5) — ΔE 0.35 on the tinted ground.
+ *                Mathematically invisible. Not "subtle": invisible.
  *   #security    the pastel four — ΔE 4.3–11.8 on tint, 7.7–10.4 on white.
  *   #testimonials a 10%-alpha gradient, which needs white underneath it.
  *
  * And #platform must stay TINTED for the opposite reason: it renders its own
  * white mega-panel, which has nothing to lift off if the section is white too.
+ *
+ * #candidates is no longer on that list. Its cards were `card-quiet` when the
+ * steps were rows; the stack made them white with a lift, so they now read on
+ * either ground. It is still on white, but by choice rather than by
+ * constraint — it could move if a reorder needed the slot.
  *
  * This is a documented invariant, not a preference. `globals.css` lightened the
  * page ground specifically because "the pastel cards no longer depend on this
@@ -55,7 +60,7 @@ import { Integrations, Proof, Roadmap, Security, Testimonials } from "./trust";
  * the tell was exactly what you would expect: the cards looked washed out and
  * the ground read as heavy grey, when the ground is in fact L* 95.1.
  *
- * So: satisfy the five constraints above FIRST, then alternate whatever is
+ * So: satisfy the constraints above FIRST, then alternate whatever is
  * left. Doing it the other way round is what went wrong. Pairs are acceptable
  * where the constraints force them — the tail runs WW··WW· and the original
  * page ran a white pair too.

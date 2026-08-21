@@ -2,7 +2,7 @@
 
 import { animated, to, useSprings } from "@react-spring/web";
 import Image from "next/image";
-import { createRef, useEffect, useState } from "react";
+import { createRef, Fragment, useEffect, useState } from "react";
 
 import { Reveal } from "@/components/ui/reveal";
 import { ScreenCard } from "@/components/ui/screen-card";
@@ -226,10 +226,20 @@ export const FeatureBento = () => (
 );
 
 /**
- * One step. The card itself is EXACTLY as it was before the stack — same
- * panel, same alternating copy/shot grid, same bleeding shots. The stacking
- * happens entirely outside it, so this stays the single description of what a
- * step looks like.
+ * One step: the shot on the left, the copy on the right, every time.
+ *
+ * It used to alternate, and the swap was doing real work in flow — it stopped
+ * four identical rows reading as a list, because the eye tracked back and
+ * forth rather than straight down. In a STACK every card pins in the same
+ * place, so the alternation stopped being a rhythm and became a flicker: the
+ * copy jumping side to side as each card replaced the last.
+ *
+ * The card is WHITE with a lift, not the quiet grey it was. Stacked, grey
+ * cards on a white band had nothing between one card and the next and the pile
+ * read as one soft mass. White separates each card from the one beneath it,
+ * and the shadow is what draws the edge. The chips lose their white override
+ * with it — a white pill on a white card would vanish, which is the same
+ * contextual-ground rule the chip system already documents.
  */
 const StepCard = ({
   step,
@@ -238,7 +248,7 @@ const StepCard = ({
   step: (typeof capabilities.steps)[number];
   shotFirst: boolean;
 }) => (
-  <article className="card-quiet relative overflow-hidden rounded-panel p-5 sm:p-8 lg:p-10">
+  <article className="relative overflow-hidden rounded-panel border border-border bg-surface-raised p-5 shadow-lift sm:p-8 lg:p-10">
     <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14">
       {/* The copy block is capped at its measure and CENTRED in
               its half, rather than sitting flush against the panel
@@ -261,7 +271,7 @@ const StepCard = ({
         </p>
         <ul className="mt-7 flex flex-wrap gap-2">
           {step.points.map((point) => (
-            <li key={point} className="chip bg-surface-raised">
+            <li key={point} className="chip">
               {point}
             </li>
           ))}
@@ -427,48 +437,59 @@ export const Capabilities = () => {
 
         <div className={stacked ? "mt-16" : "mt-16 space-y-10"}>
           {steps.map((step, i) => (
-            <div
-              key={step.n}
-              ref={refs[i]}
-              className={stacked ? "sticky" : undefined}
-              style={
-                stacked
-                  ? {
-                      top: restTops[i],
-                      /* Later cards paint over earlier ones. */
-                      zIndex: 10 + i,
-                      marginBottom: i === count - 1 ? 0 : `${GAP_VH}vh`,
-                      /* The 3D has to live on the pinned parent: a rotateX
+            <Fragment key={step.n}>
+              <div
+                ref={refs[i]}
+                className={stacked ? "sticky" : undefined}
+                style={
+                  stacked
+                    ? {
+                        top: restTops[i],
+                        /* Later cards paint over earlier ones. */
+                        zIndex: 10 + i,
+                        /* The 3D has to live on the pinned parent: a rotateX
                          with no perspective above it is a flat squash. */
-                      perspective: `${PERSPECTIVE}px`,
-                    }
-                  : undefined
-              }
-            >
-              {stacked ? (
-                <animated.div
-                  style={{
-                    transform: to(
-                      [springs[i].ty, springs[i].rx, springs[i].sc],
-                      (ty, rx, sc) =>
-                        `translateY(${ty}px) rotateX(${rx}deg) scale(${sc})`,
-                    ),
-                    filter: springs[i].br.to((b) => `brightness(${b})`),
-                    /* Hinged at the top edge, so an arriving card tips up from
+                        perspective: `${PERSPECTIVE}px`,
+                      }
+                    : undefined
+                }
+              >
+                {stacked ? (
+                  <animated.div
+                    style={{
+                      transform: to(
+                        [springs[i].ty, springs[i].rx, springs[i].sc],
+                        (ty, rx, sc) =>
+                          `translateY(${ty}px) rotateX(${rx}deg) scale(${sc})`,
+                      ),
+                      filter: springs[i].br.to((b) => `brightness(${b})`),
+                      /* Hinged at the top edge, so an arriving card tips up from
                        its own leading edge rather than pivoting about its
                        middle. */
-                    transformOrigin: "50% 0",
-                    willChange: "transform, filter",
-                  }}
-                >
-                  <StepCard step={step} shotFirst={i % 2 === 1} />
-                </animated.div>
-              ) : (
-                <Reveal variant="up">
-                  <StepCard step={step} shotFirst={i % 2 === 1} />
-                </Reveal>
-              )}
-            </div>
+                      transformOrigin: "50% 0",
+                      willChange: "transform, filter",
+                    }}
+                  >
+                    <StepCard step={step} shotFirst />
+                  </animated.div>
+                ) : (
+                  <Reveal variant="up">
+                    <StepCard step={step} shotFirst />
+                  </Reveal>
+                )}
+              </div>
+              {/* The scroll room between cards is a SPACER, not a bottom margin
+                on the card. A sticky element is constrained so its MARGIN box
+                stays inside its container, so a 46vh bottom margin made a card
+                let go 46vh before the container ended — cards 1 to 3 released
+                early, collapsed together and flew up while card 4 was still
+                pinned, tearing a 500px hole in the pile on the way out. With
+                the gap moved into a sibling every card carries no margin, so
+                they all hold to the same line and the stack leaves intact. */}
+              {stacked && i < count - 1 ? (
+                <div aria-hidden style={{ height: `${GAP_VH}vh` }} />
+              ) : null}
+            </Fragment>
           ))}
 
           {/* Scroll room after the last card, so it can rise fully and rest on
