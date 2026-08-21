@@ -801,3 +801,7 @@ This is a human-curated log — not a mirror of `git log`.
   `.bg-07`–`.bg-15`. Added because the AI enrichment demo moved onto a deep
   ground, where the white chip pill competed with the white button beside it.
 - **AI enrichment sits on `bg-15`** instead of the pale wash.
+- **Candidate journey is a scroll-pinned card stack.** `use-stack-rise` (new)
+  measures per-card arrival and burial; react-spring applies it. Cards, copy
+  and shots are unchanged — only the arrangement. Falls back to plain stacked
+  rows wherever a pinned card would not fit the viewport, which is every phone.
