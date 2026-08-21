@@ -60,6 +60,48 @@ export const siteMap = {
   linesSm: ["Between", "your ATS and", "your candidates"],
   standfirst:
     "One side never touches a candidate. The other is everything a candidate ever sees. Both run off the same cleaned data.",
+  /**
+   * The claim, shown rather than asserted: ONE role, seen from both sides.
+   *
+   * The temptation here is a collage of product surfaces, which would say
+   * "there is a lot of product" — true, and not the claim. The claim is about
+   * a relationship, so the composition has to carry a relationship: the same
+   * job, twice, over the single record both faces read from. A viewer who
+   * spots the same title and salary in both panels has worked out "both run
+   * off the same cleaned data" without being told it a second time.
+   *
+   * The role is the one the job-search demo already uses. Reusing it is the
+   * point — it has to be recognisably the SAME job or the composition proves
+   * nothing.
+   */
+  halves: [
+    {
+      label: "Never sees a candidate",
+      url: "aplify.co.uk/jobs",
+      placeholder: "Jobs table — Aplify admin",
+      caption:
+        "The role inside Aplify: fields mapped, salary normalised, region standardised.",
+    },
+    {
+      label: "All a candidate ever sees",
+      url: "yourcompany.co.uk/careers",
+      placeholder: "The same roles, candidate side",
+      caption:
+        "The same role on your own careers page: searched, opened and applied to without leaving it.",
+    },
+  ],
+  shared: {
+    label: "One cleaned record, feeding both",
+    fields: [
+      "Assistant General Manager",
+      "Manchester",
+      "£34,000–£38,000",
+      "Full time",
+    ],
+  },
+  /** §6.7 — a composition this close to the product discloses its sample data. */
+  caption:
+    "Illustrative. The role shown is invented, as everywhere on this page.",
 } as const;
 
 /**
