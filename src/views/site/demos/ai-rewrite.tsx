@@ -84,10 +84,11 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
           kept for its padding only; the fill comes from the blob ground.
 
           Every ink on this surface had to be re-solved. `--ink-label`, which
-          the caption used, measures 1.56:1 on #4a3f9e — invisible. The chips
-          are fine untouched, because a chip is a light pill and its ink sits
-          on the pill rather than on the ground. */}
-      <div className="grain bg-07 wash-lg rounded-panel">
+          the caption used, measures 2.65:1 on #3a2708, well under the 4.5:1
+          bar. The chips need nothing HERE, because `globals.css` now gives any
+          chip on a deep ground a glass pill automatically — see the
+          `.bg-07 .chip` block and the note beside it. */}
+      <div className="grain bg-15 wash-lg rounded-panel">
         <div>
           <div className="grid gap-10 md:grid-cols-2">
             {aiRewriteContent.jobs.map((job, index) => (
@@ -106,11 +107,11 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
               onClick={() => setRewritten((value) => !value)}
               /* The white pill in BOTH states. `btn-primary` is a blue-violet
                  gradient, and every deep ground in the set is the same colour
-                 family — on bg-07 its edge measures 1.26:1 against the ground,
+                 family — on bg-15 its edge measures 2.13:1 against the ground,
                  so the button dissolves and only its label survives. No ground
                  fixes that: the darkest available, bg-10, still only reaches
                  2.79:1 against a 3:1 bar. The light pill inverts correctly at
-                 8.41:1, and the label already carries the state. */
+                 14.25:1, and the label already carries the state. */
               className="btn btn-secondary px-5 py-2.5 text-ui-sm"
             >
               {rewritten

@@ -126,6 +126,15 @@
   --raw-surface-glass: rgb(255 255 255 / 0.72);
   --raw-surface-glass-edge: rgb(255 255 255 / 0.65);
 
+  /* The same idea inverted, for the DEEP blob grounds. 72% white over a dark
+     ground is just a white pill, so these are far thinner: enough to read as
+     a surface, deliberately not enough to compete with a real white button
+     sitting next to it. Solved against the darkest and the lightest deep
+     grounds at once — #f4f5f8 on this fill measures 7.84:1 over bg-15's
+     amber and 5.08:1 over bg-07's violet, so one value serves all nine. */
+  --raw-surface-glass-dark: rgb(255 255 255 / 0.16);
+  --raw-surface-glass-dark-edge: rgb(255 255 255 / 0.28);
+
   /* --- Charts. The "Vivid" categorical six, validated for colourblind
      separation and 3:1 on both Aurora card surfaces. Order is fixed and
      never cycled; re-run the dataviz validator before changing any value. */
@@ -297,6 +306,8 @@
   --surface: var(--raw-surface-group);
   --surface-raised: var(--raw-surface-tile);
   --surface-chip: var(--raw-color-chip);
+  --surface-chip-on-dark: var(--raw-surface-glass-dark);
+  --surface-chip-on-dark-edge: var(--raw-surface-glass-dark-edge);
   --surface-dark: var(--raw-color-navy);
 
   --ink: var(--raw-color-ink);
@@ -744,6 +755,36 @@ body {
   .wash-soft .chip,
   .inset-glass .chip {
     background: var(--raw-surface-tile);
+  }
+
+  /* A chip on a DEEP blob ground takes GLASS, and white text with it.
+     The third case of the same contextual-ground rule as the two above: a
+     chip's job is to read as a pill, and which fill achieves that depends on
+     what it is sitting on. On a deep ground the neutral wash is a bright
+     solid, which puts it in direct competition with any real white button
+     beside it — two white pills, equal weight, different jobs. Glass keeps it
+     legible and subordinate.
+
+     Keyed on the deep grounds themselves rather than an opt-in class, so a
+     chip dropped onto one is right by default. bg-01 to bg-06 are the light
+     grounds and are deliberately excluded.
+
+     The ring is an inset shadow rather than a border: a border would add two
+     pixels to every pill and shift the row. */
+  .bg-07 .chip,
+  .bg-08 .chip,
+  .bg-09 .chip,
+  .bg-10 .chip,
+  .bg-11 .chip,
+  .bg-12 .chip,
+  .bg-13 .chip,
+  .bg-14 .chip,
+  .bg-15 .chip {
+    background: var(--surface-chip-on-dark);
+    color: var(--ink-on-dark);
+    box-shadow: inset 0 0 0 1px var(--surface-chip-on-dark-edge);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    backdrop-filter: blur(12px) saturate(1.2);
   }
 
   /* ...but a chip back on a WHITE inset returns to the neutral wash. The

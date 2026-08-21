@@ -796,3 +796,8 @@ This is a human-curated log — not a mirror of `git log`.
 - **Vault reconciled** to the real route map: `/` renders `SiteView` from
   `src/views/site/`. Notes had described the starter's empty `views/home.tsx`
   since before the Aurora rebuild.
+- **Glass chip variant for deep grounds.** `--raw-surface-glass-dark` /
+  `--surface-chip-on-dark`, applied automatically to any `.chip` inside
+  `.bg-07`–`.bg-15`. Added because the AI enrichment demo moved onto a deep
+  ground, where the white chip pill competed with the white button beside it.
+- **AI enrichment sits on `bg-15`** instead of the pale wash.

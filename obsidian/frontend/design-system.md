@@ -129,6 +129,13 @@ every case (motion is spring-based, so there are no keyframes to co-locate).
 
 ## Current theme state
 
+> [!warning] This section describes the dark-luxury build, which was deleted
+> The live site is the Aurora rebuild: a light ground (`--raw-color-ground`
+> `#eff1f6`), Inter, and a sky-to-violet accent. The tokens listed below —
+> `--raw-color-black`, the `sky-300`/`sky-400` ramp, "authored on black" — are
+> the previous build's and no longer exist. Read `globals.css` for the current
+> three tiers until this section is rewritten.
+
 The theme is **dark-only by brand** — `--background` / `--foreground` resolve to
 the same roles regardless of `prefers-color-scheme`, because the design is
 authored on black. ADR: [[decisions-log]] ADR-0019.
@@ -217,6 +224,40 @@ equals its design value exactly at the 1440 base width.
 - No inline `style` except for dynamic values (e.g. spring-animated values).
 - Motion is spring-based; CSS `transition-*` only for the narrow hover/focus case
   above — never `@keyframes`.
+
+## Contextual grounds: a chip picks its fill from what it sits on
+
+A chip's job is to read as a pill, and which fill achieves that depends on the
+surface underneath it. `globals.css` therefore has **four** chip fills, chosen
+by ancestor rather than by a modifier class — drop a `.chip` anywhere and it is
+right by default:
+
+| Sits on | Fill | Why |
+|---|---|---|
+| the page ground / white | `--surface-chip` `#eef0f5` | the neutral wash, chosen to read quietly on white |
+| `.wash`, `.wash-soft`, `.inset-glass` | `--raw-surface-tile` (white) | the neutral wash turns muddy over the spectrum |
+| `.inset-tile` (a white inset) | `--surface-chip` again | a white pill on white would vanish |
+| `.bg-07` … `.bg-15` (the deep blob grounds) | `--surface-chip-on-dark` — glass | see below |
+
+The deep-ground case is glass, not a white pill, for a reason worth keeping:
+a deep ground usually carries a **real button** too, and `btn-secondary` is a
+solid white pill. Two white pills of equal weight doing different jobs is the
+clash. Glass stays legible and stays subordinate.
+
+`--raw-surface-glass-dark` is `rgb(255 255 255 / 0.16)` with a `0.28` ring,
+solved against the extremes of the deep set at once: `--ink-on-dark` measures
+**7.84:1** over `bg-15`'s amber and **5.08:1** over `bg-07`'s violet, so one
+value serves all nine. The ring is an `inset` box-shadow rather than a border,
+because a border would add two pixels to every pill and shift the row.
+
+The fill cannot reach 3:1 against its ground — that is what makes it glass.
+It does not need to: a chip is a static label, not a control, so the bar that
+applies is the 4.5:1 on its text.
+
+> [!note] Source order is load bearing here
+> The four rules carry equal specificity, so the order they are declared in is
+> what decides. The `data-tint` classification rules come **last** on purpose,
+> so a classification chip keeps its own colour on any ground.
 
 ## Related
 
