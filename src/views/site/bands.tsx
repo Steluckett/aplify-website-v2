@@ -24,9 +24,21 @@ import { dropOff, siteMap } from "@/data/content/site";
  * It arrives already framed — its own rounded card, its own white edge — so it
  * sits directly on the band with no `ScreenCard` around it. A browser bar here
  * would be a second frame arguing with the one already drawn.
+ *
+ * THE BLEED. The artwork runs on past the foot of its own band and is cut by
+ * the white of the section below. Mechanically: this section drops its bottom
+ * padding, the image carries a negative bottom margin so the next section
+ * starts before the picture ends, and `#problem` is `relative` so that its
+ * white background paints OVER the overflow. That last part is the whole
+ * trick — in normal painting order a later sibling's background goes down
+ * before an earlier sibling's in-flow content, so without the positioning the
+ * image would sit on top of the white instead of under it.
+ *
+ * No caption. §6.7 requires one on every DEMO; this is a still image, and a
+ * disclosure line under it would only interrupt the bleed it is not needed for.
  */
 export const MapBand = () => (
-  <section id="where-it-sits" className="py-26">
+  <section id="where-it-sits" className="pt-26 pb-0">
     <div className="shell">
       <SectionIntro
         eyebrow={siteMap.eyebrow}
@@ -36,20 +48,15 @@ export const MapBand = () => (
       />
 
       <Reveal variant="up">
-        <div className="mt-16">
-          <Image
-            src={siteMap.shot.src}
-            alt={siteMap.shot.alt}
-            width={siteMap.shot.w}
-            height={siteMap.shot.h}
-            sizes="(max-width: 1024px) 95vw, 1233px"
-            className="h-auto w-full"
-            priority={false}
-          />
-          <p className="mx-auto mt-8 max-w-[52rem] text-center text-xs text-ink-label">
-            {siteMap.caption}
-          </p>
-        </div>
+        <Image
+          src={siteMap.shot.src}
+          alt={siteMap.shot.alt}
+          width={siteMap.shot.w}
+          height={siteMap.shot.h}
+          sizes="(max-width: 1024px) 95vw, 1233px"
+          className="mt-16 -mb-10 h-auto w-full lg:-mb-16"
+          priority={false}
+        />
       </Reveal>
     </div>
   </section>

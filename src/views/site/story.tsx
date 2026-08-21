@@ -12,8 +12,14 @@ import { payoff, story } from "@/data/content/site";
  * the cleaned value sits beside each in the page's own type. The two columns
  * are the whole argument, and nobody has to read a paragraph to get it.
  */
+/*
+ * `relative` on the section is load bearing. The map band's artwork bleeds
+ * up under this one, and only a POSITIONED element paints its background
+ * above an earlier sibling's in-flow content. Drop it and the bleed
+ * inverts: the image sits on top of the white instead of under it.
+ */
 export const Story = () => (
-  <section id="problem" className="band-white py-26">
+  <section id="problem" className="relative band-white py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={story.eyebrow}
