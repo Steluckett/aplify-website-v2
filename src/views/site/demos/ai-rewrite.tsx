@@ -45,7 +45,12 @@ const DocumentIcon = () => (
       strokeWidth="1.6"
       strokeLinejoin="round"
     />
-    <path d="M14 3v4h4M9 12h6M9 16h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    <path
+      d="M14 3v4h4M9 12h6M9 16h4"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
   </svg>
 );
 
@@ -56,7 +61,10 @@ const SparkIcon = () => (
       d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"
       fill="currentColor"
     />
-    <path d="M18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z" fill="currentColor" />
+    <path
+      d="M18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2z"
+      fill="currentColor"
+    />
   </svg>
 );
 
@@ -69,11 +77,17 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
 
   return (
     <div className={className}>
-      {/* Wash + inset, with the WHITE CARDS as the inset rather than a glass
-          panel holding them. The rule exists so content is never laid straight
-          onto the wash; two job cards already satisfy it, and wrapping them in
-          a second surface was a box inside a box. */}
-      <div className="wash wash-lg rounded-panel">
+      {/* A DEEP ground rather than the wash. The two rewrite cards are white
+          and carry all the reading, so the ground behind them is free to go
+          dark — and a dark one makes the white cards read as lit rather than
+          as paper on paper, which is what the pale wash gave. `wash-lg` is
+          kept for its padding only; the fill comes from the blob ground.
+
+          Every ink on this surface had to be re-solved. `--ink-label`, which
+          the caption used, measures 1.56:1 on #4a3f9e — invisible. The chips
+          are fine untouched, because a chip is a light pill and its ink sits
+          on the pill rather than on the ground. */}
+      <div className="grain bg-07 wash-lg rounded-panel">
         <div>
           <div className="grid gap-10 md:grid-cols-2">
             {aiRewriteContent.jobs.map((job, index) => (
@@ -90,12 +104,21 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
             <button
               type="button"
               onClick={() => setRewritten((value) => !value)}
-              className={`btn ${rewritten ? "btn-secondary" : "btn-primary"} px-5 py-2.5 text-ui-sm`}
+              /* The white pill in BOTH states. `btn-primary` is a blue-violet
+                 gradient, and every deep ground in the set is the same colour
+                 family — on bg-07 its edge measures 1.26:1 against the ground,
+                 so the button dissolves and only its label survives. No ground
+                 fixes that: the darkest available, bg-10, still only reaches
+                 2.79:1 against a 3:1 bar. The light pill inverts correctly at
+                 8.41:1, and the label already carries the state. */
+              className="btn btn-secondary px-5 py-2.5 text-ui-sm"
             >
-              {rewritten ? aiRewriteContent.resetLabel : aiRewriteContent.actionLabel}
+              {rewritten
+                ? aiRewriteContent.resetLabel
+                : aiRewriteContent.actionLabel}
               <ArrowIcon />
             </button>
-            <p className="max-w-[34rem] flex-1 text-ui-xs leading-[1.6] text-ink-label">
+            <p className="max-w-[34rem] flex-1 text-ui-xs leading-[1.6] text-white/75">
               {aiRewriteContent.caption}
             </p>
           </div>
@@ -163,7 +186,9 @@ const RewriteCard = ({ job, rewritten, delay }: RewriteCardProps) => {
             {aiRewriteContent.beforeLabel}
           </span>
         </figcaption>
-        <p className="mt-6 text-sm leading-[1.7] text-ink-label">{job.before}</p>
+        <p className="mt-6 text-sm leading-[1.7] text-ink-label">
+          {job.before}
+        </p>
       </animated.figure>
 
       <animated.figure
@@ -186,7 +211,9 @@ const RewriteCard = ({ job, rewritten, delay }: RewriteCardProps) => {
         <h4 className="mt-6 text-ui-lg font-medium tracking-tight text-ink-heading">
           {job.afterTitle}
         </h4>
-        <p className="mt-3 text-sm leading-[1.6] text-ink-body">{job.afterBody}</p>
+        <p className="mt-3 text-sm leading-[1.6] text-ink-body">
+          {job.afterBody}
+        </p>
         <ul className="mt-4 flex flex-wrap gap-2">
           {metaParts.map((part, index) => (
             <li key={part}>
