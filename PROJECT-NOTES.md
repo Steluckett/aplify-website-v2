@@ -131,10 +131,29 @@ negative margin instead.
 - **A collapsed page is a build problem, not a layout problem.** The tell is
   `document.querySelector('main').getBoundingClientRect().height === 0` while
   `innerText` still has content. Check that before debugging any CSS.
-- **A `rem` height cannot hold a fixed aspect ratio.** The root font-size is
-  fluid (`globals.css`, set in `vw` across four bands), so `1rem` is 14.4px at
-  1728 and 12.6px at 1512, while the shell caps at 1440. Size image grounds
-  with `aspect-[…]`. See ADR-0027.
+- **The root font-size is 16px at every width, as of 2026-08-24.** It used to
+  be set in `vw` across four bands — the starter's "adaptive scaling grid" —
+  which made `1rem` 14.4px at 1728 and 12.6px at 1512. That was a SAWTOOTH, not
+  a ramp: each band hit 16px at the top of its range and fell off a cliff at
+  the next breakpoint. Measured, 16.00px at 1440 and **12.17px at 1460**, with
+  the same cliff at 1024 and a worse one at 640 (28.44px). A maximised MacBook
+  Pro 14" is 1512, so the whole site rendered at 79%.
+
+  It also never did its job here. That pattern keeps a REM-BASED layout
+  proportional; this layout is not, because `--raw-shell` is
+  `min(95vw, 1440px)` in px — forcing the root to 16px at 1460 left the shell
+  at 1387px, unmoved. Removed in ADR-0028, which supersedes ADR-0008.
+  `html { font-size: 100% }` now inherits the reader's own browser setting,
+  which is also what WCAG 1.4.4 wants. `src/components/common/grid/*` and
+  `use-adaptive-grid.ts` are kept but UNMOUNTED — re-mounting either re-breaks
+  the type scale at every breakpoint.
+
+  **If a note anywhere says `1rem` varies with the viewport, it predates this.**
+
+- **A `rem` height still cannot hold a fixed aspect ratio.** ADR-0027 stands on
+  its own even now the root is fixed: a `rem` height and an image's ratio are
+  independent of each other, and the shell caps at 1440 so width and height
+  stop scaling together above it. Size image grounds with `aspect-[…]`.
 - **Centre artwork on its content, not its canvas.** `event-registration.png`
   has 24px of margin on the left and 95px on the right, so centring the file
   left it visibly left-hung. Measure the alpha bounding box before trusting

@@ -1,12 +1,86 @@
 ---
 tags: [meta, decision]
-updated: 2026-08-19
+updated: 2026-08-24
 ---
 
 # Decisions Log (ADRs)
 
 Architecture Decision Records. Each entry captures a choice, its context, and its
 consequences. Use [[templates/adr-note]] for new entries. Newest first.
+
+---
+
+## ADR-0028 — The root font-size belongs to the reader; the scaling grid is removed
+
+- **Status:** Accepted — **supersedes [[#ADR-0008 — Adaptive scaling grid via root font-size|ADR-0008]]**
+- **Date:** 2026-08-24
+
+**Context.** ADR-0008 set `html { font-size }` from the viewport: a `vw` media-query
+ladder scaling down, `AdaptiveGrid` scaling up above 1920. Each band divided 16px by
+the design base width of its range (`16 * 100 / baseWidth`). Two things were wrong
+with it, and both were measured on the running site rather than reasoned about.
+
+**1. The premise does not hold in this project.** The pattern keeps a *rem-based*
+layout proportional by scaling the root. This layout is not rem-based: `--raw-shell`
+is `min(95vw, 1440px)`, in px. Setting the root to 16px at a 1460px viewport left the
+shell at **1387px, unmoved**. The ladder never scaled the layout — it only shrank the
+type inside a column that stayed exactly where it was.
+
+**2. It was a sawtooth, not a ramp.** Because each band divides by the base width at
+the TOP of its range, every band climbed to 16px and then fell off a cliff at the next
+breakpoint, where the next band divides by a larger number. Measured root sizes:
+
+| Viewport | Root | vs 16px |
+|---|---|---|
+| 360 | 16.00px | 100% |
+| **640** | **28.44px** | **178%** |
+| 660 | 10.31px | 64% |
+| 1024 | 16.00px | 100% |
+| 1040 | 11.56px | 72% |
+| 1440 | 16.00px | 100% |
+| **1460** | **12.17px** | **76%** |
+| 1512 | 12.60px | 79% |
+
+Three cliffs — at 640, 1024 and 1440 — each changing every glyph on the page by a
+quarter across twenty pixels of window width. A maximised MacBook Pro 14" sits at
+1512, so the entire site rendered at **79%** on the commonest machine our buyers use.
+At 640px the page was 52,257px tall against a true 24,249px.
+
+This is also the root cause ADR-0027 identified but worked around rather than fixed.
+
+**3. It overrode the reader.** Setting `html { font-size }` in `vw` or `px` at all
+discards a reader's own browser font-size preference — WCAG 1.4.4 (Resize Text). On a
+public site selling to care providers and the NHS supply chain, that is not a detail.
+
+**Decision.** Delete the scaling grid.
+- `globals.css` — the ladder and the four media queries are replaced by
+  `html { font-size: 100% }`, which inherits the reader's browser default (16px for
+  almost everyone, correctly larger for those who have changed it).
+- `app/layout.tsx` — `<AdaptiveGrid />` is unmounted.
+- `src/components/common/grid/*` and `src/hooks/use-adaptive-grid.ts` are **kept but
+  unmounted**, as starter infrastructure. `grid.config.ts` carries a warning against
+  re-mounting; doing so re-breaks the type scale at every breakpoint.
+- Width is handled where it already was: Tailwind breakpoints and the `vw` shell.
+
+**Consequences.** Every `rem` now lands on its literal token value at every viewport —
+hero 96px, section heads 56, body 18 — and `.screen` sits at Aurora's 14px base with
+13px table heads, which is what [[design-system]] and `APLIFY-PRODUCT-UI-SPEC.md`
+have always documented. The product register no longer drifts against the spec.
+
+Verified on port 3100 at 375 / 640 / 768 / 1024 / 1280 / 1512 / 1920 / 2400: root is
+16px at all of them, no page-level horizontal overflow at any, and no inline override
+above 1920. The WCAG side is verified by mechanism (`100%` inherits) rather than by
+testing a browser with a changed default font size.
+
+**Two honest consequences.** The page is now taller on narrow viewports (24,792px vs
+18,980px at 768) — that is the content's real size, not a regression. And above 1920
+the type no longer grows: a 1440px shell of 16px-rooted type now sits centred on a
+large monitor, which is the conventional behaviour for a capped-shell marketing site
+and what the `min(95vw, 1440px)` cap always implied.
+
+**ADR-0027 still stands.** Sizing image grounds by `aspect-[…]` rather than a `rem`
+height remains correct — a ratio cannot drift against fixed artwork — even though the
+specific drift that prompted it is now gone.
 
 ---
 
@@ -921,8 +995,14 @@ transition effects were ref-stabilised, and `useProgressTrigger` now returns
 
 ## ADR-0008 — Adaptive scaling grid via root font-size
 
-- **Status:** Accepted
+- **Status:** **Superseded by [[#ADR-0028 — The root font-size belongs to the reader; the scaling grid is removed|ADR-0028]]** (2026-08-24)
 - **Date:** 2026-05-21
+
+> [!warning] Superseded — do not re-implement
+> The grid was removed. Its premise (a rem-based layout kept proportional by the
+> root font-size) is false here, because the shell is `min(95vw, 1440px)` in px,
+> and the per-band base widths made the ladder a sawtooth: 16px at 1440, 12.17px
+> at 1460. It also overrode the reader's own browser font-size. See ADR-0028.
 
 **Context.** An adaptive scaling system was dropped into `src/components/common/`
 to keep a rem-based design proportional across viewports. It shipped as a

@@ -1,6 +1,19 @@
 // 📖 Docs: obsidian/frontend/components/common.md
 
 /**
+ * UNMOUNTED ON THIS PROJECT — do not re-mount without reading ADR-0028.
+ *
+ * `AdaptiveGrid` was removed from `app/layout.tsx`, and the matching `vw`
+ * media-query ladder was removed from `globals.css`. The pattern below keeps a
+ * REM-BASED layout proportional by scaling the root font-size; this project's
+ * shell is `min(95vw, 1440px)` in px, so the root never moved the layout — it
+ * only shrank the type inside a column that stayed put. Combined with a per-
+ * band base width it produced a sawtooth: 16px at 1440, 12.17px at 1460.
+ *
+ * Mounting this again re-breaks the type scale at every breakpoint, and
+ * overrides the reader's own browser font-size (WCAG 1.4.4). The files are
+ * kept because they are starter infrastructure, not because they are wired up.
+ *
  * Adaptive scaling grid configuration.
  *
  * The grid keeps a rem-based design proportional across viewports by scaling

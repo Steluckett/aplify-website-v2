@@ -1,12 +1,45 @@
 ---
 tags: [meta, changelog]
-updated: 2026-08-04
+updated: 2026-08-24
 ---
 
 # Changelog
 
 Chronological log of notable changes to the project. Newest first.
 This is a human-curated log — not a mirror of `git log`.
+
+## 2026-08-24
+
+- **The adaptive scaling grid is gone; the root font-size is the reader's.** The
+  `vw` media-query ladder in `globals.css` and the `AdaptiveGrid` mount in
+  `app/layout.tsx` are removed in favour of `html { font-size: 100% }`. See
+  [[decisions-log]] **ADR-0028**, which supersedes ADR-0008.
+
+  The ladder divided 16px by each band's design base width, which put 16px at the
+  TOP of every band and a cliff at the bottom of the next. Measured: **16.00px at
+  1440 and 12.17px at 1460** — a quarter of the type size lost across twenty pixels
+  of window width, with the same cliff at 1024 and a worse one at 640 (28.44px,
+  178% of intended, making the page 52,257px tall). A maximised MacBook Pro 14"
+  sits at 1512 and was rendering the whole site at **79%**.
+
+  It never did what it was for. That pattern keeps a *rem-based* layout
+  proportional; this one is not — `--raw-shell` is `min(95vw, 1440px)` in px.
+  Forcing the root to 16px at a 1460 viewport left the shell at 1387px, unmoved.
+  It was only ever shrinking type inside a column that stayed put. And setting the
+  root from the viewport discards a reader's own browser font-size (WCAG 1.4.4).
+
+  Everything sized in `rem` now lands on its literal token value: hero 96px, section
+  heads 56, body 18, and `.screen` at Aurora's 14px with 13px table heads — which is
+  what [[design-system]] and `APLIFY-PRODUCT-UI-SPEC.md` always said it was. The
+  product register had been quietly drifting off its own spec at every width.
+
+  Verified on 3100 at 375 / 640 / 768 / 1024 / 1280 / 1512 / 1920 / 2400: 16px at
+  all of them, no horizontal overflow anywhere, no inline override above 1920.
+
+  `src/components/common/grid/*` and `use-adaptive-grid.ts` are kept but unmounted;
+  `grid.config.ts` carries a warning against re-mounting them.
+
+---
 
 ## 2026-08-04
 

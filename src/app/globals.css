@@ -455,38 +455,43 @@ body {
 }
 
 @layer base {
-  /* Adaptive scaling grid — scales the root font-size with the viewport so a
-     rem-based layout stays proportional. Each breakpoint divides FONT_BASE
-     (16px) by the design base width its range was laid out at:
-       font-size: 16 * 100 / baseWidth  (vw)
-     Above 1920px the AdaptiveGrid component takes over (scale-up).
-     Keep in sync with src/components/common/grid/grid.config.ts. */
+  /* The root font-size is the READER'S, not ours. See ADR-0028.
+     
+     This used to run the starter's "adaptive scaling grid": a ladder of `vw`
+     media queries that divided 16px by the design base width of each band
+     (`16 * 100 / baseWidth`), with `AdaptiveGrid` scaling up above 1920. It
+     was removed for two reasons, both measured.
+
+     1. THE PREMISE WAS FALSE HERE. That pattern keeps a rem-based layout
+        proportional by scaling the root. This layout is not rem-based — the
+        shell is `min(95vw, 1440px)`, in px. Setting the root to 16px at a
+        1460px viewport left the shell at 1387px, unmoved. So the ladder never
+        scaled the layout; it only shrank the type inside a column that stayed
+        put.
+
+     2. IT WAS A SAWTOOTH. Each band ramped from its floor up to 16px at the
+        TOP of its range, then fell off a cliff at the next breakpoint, because
+        the next band divides by a larger base. Measured root sizes:
+
+          360px  16.00      640px  28.44   <- 178% of intended
+          660px  10.31      1024px 16.00
+          1040px 11.56      1440px 16.00
+          1460px 12.17      1512px 12.60   <- a MacBook Pro 14", at 79%
+
+        Twenty pixels of window width either side of 640 or 1440 changed the
+        size of every glyph on the page by a quarter. The whole site rendered
+        at 79% on the commonest laptop our buyers use.
+
+     And overriding the root at all defeats a reader who has set a larger
+     browser font — WCAG 1.4.4. `100%` inherits their preference, which is
+     16px for almost everyone and correctly larger for the people who need it.
+
+     Everything sized in `rem` now lands on the literal token values at every
+     width: hero 96px, section heads 56, body 18 — and `.screen` at its
+     Aurora 11-24px, which is what APLIFY-PRODUCT-UI-SPEC.md documents.
+     Width is handled where it belongs: Tailwind breakpoints and the vw shell. */
   html {
-    font-size: 16px;
-  }
-
-  @media (max-width: 1920px) {
-    html {
-      font-size: 0.833333vw; /* 16 * 100 / 1920 */
-    }
-  }
-
-  @media (max-width: 1440px) {
-    html {
-      font-size: 1.111111vw; /* 16 * 100 / 1440 */
-    }
-  }
-
-  @media (max-width: 1024px) {
-    html {
-      font-size: 1.5625vw; /* 16 * 100 / 1024 */
-    }
-  }
-
-  @media (max-width: 640px) {
-    html {
-      font-size: 4.444444vw; /* 16 * 100 / 360 */
-    }
+    font-size: 100%;
   }
 
   button:not(:disabled),
