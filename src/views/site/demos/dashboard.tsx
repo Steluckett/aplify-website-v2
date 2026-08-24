@@ -280,21 +280,20 @@ const DateField = ({
 const HEAD_CELL =
   "bg-surface-raised py-2.5 text-left text-ui-sm font-normal text-ink-label";
 
-/* The rows are GLASS, at the density a DEEP ground needs. Solid white bricks on
-   the gradient read as pasted on; translucent, the ground moves under them and
-   the table belongs to its panel.
+/* The rows are a TINT ON THE GRADIENT — `white/0.08`, the fill the glass tab
+   group carries — not cards sitting on it. A dense glass was tried first (0.92)
+   and read as white bricks, which is the thing this was meant to stop.
 
-   `.glass-dense`, NOT `.glass`. Plain glass is 0.72 — right on the light page
-   ground the nav sits on, and it leaves --ink-label at 3.19:1 here. That grey
-   is the email and the applied date, measured on the DARKEST point of `.bg-08`
-   (its bare base; all three blobs lighten it). The curve crosses AA at exactly
-   0.90, so the token is 0.92: 4.68:1 for the label grey, 6.95:1 for body.
+   THE COST, because it will look like an oversight otherwise: on this ground a
+   transparent row admits exactly ONE legal ink, and that is FULL WHITE at
+   4.75:1. Nothing dimmer clears AA at any row alpha — not a faded white (even
+   0.9 alpha fails), not a near-white tint (#e2e8f4 is 4.21:1). So the email
+   under a candidate's name is the same colour as the name, and the hierarchy in
+   a row is carried by SIZE AND WEIGHT alone. That is the trade for a see-through
+   row; it cannot be softened by choosing a nicer grey.
 
-   It is still a LIGHT surface, so the inks are unchanged, and `.glass-dense` is
-   in the chip-reset list in globals.css. Without that the deep-ground chip rule
-   paints --ink-on-dark onto a #eef0f5 pill — the 1.05:1 failure that block
-   exists to prevent. On the opaque chip fill the six status inks run 4.51–6.23. */
-const CELL = "h-16 glass-dense align-middle text-ui-base";
+   Chips recess rather than lighten — see `.row-glass .chip` in globals.css. */
+const CELL = "h-16 row-glass align-middle text-ui-base text-ink-on-dark";
 
 const TableShell = ({
   minWidth,
@@ -891,32 +890,32 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                                 event.currentTarget,
                               );
                             }}
-                            className="text-left text-ui-sm font-medium text-ink transition-colors duration-[var(--duration-fast)] ease-entrance group-hover:text-ink-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
+                            className="text-left text-ui-sm font-medium transition-opacity duration-[var(--duration-fast)] ease-entrance group-hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
                           >
                             {application.id}
                           </button>
                         </th>
                         <td className={`${CELL} px-4`}>
-                          <p className="text-ui-sm font-medium text-ink">
+                          <p className="text-ui-sm font-medium">
                             {application.name}
                           </p>
-                          <p className="text-ui-xs text-ink-label">
-                            {application.email}
-                          </p>
+                          {/* Same white as the name — see the CELL note. The
+                              step down is 13px medium to 11px regular. */}
+                          <p className="text-ui-2xs">{application.email}</p>
                         </td>
                         <td className={`${CELL} px-4`}>
-                          <p className="text-ui-sm text-ink">
+                          <p className="text-ui-sm">
                             {application.jobTitle} ({application.jobRef})
                           </p>
                         </td>
                         <td className={`${CELL} px-4`}>
                           <StatusChip status={application.status} />
                         </td>
-                        <td className={`${CELL} px-4 text-ui-sm text-ink-body`}>
+                        <td className={`${CELL} px-4 text-ui-sm`}>
                           {application.source}
                         </td>
                         <td
-                          className={`${CELL} whitespace-nowrap px-4 text-ui-sm text-ink-label`}
+                          className={`${CELL} whitespace-nowrap px-4 text-ui-sm`}
                         >
                           {application.applied}
                         </td>
@@ -942,10 +941,10 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                                 ? `${content.notes.heading} for ${application.name} (${noteCount})`
                                 : `${content.notes.add} for ${application.name}`
                             }
-                            className={`relative inline-grid h-9 w-9 place-items-center rounded-pill transition-colors duration-[var(--duration-fast)] ease-entrance focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid ${
+                            className={`relative inline-grid h-9 w-9 place-items-center rounded-pill transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 ${
                               noteCount > 0
                                 ? "bg-accent-mid text-ink-on-dark"
-                                : "bg-surface-chip text-ink-label hover:text-ink"
+                                : "bg-black/20 text-ink-on-dark"
                             }`}
                           >
                             <NoteIcon />
@@ -999,26 +998,20 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                       scope="row"
                       className={`${CELL} rounded-l-sm py-3 pl-5 pr-4 text-left font-normal`}
                     >
-                      <p className="text-ui-sm font-medium text-ink">
+                      <p className="text-ui-sm font-medium">
                         {registration.name}
                       </p>
-                      <p className="text-ui-xs text-ink-label">
-                        {registration.email}
-                      </p>
+                      <p className="text-ui-2xs">{registration.email}</p>
                     </th>
                     <td className={`${CELL} px-4`}>
                       <span className="chip" data-tint="info">
                         {registration.event}
                       </span>
                     </td>
-                    <td
-                      className={`${CELL} whitespace-nowrap px-4 text-ui-sm text-ink-body`}
-                    >
+                    <td className={`${CELL} whitespace-nowrap px-4 text-ui-sm`}>
                       {registration.eventDate}
                     </td>
-                    <td
-                      className={`${CELL} whitespace-nowrap px-4 text-ui-sm text-ink-label`}
-                    >
+                    <td className={`${CELL} whitespace-nowrap px-4 text-ui-sm`}>
                       {registration.registered}
                     </td>
                     <td className={`${CELL} rounded-r-sm pl-4 pr-5`}>
@@ -1027,7 +1020,7 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                           Yes
                         </span>
                       ) : (
-                        <span className="text-ui-sm text-ink-label">—</span>
+                        <span className="text-ui-sm">—</span>
                       )}
                     </td>
                   </tr>

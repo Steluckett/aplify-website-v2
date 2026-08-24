@@ -134,13 +134,25 @@
      amber and 5.08:1 over bg-07's violet, so one value serves all nine. */
   --raw-surface-glass-dark: rgb(255 255 255 / 0.16);
 
-  /* A THIRD glass, for a light surface that sits on a DEEP ground and still
-     carries page inks. 0.72 cannot: composited over `.bg-08`'s darkest point
-     it leaves --ink-label at 3.19:1. The binding constraint is that grey, and
-     the curve crosses 4.5 at exactly 0.90 — 0.92 is the first step with any
-     margin (4.68:1 on the darkest point, 6.95:1 for --ink-body). Dense enough
-     to read, translucent enough that the ground still moves under it. */
-  --raw-surface-glass-dense: rgb(255 255 255 / 0.92);
+  /* A TABLE ROW on a deep ground. Barely-there white — the same fill the
+     glass tab group carries — so the row is a tint on the gradient rather than
+     a card sitting on it.
+
+     0.08, not the tab group's 0.10, purely for margin: on this ground the row
+     admits exactly ONE legal ink, full white, and at 0.10 that is 4.56:1
+     against 4.75:1 here. The two are visually identical. Nothing dimmer works
+     at any alpha — even #e2e8f4, which is barely off-white, measures 4.21:1 —
+     so hierarchy inside a row comes from SIZE AND WEIGHT, never from a paler
+     ink. That is the whole trade for a transparent row and it is not
+     negotiable by picking a nicer grey. */
+  --raw-surface-glass-row: rgb(255 255 255 / 0.08);
+
+  /* ...and a chip on such a row goes DOWN, not up. The usual on-dark chip fill
+     lightens (white/0.16), which on an already-lightened row lands white text
+     at 3.40:1 — two translucent whites stacked reach a mid tone where nothing
+     reads. Recessing instead gives the pill its shape back and takes white to
+     6.44:1. */
+  --raw-surface-chip-recessed: rgb(0 0 0 / 0.18);
 
   /* --- Charts. The "Vivid" categorical six, validated for colourblind
      separation and 3:1 on both Aurora card surfaces. Order is fixed and
@@ -818,18 +830,19 @@ body {
      Declared after the deep rule and before the tints, so a classification
      chip still keeps its own colour on either ground.
 
-     `.glass` joined this list on 2026-08-24, when the dashboard's table rows
-     became glass. At 72% white it is a LIGHT surface however deep the ground
-     beneath it — so a chip on one needs the light-surface treatment, exactly
-     like a `.tile`. Without this the deep-ground rule above would have painted
-     `--ink-on-dark` on a #eef0f5 pill, which is the 1.05:1 failure that
-     prompted this whole block. Any further light surface that can hold a chip
-     goes here too. */
+     `.glass` joined this list on 2026-08-24: at 72% white it is a LIGHT surface
+     however deep the ground beneath it, so a chip on one needs the
+     light-surface treatment exactly like a `.tile`. Without it the deep-ground
+     rule above paints `--ink-on-dark` on a #eef0f5 pill — the 1.05:1 failure
+     that prompted this whole block. Any further light surface that can hold a
+     chip goes here too.
+
+     `.row-glass` is the opposite case and is handled separately above: it is a
+     DARK surface, so its chips recess and take white. */
   .tile .chip,
   .card-quiet .chip,
   .inset-tile .chip,
-  .glass .chip,
-  .glass-dense .chip {
+  .glass .chip {
     background: var(--surface-chip);
     color: var(--ink-label);
     box-shadow: none;
@@ -1026,13 +1039,34 @@ body {
     backdrop-filter: blur(24px) saturate(1.4);
   }
 
-  /* Same idea on a DEEP ground. Do not reach for plain `.glass` there: the nav
-     and the cookie banner sit on the light page ground, where 0.72 is right,
-     and lifting that value to suit a dark panel would repaint both of them. */
-  .glass-dense {
-    background: var(--raw-surface-glass-dense);
-    -webkit-backdrop-filter: blur(24px) saturate(1.4);
-    backdrop-filter: blur(24px) saturate(1.4);
+  /* A table row on a deep ground: a tint on the gradient, not a card on it.
+     Everything inside is FULL WHITE — see the token note; no paler ink clears
+     AA here at any row alpha. */
+  .row-glass {
+    background: var(--raw-surface-glass-row);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    backdrop-filter: blur(16px) saturate(1.2);
+  }
+
+  /* The chip recesses rather than lightens, and its TEXT goes white while the
+     dot keeps the state. The attribute selector is what makes that stick:
+     `.chip[data-state="…"]` is (0,1,1) and sets `color`, so a plain `.row-glass
+     .chip` at (0,2,0) would lose the cascade to it and repaint dark green on a
+     dark pill. `.row-glass .chip[data-state]` is (0,2,1) and wins.
+
+     The word already carries the state — the chip says "Accepted" — so the dot
+     is reinforcement, not the sole signal, and 1.4.1 is satisfied by the label.
+     Worth knowing: on the LIGHT chip this system already ships, four of the six
+     dots sit under 3:1 (1.57–3.71), so this is the existing standard rather
+     than a new exception. */
+  .row-glass .chip,
+  .row-glass .chip[data-state],
+  .row-glass .chip[data-tint] {
+    background: var(--raw-surface-chip-recessed);
+    color: var(--ink-on-dark);
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   /* --- Pastel card grounds -------------------------------------------------
