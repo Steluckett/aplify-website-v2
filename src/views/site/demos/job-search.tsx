@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Reveal } from "@/components/ui/reveal";
 import { jobSearchContent } from "@/data/content/job-search";
@@ -114,7 +114,9 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
   }
 
   return (
-    <div className={`flex flex-col gap-5 bg-surface p-4 sm:p-6 ${className ?? ""}`}>
+    <div
+      className={`flex flex-col gap-5 bg-surface p-4 sm:p-6 ${className ?? ""}`}
+    >
       {/* Route switch — the demo's own control strip. */}
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div
@@ -147,7 +149,10 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
           lands exactly when the switch raises it. */}
       {route === "link" ? (
         <Reveal variant="fade">
-          <aside aria-label={content.linkOutPanel.heading} className="wash rounded-card">
+          <aside
+            aria-label={content.linkOutPanel.heading}
+            className="wash rounded-card"
+          >
             <div className="inset-tile flex items-start gap-4 p-5">
               <span className="icon-chip h-10 w-10" aria-hidden>
                 <ExternalIcon />
@@ -243,7 +248,9 @@ const Segment = ({
   <button
     type="button"
     role={role}
-    {...(role === "radio" ? { "aria-checked": active } : { "aria-selected": active })}
+    {...(role === "radio"
+      ? { "aria-checked": active }
+      : { "aria-selected": active })}
     onClick={onClick}
     className={`rounded-pill px-4 py-2 text-ui-sm font-medium transition-colors
                 duration-[var(--duration-fast)] ease-entrance ${
@@ -333,35 +340,134 @@ interface ViewProps {
   onApply: (job: Job) => void;
 }
 
-/** Cards on the ground as white tiles — the system's default figure. */
-const GridView = ({ jobs, route, onApply }: ViewProps) => (
-  <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-    {jobs.map((job, i) => (
-      <Reveal
-        key={jobKey(job)}
-        tag="li"
-        variant="up"
-        delay={Math.min(i, 8) * 45}
-        className="h-full"
-      >
-        <article className="tile flex h-full flex-col p-5">
-          <h4 className="text-ui-lg font-medium tracking-tight text-ink-heading">
-            {job.title}
-          </h4>
-          <p className="mt-1 text-ui-sm text-ink-label">
-            {job.location} · {job.region}
+/** Nine to a page — a 3x3 grid, and the reason the sample set is eighteen. */
+export const PER_PAGE = 9;
+
+/**
+ * Cards on the ground as white tiles — the system's default figure.
+ *
+ * Paginated rather than scrolled. Eighteen cards in one column is a list you
+ * give up on; nine is a grid you read. The page resets whenever the filtered
+ * set changes, because leaving someone on page 2 of a set that now has one
+ * result shows them an empty grid and no reason for it.
+ */
+const GridView = ({ jobs, route, onApply }: ViewProps) => {
+  const [page, setPage] = useState(0);
+  const pages = Math.max(1, Math.ceil(jobs.length / PER_PAGE));
+  const current = Math.min(page, pages - 1);
+
+  useEffect(() => {
+    setPage(0);
+  }, [jobs]);
+
+  const shown = jobs.slice(current * PER_PAGE, current * PER_PAGE + PER_PAGE);
+
+  return (
+    <div className="flex flex-col gap-5">
+      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {shown.map((job, i) => (
+          <Reveal
+            key={jobKey(job)}
+            tag="li"
+            variant="up"
+            delay={Math.min(i, 8) * 45}
+            className="h-full"
+          >
+            <article className="tile flex h-full flex-col p-5">
+              <h4 className="text-ui-lg font-medium tracking-tight text-ink-heading">
+                {job.title}
+              </h4>
+              <p className="mt-1 text-ui-sm text-ink-label">
+                {job.location} · {job.region}
+              </p>
+              <p className="mt-4 text-ui-base font-medium text-ink">
+                {job.salary}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <JobTags job={job} />
+              </div>
+              {/* A line of the advert. A card without one is a search result,
+                  not a job. */}
+              <p className="mt-4 text-ui-sm leading-relaxed text-ink-body">
+                {job.summary}
+              </p>
+              <div className="mt-auto pt-6">
+                <ApplyAction job={job} route={route} onApply={onApply} />
+              </div>
+            </article>
+          </Reveal>
+        ))}
+      </ul>
+
+      {pages > 1 ? (
+        <nav
+          aria-label={jobSearchContent.pagination.label}
+          className="flex items-center justify-between gap-3"
+        >
+          <p className="text-ui-sm text-ink-label" aria-live="polite">
+            {jobSearchContent.pagination.showing
+              .replace("{from}", String(current * PER_PAGE + 1))
+              .replace(
+                "{to}",
+                String(Math.min((current + 1) * PER_PAGE, jobs.length)),
+              )
+              .replace("{total}", String(jobs.length))}
           </p>
-          <p className="mt-4 text-ui-base font-medium text-ink">{job.salary}</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <JobTags job={job} />
+          <div className="flex items-center gap-2">
+            <PageButton
+              onClick={() => setPage(current - 1)}
+              disabled={current === 0}
+            >
+              {jobSearchContent.pagination.previous}
+            </PageButton>
+            {Array.from({ length: pages }, (_, i) => (
+              <PageButton
+                key={i}
+                onClick={() => setPage(i)}
+                active={i === current}
+                aria-current={i === current ? "page" : undefined}
+              >
+                {String(i + 1)}
+              </PageButton>
+            ))}
+            <PageButton
+              onClick={() => setPage(current + 1)}
+              disabled={current === pages - 1}
+            >
+              {jobSearchContent.pagination.next}
+            </PageButton>
           </div>
-          <div className="mt-auto pt-6">
-            <ApplyAction job={job} route={route} onApply={onApply} />
-          </div>
-        </article>
-      </Reveal>
-    ))}
-  </ul>
+        </nav>
+      ) : null}
+    </div>
+  );
+};
+
+const PageButton = ({
+  children,
+  onClick,
+  disabled,
+  active,
+  ...rest
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+  active?: boolean;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
+  <button
+    type="button"
+    onClick={onClick}
+    disabled={disabled}
+    className={`rounded-pill px-3 py-1.5 text-ui-sm transition-colors duration-[var(--duration-fast)] ease-entrance disabled:opacity-40 ${
+      active
+        ? "bg-ink text-on-brand"
+        : "bg-surface-raised text-ink-body hover:text-ink"
+    }`}
+    {...rest}
+  >
+    {children}
+  </button>
 );
 
 /** The table head is ONE continuous white pill band — normal case, quiet. */
@@ -417,7 +523,9 @@ const ListView = ({ jobs, route, onApply }: ViewProps) => (
             <td className={`${CELL} px-4`}>
               <span className="chip">{job.contract}</span>
             </td>
-            <td className={`${CELL} whitespace-nowrap px-4 text-ui-sm font-medium text-ink`}>
+            <td
+              className={`${CELL} whitespace-nowrap px-4 text-ui-sm font-medium text-ink`}
+            >
               {job.salary}
             </td>
             <td className={`${CELL} rounded-r-sm pl-4 pr-5 text-right`}>
@@ -465,8 +573,8 @@ const MapView = ({ jobs, route, onApply }: ViewProps) => {
           </Reveal>
         ) : (
           <p className="rounded-sm border border-dashed border-hairline p-5 text-ui-sm leading-relaxed text-ink-label">
-            Select a pin to see the role — the set on the map is the same one the
-            grid and list show.
+            Select a pin to see the role — the set on the map is the same one
+            the grid and list show.
           </p>
         )}
         <p className="text-ui-xs leading-relaxed text-ink-label">

@@ -20,6 +20,14 @@ export const jobSearchContent = {
 
   views: ["Grid", "List", "Map"] as const,
 
+  /** Nine to a page. `{from}`/`{to}`/`{total}` are filled at render. */
+  pagination: {
+    label: "Job search pages",
+    showing: "Showing {from}–{to} of {total} roles",
+    previous: "Previous",
+    next: "Next",
+  },
+
   filters: {
     allFamilies: "All families",
     allRegions: "All regions",
