@@ -2,7 +2,6 @@
 
 import { ScreenCard } from "@/components/ui/screen-card";
 import { SectionIntro } from "@/components/ui/section-intro";
-import { jobSearchContent } from "@/data/content/job-search";
 import { demos } from "@/data/content/site";
 
 import { AiRewriteDemo } from "./demos/ai-rewrite";
@@ -41,12 +40,6 @@ export const JobSearchSection = () => (
             working, in the middle of the page. */}
       <div className="mt-16">
         <JobSearchDemo />
-        {/* The roles are invented and the page must say so — a demo that
-              looks this much like the product is exactly the one that needs
-              its sample data disclosed. */}
-        <p className="mx-auto mt-6 max-w-[52rem] text-center text-xs text-ink-label">
-          {jobSearchContent.captions.demo}
-        </p>
       </div>
     </div>
   </section>

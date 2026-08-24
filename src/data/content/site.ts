@@ -327,8 +327,6 @@ export const story = {
       salary: "Up to £26,000",
     },
   ],
-  footnote:
-    "Illustrative feed data — one region, three spellings; one city, listed twice in a single field. The same three roles, cleaned on import.",
 };
 
 export const payoff = {

@@ -105,8 +105,4 @@ export const jobSearchContent = {
     fork: "In the product, this role would now appear in the recruiter dashboard for triage — or, where native ATS integration is in place, straight in the ATS your team already works in. Nothing was submitted here.",
     backLabel: "Back to search",
   },
-
-  captions: {
-    demo: "A working demonstration on sample roles — every employer, vacancy and salary is invented; the geography is real.",
-  },
 };
