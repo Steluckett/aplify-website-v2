@@ -330,6 +330,12 @@
     var(--raw-color-violet-deep)
   );
 
+  /* The one destructive action's ground. A semantic role rather than the raw,
+     because rule 4 keeps tier-1 literals out of class names — and `bg-danger`
+     is only safe to write once `--color-danger` is bound below. An unbound
+     colour utility silently paints `currentColor`. */
+  --danger: var(--raw-color-attention-ink);
+
   --shell: var(--raw-shell);
 
   --radius-panel: var(--raw-radius-panel);
@@ -389,6 +395,7 @@
 
   --color-hairline: var(--hairline);
   --color-track: var(--track);
+  --color-danger: var(--danger);
   --color-accent: var(--accent);
   --color-accent-end: var(--accent-end);
   --color-accent-mid: var(--accent-mid);

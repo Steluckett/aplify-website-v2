@@ -449,6 +449,11 @@ export const demos = {
     linesSm: ["One place", "to action", "all of it"],
     standfirst:
       "Every application and every event registration lands in one place, and moves through a status workflow your team controls.",
+    /* UNUSED since 2026-08-24. The dashboard demo lost its `ScreenCard`, so
+       there is no browser bar left to print a URL in. Kept only because the
+       AI-rewrite section above still has its own `shot`, and a lone survivor
+       is more confusing than a matched pair. Delete both together if that
+       section is ever unframed too. */
     shot: {
       url: "app.aplify.co.uk/applications",
       placeholder: "Recruiter dashboard — applications",

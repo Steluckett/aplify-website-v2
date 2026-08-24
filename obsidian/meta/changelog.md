@@ -10,6 +10,48 @@ This is a human-curated log — not a mirror of `git log`.
 
 ## 2026-08-24
 
+- **The recruiter dashboard is rebuilt to the job search's rules, and both demos
+  lose their browser chrome.** [[decisions-log]] **ADR-0029**.
+
+  It now composes exactly as the job search does: controls on a white card
+  straddling the deep panel's top edge (`lg:` only), glass tab pills with the
+  count opposite, white row bands separated by air, `.screen` for the product
+  register. Two-tier filters matching the shipped product — search, status and a
+  More/Fewer toggle, then jobs / categories / roles / sources / a date range.
+
+  **The detail view is a contained slide-over stack** — application → candidate →
+  that candidate's timeline — positioned inside the demo's own panel rather than
+  fixed to the viewport. It overlays instead of replacing, which removes a real
+  defect: opening a record used to collapse the section from 1527px to 1112px and
+  yank everything below it up under the cursor. Measured now: **0px**.
+
+  **The §6.7 caption finally renders.** It had sat in `dashboard-data.ts` since the
+  surface was built and had never once been on screen — the one demo handling what
+  looks like candidate data carried no illustrative disclosure at all. 7.00:1 on the
+  deep ground.
+
+  **The three summary tiles are gone.** They were the only part of this surface not
+  in the shipped product, and a figure invented for a demo is what §6.1 exists to
+  stop.
+
+  Sample people gained telephone numbers on Ofcom's reserved **07700 900xxx** drama
+  range — the phone equivalent of `example.com`, so §6.5 holds for the new fields
+  too — plus postcodes, job refs, salaries matching `job-data.ts`, screening answers
+  and consent stamps.
+
+- **Two AA failures that were already deployed, found by auditing the copy.**
+
+  The job search's **Search button measured 2.54:1** — `bg-accent`, the bright sky
+  `#0ea5e9`, under white. That is exactly the failure the deepened pair exists to
+  prevent, and `APLIFY-PRODUCT-UI-SPEC.md` says so outright. Both it and the
+  dashboard's Export CSV now take `.btn-primary`'s deepened gradient: **4.73:1** and
+  **6.69:1**, measured per stop. The inactive tab's count badge went 4.31:1 → 5.49:1.
+
+  Zero failures now across both demos — 159 text nodes, canvas-composited.
+
+- **`--danger` is bound** (`--danger` → `--color-danger`) for the one destructive
+  control. `bg-danger` written before the binding would have painted `currentColor`.
+
 - **The adaptive scaling grid is gone; the root font-size is the reader's.** The
   `vw` media-query ladder in `globals.css` and the `AdaptiveGrid` mount in
   `app/layout.tsx` are removed in favour of `html { font-size: 100% }`. See

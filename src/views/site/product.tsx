@@ -1,6 +1,5 @@
 "use client";
 
-import { ScreenCard } from "@/components/ui/screen-card";
 import { SectionIntro } from "@/components/ui/section-intro";
 import { demos } from "@/data/content/site";
 
@@ -15,14 +14,21 @@ import { JobSearchDemo } from "./demos/job-search";
  * pictures of it: search, filter, apply, rewrite and triage all work here.
  * A screenshot of software asks to be believed; software asks to be used.
  *
- * Two of the three sit inside browser chrome, because they are screens a
- * client's visitor or recruiter would actually be looking at, and the frame
- * is what says whose site it is. The AI rewrite is not a screen — it is a
- * before-and-after comparison — so it carries the wash-and-inset composition
- * directly instead of pretending to be a browser window.
+ * NONE of the three sits in browser chrome any more. The job search lost its
+ * frame first (see the note on `JobSearchSection` below), and the dashboard
+ * followed on 2026-08-24, because a page carrying two framings for two product
+ * surfaces read as two products. The AI rewrite never had one — it is a
+ * before-and-after comparison, not a screen, so it carries the wash-and-inset
+ * composition directly.
  *
- * `.screen` inside the frame drops everything to Aurora's UI scale, which is
- * what stops a live demo reading as more marketing page.
+ * What each demo does instead is ground ITSELF: the job search and the
+ * dashboard both sit on the deep blob ground with their controls on a white
+ * card straddling the panel's top edge, and their tiles and pill fields read
+ * against that rather than against a fake window.
+ *
+ * `.screen` is what drops everything inside to Aurora's UI scale, and it is
+ * still what stops a live demo reading as more marketing page — it is now set
+ * on the demo's own panel rather than inherited from a frame.
  */
 export const JobSearchSection = () => (
   <section id="job-search" className="py-26">
@@ -68,10 +74,11 @@ export const DashboardSection = () => (
         linesSm={[...demos.dashboard.linesSm]}
         standfirst={demos.dashboard.standfirst}
       />
+      {/* No frame, for the same reason the job search has none — and the
+          demo now renders its own §6.7 caption at the foot of its panel,
+          which is the disclosure this surface had been missing entirely. */}
       <div className="mt-16">
-        <ScreenCard ground="wash" pad="generous" url={demos.dashboard.shot.url}>
-          <DashboardDemo />
-        </ScreenCard>
+        <DashboardDemo />
       </div>
     </div>
   </section>

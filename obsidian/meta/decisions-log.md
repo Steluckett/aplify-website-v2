@@ -10,6 +10,77 @@ consequences. Use [[templates/adr-note]] for new entries. Newest first.
 
 ---
 
+## ADR-0029 — Both product demos are unframed, and the dashboard is rebuilt to the job search's rules
+
+- **Status:** Accepted
+- **Date:** 2026-08-24
+
+**Context.** The page carries two full product surfaces — the job search and the
+recruiter dashboard — and they were reading as two different products. The job
+search had already been rebuilt (2026-08-21): frame removed, deep ground, controls
+on a white card straddling the panel's top edge, white tiles, glass groupings. The
+dashboard was still a `ScreenCard` browser window on a wash, and had not been
+touched since 18 Aug. Its own table comment in `job-search.tsx` had said what the
+intent was all along — *"the same shell the recruiter dashboard uses, so the two
+product shots on this page read as one product"* — but only the table ever matched.
+
+Three defects also stood in it:
+
+1. **No §6.7 disclosure.** `dashboard-data.ts` had carried a `caption` since the
+   surface was built and nothing ever rendered it. The one demo on the page
+   handling anything resembling candidate data said nothing about being illustrative.
+2. **A 415px collapse.** Opening a record REPLACED the list, so the section went
+   1527px → 1112px and every section below jumped up under the reader's cursor.
+3. **Summary tiles that are not in the product.** Three figures — total, actioned %,
+   accepted — existed only here. A figure invented for a demo is the exact shape of
+   thing §6.1 exists to stop, even when it is derived from sample data.
+
+**Decision.** Rebuild the dashboard against the job search's rules and against
+screenshots of the shipped product.
+
+- **No browser chrome, on either demo.** The block comment in `product.tsx` claiming
+  "two of the three sit inside browser chrome" was already stale — the job-search
+  rebuild had superseded it and the file contradicted itself eighteen lines apart.
+  The chrome *did* say something true on the dashboard (a recruiter really is at
+  app.aplify.co.uk, where a candidate is on the client's own site) but one page
+  carrying two framings for two product surfaces cost more than that was worth.
+- **The controls straddle the panel edge**, `lg:` only, same device and same bleed.
+- **Two-tier filters** matching the product: search + status + a More/Fewer toggle
+  + export, then jobs / categories / roles / sources / date-from / date-to.
+- **Slide-overs, CONTAINED.** The product's real gesture — application → candidate
+  → that candidate's timeline — absolutely positioned inside the demo's own panel
+  rather than fixed to the viewport. A demo embedded mid-page must not seize the
+  screen to show a detail record, and overlaying rather than replacing costs no
+  height, which is what removes the 415px collapse.
+- **The summary tiles go.** The caption renders.
+
+**Consequences.** Measured on 3100 at 1512: opening a record is a **0px** height
+change, against 415px before. Zero AA failures across both demos (159 text nodes,
+canvas-composited, gradients tested per stop).
+
+**Two things this audit caught that were already live.**
+
+- The **Search button on the job search failed AA at 2.54:1** — `bg-accent`, the
+  bright sky `#0ea5e9`, under `--ink-on-dark`. This is precisely the failure the
+  deepened pair exists to prevent; `APLIFY-PRODUCT-UI-SPEC.md` says so in as many
+  words: *"the bright pair fails contrast for white — that's why two exist, not for
+  variety."* Both buttons now take `.btn-primary`'s deepened gradient, which measures
+  **4.73:1** at `#0879b8` and **6.69:1** at `#5044d6`. Found only because the
+  dashboard copied the class and the copy got audited.
+- The **inactive tab's count badge measured 4.31:1** on the track. It now inherits
+  its parent's ink and measures 5.49:1.
+
+**A new bound token.** `--danger` (tier 2) → `--color-danger` (tier 3), for the one
+destructive control. Writing `bg-danger` before binding it would have painted
+`currentColor` — the trap PROJECT-NOTES has now recorded four times.
+
+**The Delete Application control is included and works**, on this page's copy of the
+data. A red button that does nothing teaches the reader the wrong thing about a
+control the product genuinely has, and "we anonymise on delete" is a real answer to
+a question a care provider will ask. It is two-step, and the caption carries the rest.
+
+---
+
 ## ADR-0028 — The root font-size belongs to the reader; the scaling grid is removed
 
 - **Status:** Accepted — **supersedes [[#ADR-0008 — Adaptive scaling grid via root font-size|ADR-0008]]**

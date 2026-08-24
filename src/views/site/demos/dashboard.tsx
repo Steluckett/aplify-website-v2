@@ -1,6 +1,14 @@
 "use client";
 
-import { useId, useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import { animated, useTransition } from "@react-spring/web";
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 import {
   SEED_APPLICATIONS,
@@ -12,27 +20,56 @@ import {
 } from "@/data/content/dashboard-data";
 
 /**
- * The recruiter dashboard, in the Aurora product register.
+ * The recruiter dashboard — the product working, not a picture of it.
  *
- * This is the INNER UI only, and it expects to be mounted inside a `.screen`
- * container (a browser frame — `ScreenCard`'s children slot). `.screen` is what
- * flips the type scale down to Aurora's 11–24px and re-points `--surface` at
- * the tinted admin ground, which is the whole reason a shot reads as software
- * rather than as more page.
+ * COMPOSITION. This is built to the job search's rules, deliberately, because
+ * the two are the only full product surfaces on the page and they were reading
+ * as two different products. `job-search.tsx` already said so in its own table
+ * comment — "the same shell the recruiter dashboard uses, so the two product
+ * shots on this page read as one product" — but only the table had ever been
+ * made to match. Now the whole instrument does:
  *
- * Every piece of state and every handler is carried over unchanged from the
- * previous build: tab, two filters, the live applications array, the open
- * record, the status change that writes its own timeline entry, and a CSV
- * export that produces a genuine file from whatever the filters left visible.
+ *   - No browser chrome. The demo grounds itself rather than pretending to be
+ *     a screenshot of a window. (The chrome DID say something true here — a
+ *     recruiter really is looking at app.aplify.co.uk, where a candidate is on
+ *     the client's own site — but one page carrying two framings for two
+ *     product surfaces cost more than that distinction was worth.)
+ *   - The controls are a white card STRADDLING the panel's top edge, the same
+ *     device and the same `lg:`-only bleed, so the filters read as the head of
+ *     the instrument rather than as one more row inside it.
+ *   - The panel is the deep ground with `.screen` on it: Aurora's 11-24px UI
+ *     scale, white pill fields, white tiles, glass for grouping.
+ *   - Tabs are the glass pill group, count on the right — job search's own
+ *     "18 jobs found" row.
  *
- * The presentation follows the suite rule — surfaces dip into tint, controls
- * and fields are white pills sitting on them. Rows are white bands separated by
- * AIR rather than hairlines, the table head is one continuous white pill band,
- * status carries a dot chip and category carries a silent tint chip. A dot
- * means state; a classification never gets one.
+ * WHAT WENT. The three summary tiles are gone (Stephen's call). They were the
+ * only part of this surface not present in the shipped product, and a figure
+ * invented for a demo is the exact shape of thing §6.1 exists to stop.
+ *
+ * THE SLIDE-OVERS are the product's real gesture, and they are CONTAINED —
+ * absolutely positioned inside this panel, not fixed to the viewport. A demo
+ * embedded mid-page must not seize the whole screen to show a detail record.
+ * Containment also fixes a real defect in the previous build: the detail view
+ * REPLACED the list, which collapsed the section by 415px and yanked every
+ * section below it up under the reader's cursor. Overlaying costs no height.
+ *
+ * Three layers stack, exactly as the product stacks them: the application, then
+ * the candidate (whose notes span their applications, not just this one), then
+ * that candidate's timeline. Each lower layer peeks out by a sliver so the
+ * depth is legible.
+ *
+ * §6.7 — the caption is rendered, at the foot of the panel. It had existed in
+ * `dashboard-data.ts` since this surface was built and was never once put on
+ * screen, so the one demo on the page handling anything resembling candidate
+ * data carried no illustrative disclosure at all.
  */
 
-const CATEGORIES = [...new Set(SEED_APPLICATIONS.map((a) => a.category))];
+const content = dashboardContent;
+
+const CATEGORIES = [...new Set(SEED_APPLICATIONS.map((a) => a.category))].sort();
+const ROLES = [...new Set(SEED_APPLICATIONS.map((a) => a.role))].sort();
+const SOURCES = [...new Set(SEED_APPLICATIONS.map((a) => a.source))].sort();
+const JOBS = [...new Set(SEED_APPLICATIONS.map((a) => a.job))].sort();
 
 /**
  * Status → chip state. Six statuses onto six of the seven available dots, all
@@ -49,30 +86,24 @@ const STATUS_STATE: Record<Status, string> = {
   Withdrawn: "warn",
 };
 
-/**
- * `onTint` swaps the chip's neutral wash for a white pill. The wash and the
- * tinted ground are within a point of each other in lightness, so each chip
- * ground vanishes on the other's surface — white on tint, wash on white.
- */
-const StatusChip = ({ status, onTint }: { status: Status; onTint?: boolean }) => (
-  <span
-    className={`chip ${onTint ? "bg-surface-raised shadow-sm" : ""}`}
-    data-state={STATUS_STATE[status]}
-  >
+const StatusChip = ({ status }: { status: Status }) => (
+  <span className="chip" data-state={STATUS_STATE[status]}>
     {status}
   </span>
 );
 
-/* --- Icons ---------------------------------------------------------------- */
+/* --- Glyphs ---------------------------------------------------------------
+   Drawn to job-search's stroke weight (1.7 at 24px) so the two demos share a
+   hand as well as a palette. */
 
-const InboxIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
+const SearchIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden>
+    <circle cx="11" cy="11" r="6.2" stroke="currentColor" strokeWidth="1.7" />
     <path
-      d="M3.5 13.5h4l1.2 2.2h6.6l1.2-2.2h4M4.6 5.6l-1.1 7.9v3.4A1.5 1.5 0 005 18.4h14a1.5 1.5 0 001.5-1.5v-3.4l-1.1-7.9A1.5 1.5 0 0017.9 4.3H6.1a1.5 1.5 0 00-1.5 1.3z"
+      d="M15.6 15.6L20 20"
       stroke="currentColor"
-      strokeWidth="1.5"
+      strokeWidth="1.7"
       strokeLinecap="round"
-      strokeLinejoin="round"
     />
   </svg>
 );
@@ -89,6 +120,17 @@ const ChevronIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const FilterIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden>
+    <path
+      d="M4 6h16M7 12h10M10 18h4"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 const DownloadIcon = () => (
   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
     <path
@@ -101,10 +143,22 @@ const DownloadIcon = () => (
   </svg>
 );
 
-const BackIcon = () => (
+const CloseIcon = () => (
   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
     <path
-      d="M20 12H5m0 0l5.5-5.5M5 12l5.5 5.5"
+      d="M6 6l12 12M18 6L6 18"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
+    <circle cx="12" cy="12" r="8.2" stroke="currentColor" strokeWidth="1.7" />
+    <path
+      d="M12 7.6V12l3 1.8"
       stroke="currentColor"
       strokeWidth="1.7"
       strokeLinecap="round"
@@ -113,61 +167,184 @@ const BackIcon = () => (
   </svg>
 );
 
-/* --- Controls -------------------------------------------------------------- */
+const PersonIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
+    <circle cx="12" cy="8.5" r="3.6" stroke="currentColor" strokeWidth="1.7" />
+    <path
+      d="M4.8 20a7.2 7.2 0 0114.4 0"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+    />
+  </svg>
+);
 
-interface SelectFieldProps {
-  label: string;
+const NoteIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
+    <path
+      d="M5 4.8h14v9.4L14.2 19H5z"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M19 14.2h-4.8V19"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+/* --- Controls -------------------------------------------------------------
+   Job search's `RowSelect`, verbatim in spirit: a white pill on the card, the
+   "All …" option doing the labelling so no separate label competes with it.
+   The accessible name comes from `aria-label`, never from a wrapping <label> —
+   a wrapper folds the option text into the name and it comes out as the whole
+   list rather than "Status". */
+
+const RowSelect = ({
+  value,
+  onChange,
+  allLabel,
+  options,
+  label,
+  className,
+}: {
   value: string;
-  onChange: (next: string) => void;
-  children: ReactNode;
-}
+  onChange: (v: string) => void;
+  allLabel: string;
+  options: readonly string[];
+  label: string;
+  className?: string;
+}) => (
+  <span className={`relative flex items-center ${className ?? ""}`}>
+    <select
+      aria-label={label}
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      className="h-12 w-full appearance-none rounded-pill bg-surface-chip pl-5 pr-11 text-ui-sm text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
+    >
+      <option value="">{allLabel}</option>
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+    <ChevronIcon className="pointer-events-none absolute right-4 h-4 w-4 text-ink-label" />
+  </span>
+);
 
-/**
- * A white pill select on a tinted surface. `useId` gives an explicit
- * `for`/`id` pair rather than relying on wrapping: a wrapping label folds the
- * option text into the control's accessible name, so the name comes out as the
- * whole list rather than "Status".
- */
-const SelectField = ({ label, value, onChange, children }: SelectFieldProps) => {
-  const id = useId();
+/** A date bound. Native control, white pill — the calendar affordance is the
+ *  browser's, which is what a recruiter actually gets. */
+const DateField = ({
+  value,
+  onChange,
+  label,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  label: string;
+}) => (
+  <input
+    type="date"
+    aria-label={label}
+    value={value}
+    onChange={(event) => onChange(event.target.value)}
+    className="h-12 w-full rounded-pill bg-surface-chip px-5 text-ui-sm text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
+  />
+);
 
-  return (
-    <span className="inline-flex items-center gap-2">
-      <label htmlFor={id} className="text-ui-xs text-ink-label">
-        {label}
-      </label>
-      <span className="relative inline-flex items-center">
-        <select
-          id={id}
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          className="field w-auto appearance-none rounded-pill py-2 pl-4 pr-9 text-ui-sm font-medium shadow-sm"
-        >
-          {children}
-        </select>
-        <ChevronIcon className="pointer-events-none absolute right-3 h-3.5 w-3.5 text-ink-label" />
-      </span>
-    </span>
-  );
-};
+/* --- Table primitives -----------------------------------------------------
+   Job search's exact recipe. The head is ONE continuous pill band; rows are
+   white bands separated by AIR. `border-spacing-y-3` supplies both the 12px
+   under the head and the 12px between rows, so there is not a hairline
+   anywhere in the table. */
 
-/* --- Table primitives ------------------------------------------------------
-   The head is ONE continuous pill band; rows are white bands separated by air.
-   `border-spacing-y-3` supplies both the 12px under the head and the 12px
-   between rows, so there is not a hairline anywhere in the table. */
-
-const HEAD_CELL = "bg-surface-raised py-2.5 text-left text-ui-sm font-normal text-ink-label";
+const HEAD_CELL =
+  "bg-surface-raised py-2.5 text-left text-ui-sm font-normal text-ink-label";
 const CELL = "h-16 bg-surface-raised align-middle text-ui-base";
 
-const TableShell = ({ minWidth, children }: { minWidth: string; children: ReactNode }) => (
+const TableShell = ({
+  minWidth,
+  caption,
+  children,
+}: {
+  minWidth: string;
+  caption: string;
+  children: ReactNode;
+}) => (
   <div className="overflow-x-auto">
     <table
       className="w-full border-separate border-spacing-x-0 border-spacing-y-3"
       style={{ minWidth }}
     >
+      <caption className="sr-only">{caption}</caption>
       {children}
     </table>
   </div>
+);
+
+/* --- Slide-over shell ------------------------------------------------------ */
+
+interface PanelProps {
+  title: string;
+  subtitle?: ReactNode;
+  onClose: () => void;
+  children: ReactNode;
+}
+
+/**
+ * One layer of the stack. Scrolls its own body, and `data-lenis-prevent` is
+ * REQUIRED rather than optional: Lenis drives the page and captures wheel
+ * events globally, so a nested scroll area silently does nothing on a wheel —
+ * it would scroll by drag and by keyboard and look broken to a mouse. This is
+ * the same trap the job map hit.
+ */
+const Panel = ({ title, subtitle, onClose, children }: PanelProps) => (
+  /* `w-full min-w-0` is load-bearing: this is a flex ITEM, so without a width
+     it sizes to its content. The timeline panel has short lines and was
+     collapsing to about 40% of the layer, letting the panel underneath show
+     through beside it and reading as two panels side by side. */
+  <div className="flex h-full w-full min-w-0 flex-col overflow-hidden rounded-panel bg-surface-raised shadow-lift">
+    <header className="flex flex-none items-start justify-between gap-4 border-b border-hairline px-5 py-4">
+      <div className="min-w-0">
+        <h4 className="truncate text-ui-lg font-medium tracking-tight text-ink-heading">
+          {title}
+        </h4>
+        {subtitle ? <div className="mt-1">{subtitle}</div> : null}
+      </div>
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label={content.detail.closeLabel}
+        className="grid h-8 w-8 flex-none place-items-center rounded-pill bg-surface-chip text-ink-body transition-colors duration-[var(--duration-fast)] ease-entrance hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
+      >
+        <CloseIcon />
+      </button>
+    </header>
+    <div
+      data-lenis-prevent
+      className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5"
+    >
+      {children}
+    </div>
+  </div>
+);
+
+/** A labelled row inside a panel section: label left, value right. */
+const Row = ({ label, value }: { label: string; value: ReactNode }) => (
+  <div className="flex items-baseline justify-between gap-4 py-1.5">
+    <dt className="flex-none text-ui-sm text-ink-label">{label}</dt>
+    <dd className="min-w-0 text-right text-ui-sm text-ink">{value}</dd>
+  </div>
+);
+
+const SectionHeading = ({ children }: { children: ReactNode }) => (
+  <h5 className="text-ui-2xs font-medium uppercase tracking-eyebrow text-ink-label">
+    {children}
+  </h5>
 );
 
 /* --- The demo -------------------------------------------------------------- */
@@ -176,26 +353,105 @@ export interface DashboardDemoProps {
   className?: string;
 }
 
-export const DashboardDemo = ({ className }: DashboardDemoProps) => {
-  const content = dashboardContent;
+interface Note {
+  body: string;
+  by: string;
+  when: string;
+}
 
-  const [tab, setTab] = useState<"applications" | "registrations">("applications");
-  const [status, setStatus] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
-  const [applications, setApplications] = useState<Application[]>(SEED_APPLICATIONS);
+type LayerKind = "application" | "candidate" | "timeline";
+
+export const DashboardDemo = ({ className }: DashboardDemoProps) => {
+  const [tab, setTab] = useState<"applications" | "registrations">(
+    "applications",
+  );
+
+  /* Filters, in the product's own order. */
+  const [query, setQuery] = useState("");
+  const [status, setStatus] = useState("");
+  const [job, setJob] = useState("");
+  const [category, setCategory] = useState("");
+  const [role, setRole] = useState("");
+  const [source, setSource] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [expanded, setExpanded] = useState(false);
+
+  const [applications, setApplications] =
+    useState<Application[]>(SEED_APPLICATIONS);
   const [openId, setOpenId] = useState<string | null>(null);
+  const [candidateOpen, setCandidateOpen] = useState(false);
+  const [timelineOpen, setTimelineOpen] = useState(false);
+  const [notes, setNotes] = useState<Record<string, Note[]>>({});
+  const [draft, setDraft] = useState("");
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+
+  const countId = useId();
 
   const filtered = useMemo(
     () =>
-      applications.filter(
-        (application) =>
-          (!status || application.status === status) &&
-          (!category || application.category === category),
-      ),
-    [applications, status, category],
+      applications.filter((a) => {
+        if (query && !a.name.toLowerCase().includes(query.trim().toLowerCase()))
+          return false;
+        if (status && a.status !== status) return false;
+        if (job && a.job !== job) return false;
+        if (category && a.category !== category) return false;
+        if (role && a.role !== role) return false;
+        if (source && a.source !== source) return false;
+        if (from && a.appliedIso < from) return false;
+        if (to && a.appliedIso > to) return false;
+        return true;
+      }),
+    [applications, query, status, job, category, role, source, from, to],
   );
 
-  const open = applications.find((application) => application.id === openId) ?? null;
+  const open = applications.find((a) => a.id === openId) ?? null;
+
+  /* Close every layer when the record behind them goes away — deleting the
+     open application would otherwise leave two panels describing nothing. */
+  useEffect(() => {
+    if (openId && !open) {
+      setOpenId(null);
+      setCandidateOpen(false);
+      setTimelineOpen(false);
+    }
+  }, [openId, open]);
+
+  const closeTop = () => {
+    if (timelineOpen) return setTimelineOpen(false);
+    if (candidateOpen) return setCandidateOpen(false);
+    setOpenId(null);
+  };
+
+  /* ESC peels one layer at a time, which is what a stack should do. Focus
+     returns to whatever opened the first layer. */
+  const triggerRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!openId) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (timelineOpen) setTimelineOpen(false);
+      else if (candidateOpen) setCandidateOpen(false);
+      else setOpenId(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [openId, candidateOpen, timelineOpen]);
+
+  useEffect(() => {
+    if (openId) return;
+    const t = triggerRef.current;
+    if (t && typeof t.focus === "function") t.focus();
+    triggerRef.current = null;
+  }, [openId]);
+
+  const openApplication = (id: string, trigger: HTMLElement | null) => {
+    triggerRef.current = trigger;
+    setOpenId(id);
+    setCandidateOpen(false);
+    setTimelineOpen(false);
+    setConfirmingDelete(false);
+  };
 
   const changeStatus = (id: string, next: Status) => {
     setApplications((current) =>
@@ -220,11 +476,56 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
     );
   };
 
+  /* Deleting works, on this page's copy of the data only. A red button that
+     does nothing teaches the reader the wrong thing about a control the
+     product genuinely has — and anonymising on delete is a real answer to a
+     real question a care provider will ask. The caption carries the rest. */
+  const deleteApplication = (id: string) => {
+    setApplications((current) => current.filter((a) => a.id !== id));
+    setOpenId(null);
+    setCandidateOpen(false);
+    setTimelineOpen(false);
+    setConfirmingDelete(false);
+  };
+
+  const addNote = (id: string) => {
+    const body = draft.trim();
+    if (!body) return;
+    setNotes((current) => ({
+      ...current,
+      [id]: [
+        { body, by: content.notes.author, when: content.notes.when },
+        ...(current[id] ?? []),
+      ],
+    }));
+    setDraft("");
+  };
+
   /** A genuine file, from the rows the filters left visible. */
   const exportCsv = () => {
-    const header = ["ID", "Name", "Email", "Job", "Category", "Status", "Source", "Applied"];
+    const header = [
+      "Application",
+      "Candidate",
+      "Email",
+      "Job",
+      "Category",
+      "Role",
+      "Status",
+      "Source",
+      "Applied",
+    ];
     const rows = filtered.map((a) =>
-      [a.id, a.name, a.email, a.job, a.category, a.status, a.source, a.applied]
+      [
+        a.id,
+        a.name,
+        a.email,
+        a.job,
+        a.category,
+        a.role,
+        a.status,
+        a.source,
+        a.applied,
+      ]
         .map((field) => `"${field.replaceAll('"', '""')}"`)
         .join(","),
     );
@@ -239,358 +540,784 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
     URL.revokeObjectURL(url);
   };
 
-  /* Derived, not stored — the summary strip reads the same array the table
-     does, which is why changing a status in the detail view moves it. */
-  const total = applications.length;
-  const actioned = applications.filter((a) => a.status !== "Submitted").length;
-  const accepted = applications.filter((a) => a.status === "Accepted").length;
-  const actionedPct = total === 0 ? 0 : Math.round((actioned / total) * 100);
+  const clearFilters = () => {
+    setQuery("");
+    setStatus("");
+    setJob("");
+    setCategory("");
+    setRole("");
+    setSource("");
+    setFrom("");
+    setTo("");
+  };
+
+  const anyFilter = Boolean(
+    query || status || job || category || role || source || from || to,
+  );
+
+  /* The open stack, bottom-first. */
+  const stack: { key: string; kind: LayerKind }[] = [];
+  if (open) stack.push({ key: `application-${open.id}`, kind: "application" });
+  if (open && candidateOpen)
+    stack.push({ key: `candidate-${open.id}`, kind: "candidate" });
+  if (open && timelineOpen)
+    stack.push({ key: `timeline-${open.id}`, kind: "timeline" });
+
+  /* Spring-driven, per AGENTS.md rule 1 — a slide-over is revealing motion, so
+     it is a spring, not a `transition-*`. Friction is high: the panel arrives
+     and settles, matching `Reveal`'s signature rather than inventing a second. */
+  const layers = useTransition(stack, {
+    keys: (layer) => layer.key,
+    from: { x: 104, opacity: 0 },
+    enter: { x: 0, opacity: 1 },
+    leave: { x: 104, opacity: 0 },
+    config: { tension: 260, friction: 34 },
+  });
+
+  const scrim = useTransition(Boolean(open), {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    config: { tension: 220, friction: 30 },
+  });
 
   const tabs = [
     ["applications", content.tabs.applications, applications.length],
     ["registrations", content.tabs.registrations, SEED_REGISTRATIONS.length],
   ] as const;
 
+  const showing =
+    tab === "applications"
+      ? filtered.length === 1
+        ? content.filters.countOne
+        : content.filters.count.replace("{n}", String(filtered.length))
+      : content.filters.registrationCount.replace(
+          "{n}",
+          String(SEED_REGISTRATIONS.length),
+        );
+
   return (
-    <div className={`bg-surface p-4 sm:p-6 ${className ?? ""}`}>
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <span className="icon-chip h-9 w-9">
-            <InboxIcon />
-          </span>
-          <h3 className="text-ui-lg font-medium tracking-tight text-ink-heading">
-            {tab === "applications" ? content.tabs.applications : content.tabs.registrations}
-          </h3>
-        </div>
+    <div className={className}>
+      {/* THE CONTROLS — lifted out so they STRADDLE the panel below, the same
+          device the job search uses. The overlap is what makes the filters read
+          as the head of the instrument rather than a row inside it.
 
-        <div
-          role="tablist"
-          aria-label="Dashboard tabs"
-          className="inline-flex w-fit rounded-pill bg-track p-1"
+          `lg:` only. Stacked on a phone this is six fields tall, and a tall
+          column straddling a panel edge reads as a mistake rather than a
+          device — which is exactly the note job-search.tsx leaves. */}
+      <div className="relative z-10 mx-auto w-full px-0 sm:px-6 lg:px-10">
+        <form
+          onSubmit={(event) => event.preventDefault()}
+          className="screen rounded-panel bg-surface-raised p-3 shadow-lift"
         >
-          {tabs.map(([value, label, count]) => (
-            <button
-              key={value}
-              type="button"
-              role="tab"
-              aria-selected={tab === value}
-              onClick={() => {
-                setTab(value);
-                setOpenId(null);
-              }}
-              className={`inline-flex items-center gap-2 rounded-pill px-4 py-2 text-ui-sm font-medium transition-colors duration-[var(--duration-fast)] ease-entrance ${
-                tab === value
-                  ? "bg-surface-raised text-ink shadow-sm"
-                  : "text-ink-label hover:text-ink"
-              }`}
-            >
-              {label}
-              <span className="text-ui-2xs text-ink-label">{count}</span>
-            </button>
-          ))}
-        </div>
-      </header>
-
-      {tab === "applications" && open ? (
-        <CandidateDetail
-          application={open}
-          onBack={() => setOpenId(null)}
-          onStatusChange={(next) => changeStatus(open.id, next)}
-        />
-      ) : tab === "applications" ? (
-        <div className="mt-5">
-          {/* The summary strip. Wash + inset is law: white insets, because
-              these hold figures rather than fields. */}
-          <div className="wash rounded-card">
-            <div className="grid gap-3 sm:grid-cols-3">
-              <SummaryTile label={content.tabs.applications} value={total} />
-              <SummaryTile label="Actioned" value={actionedPct} unit="%" fill={actionedPct} />
-              <SummaryTile label="Accepted" value={accepted} />
-            </div>
-          </div>
-
-          {/* Filters + export. */}
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-3">
-              <SelectField label="Status" value={status} onChange={setStatus}>
-                <option value="">{content.filters.allStatuses}</option>
-                {STATUSES.map((value) => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </SelectField>
-              <SelectField label="Category" value={category} onChange={setCategory}>
-                <option value="">{content.filters.allCategories}</option>
-                {CATEGORIES.map((value) => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </SelectField>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <span className="hidden text-ui-xs text-ink-label sm:inline">
-                {content.filters.exportHint}
+          <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center">
+            <span className="relative flex flex-[1.4] items-center">
+              <input
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder={content.filters.searchPlaceholder}
+                aria-label={content.filters.searchLabel}
+                className="h-12 w-full rounded-pill bg-surface-chip pl-12 pr-5 text-ui-sm text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
+              />
+              <span className="pointer-events-none absolute left-5 text-ink-label">
+                <SearchIcon />
               </span>
-              <button
-                type="button"
-                onClick={exportCsv}
-                className="btn btn-primary px-4 py-2 text-ui-sm"
-              >
-                {content.filters.export}
-                <DownloadIcon />
-              </button>
-            </div>
+            </span>
+
+            <RowSelect
+              value={status}
+              onChange={setStatus}
+              allLabel={content.filters.allStatuses}
+              options={STATUSES}
+              label={content.filters.allStatuses}
+              className="flex-1"
+            />
+
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              aria-expanded={expanded}
+              className="inline-flex h-12 flex-none items-center justify-center gap-2 rounded-pill bg-surface-chip px-5 text-ui-sm font-medium text-ink-accent transition-colors duration-[var(--duration-fast)] ease-entrance hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
+            >
+              <FilterIcon className="h-4 w-4" />
+              {expanded ? content.filters.fewer : content.filters.more}
+              <ChevronIcon
+                className={`h-4 w-4 transition-transform duration-[var(--duration-fast)] ease-entrance ${
+                  expanded ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            <button
+              type="button"
+              onClick={exportCsv}
+              title={content.filters.exportHint}
+              /* `btn-primary`, not `bg-accent`. The bright sky #0ea5e9 measures
+                 2.54:1 under white — the product spec keeps a DEEPENED pair
+                 (#0879b8 → #5044d6) precisely because the bright one fails for
+                 white text, and this button had been reaching for the wrong
+                 one. The deepened gradient is 4.73:1 at its light end. */
+              className="btn btn-primary h-12 flex-none rounded-pill px-6 text-ui-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
+            >
+              {content.filters.export}
+              <DownloadIcon />
+            </button>
           </div>
 
-          {filtered.length === 0 ? (
-            <div className="tile mt-5 px-5 py-12 text-center">
-              <p className="text-ui-base text-ink-label">{content.filters.empty}</p>
+          {expanded ? (
+            <div className="mt-3 border-t border-hairline pt-3">
+              <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-6">
+                <RowSelect
+                  value={job}
+                  onChange={setJob}
+                  allLabel={content.filters.allJobs}
+                  options={JOBS}
+                  label={content.filters.allJobs}
+                />
+                <RowSelect
+                  value={category}
+                  onChange={setCategory}
+                  allLabel={content.filters.allCategories}
+                  options={CATEGORIES}
+                  label={content.filters.allCategories}
+                />
+                <RowSelect
+                  value={role}
+                  onChange={setRole}
+                  allLabel={content.filters.allRoles}
+                  options={ROLES}
+                  label={content.filters.allRoles}
+                />
+                <RowSelect
+                  value={source}
+                  onChange={setSource}
+                  allLabel={content.filters.allSources}
+                  options={SOURCES}
+                  label={content.filters.allSources}
+                />
+                <DateField
+                  value={from}
+                  onChange={setFrom}
+                  label={content.filters.dateFrom}
+                />
+                <DateField
+                  value={to}
+                  onChange={setTo}
+                  label={content.filters.dateTo}
+                />
+              </div>
             </div>
+          ) : null}
+        </form>
+      </div>
+
+      {/* THE PANEL — rides UP under the controls card so the card straddles its
+          edge, and clips the slide-overs to itself. */}
+      <div className="screen grain bg-08 relative overflow-hidden rounded-panel px-5 pb-7 pt-12 sm:px-7 lg:-mt-9 lg:px-10 lg:pb-10 lg:pt-20">
+        <div className="flex flex-col gap-6">
+          {/* Tabs left, count right — job search's own row. */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div
+              role="tablist"
+              aria-label="Dashboard views"
+              className="inline-flex gap-1 rounded-pill bg-white/10 p-1 backdrop-blur-md"
+            >
+              {tabs.map(([value, label, count]) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="tab"
+                  aria-selected={tab === value}
+                  onClick={() => {
+                    setTab(value);
+                    setOpenId(null);
+                  }}
+                  className={`inline-flex items-center gap-2 rounded-pill px-4 py-2 text-ui-sm font-medium transition-colors duration-[var(--duration-fast)] ease-entrance ${
+                    tab === value
+                      ? "bg-surface-raised text-ink"
+                      : "text-ink-on-dark hover:text-white"
+                  }`}
+                >
+                  {label}
+                  {/* The count sat at --ink-label on the track and measured
+                      4.31:1 — the one text on the page that failed AA. It now
+                      inherits its parent's ink on both states. */}
+                  <span
+                    className={
+                      tab === value ? "text-ink-body" : "text-ink-on-dark/80"
+                    }
+                  >
+                    {count}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* On the deep ground, so --ink-label (2.04:1 there) will not do. */}
+            <p
+              id={countId}
+              aria-live="polite"
+              className="text-ui-sm text-ink-on-dark/80"
+            >
+              {showing}
+            </p>
+          </div>
+
+          {tab === "applications" ? (
+            filtered.length === 0 ? (
+              <div className="tile flex flex-col items-center gap-3 px-6 py-12 text-center">
+                <p className="text-ui-base text-ink-label">
+                  {content.filters.empty}
+                </p>
+                {anyFilter ? (
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="btn btn-secondary px-4 py-2 text-ui-sm"
+                  >
+                    {content.filters.clear}
+                  </button>
+                ) : null}
+              </div>
+            ) : (
+              <TableShell
+                minWidth="58rem"
+                caption="Sample applications matching the current filters"
+              >
+                <thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      className={`${HEAD_CELL} rounded-l-pill pl-5 pr-4`}
+                    >
+                      Application
+                    </th>
+                    <th scope="col" className={`${HEAD_CELL} px-4`}>
+                      Candidate
+                    </th>
+                    <th scope="col" className={`${HEAD_CELL} px-4`}>
+                      Job
+                    </th>
+                    <th scope="col" className={`${HEAD_CELL} px-4`}>
+                      Status
+                    </th>
+                    <th scope="col" className={`${HEAD_CELL} px-4`}>
+                      Source
+                    </th>
+                    <th
+                      scope="col"
+                      className={`${HEAD_CELL} rounded-r-pill pl-4 pr-5`}
+                    >
+                      Applied
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map((application) => (
+                    <tr
+                      key={application.id}
+                      className="group transition-shadow duration-[var(--duration-fast)] ease-entrance hover:shadow-tile"
+                    >
+                      <th
+                        scope="row"
+                        className={`${CELL} rounded-l-sm py-3 pl-5 pr-4 text-left font-normal`}
+                      >
+                        <button
+                          type="button"
+                          onClick={(event) =>
+                            openApplication(application.id, event.currentTarget)
+                          }
+                          className="text-left text-ui-sm font-medium text-ink transition-colors duration-[var(--duration-fast)] ease-entrance group-hover:text-ink-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
+                        >
+                          {application.id}
+                        </button>
+                      </th>
+                      <td className={`${CELL} px-4`}>
+                        <p className="text-ui-sm font-medium text-ink">
+                          {application.name}
+                        </p>
+                        <p className="text-ui-xs text-ink-label">
+                          {application.email}
+                        </p>
+                      </td>
+                      <td className={`${CELL} px-4`}>
+                        <p className="text-ui-sm text-ink">
+                          {application.jobTitle} ({application.jobRef})
+                        </p>
+                        <p className="mt-1.5">
+                          <span className="chip" data-tint="sky">
+                            {application.category}
+                          </span>
+                        </p>
+                      </td>
+                      <td className={`${CELL} px-4`}>
+                        <StatusChip status={application.status} />
+                      </td>
+                      <td className={`${CELL} px-4 text-ui-sm text-ink-body`}>
+                        {application.source}
+                      </td>
+                      <td
+                        className={`${CELL} whitespace-nowrap rounded-r-sm pl-4 pr-5 text-ui-sm text-ink-label`}
+                      >
+                        {application.applied}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </TableShell>
+            )
           ) : (
-            <TableShell minWidth="46rem">
+            <TableShell
+              minWidth="46rem"
+              caption="Sample event registrations"
+            >
               <thead>
                 <tr>
-                  <th scope="col" className={`${HEAD_CELL} rounded-l-pill pl-5 pr-4`}>
-                    Candidate
+                  <th
+                    scope="col"
+                    className={`${HEAD_CELL} rounded-l-pill pl-5 pr-4`}
+                  >
+                    Registrant
                   </th>
                   <th scope="col" className={`${HEAD_CELL} px-4`}>
-                    Job
+                    Event
                   </th>
                   <th scope="col" className={`${HEAD_CELL} px-4`}>
-                    Source
+                    Event date
                   </th>
                   <th scope="col" className={`${HEAD_CELL} px-4`}>
-                    Applied
+                    Registered
                   </th>
-                  <th scope="col" className={`${HEAD_CELL} rounded-r-pill pl-4 pr-5`}>
-                    Status
+                  <th
+                    scope="col"
+                    className={`${HEAD_CELL} rounded-r-pill pl-4 pr-5`}
+                  >
+                    Attended
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((application) => (
-                  <tr
-                    key={application.id}
-                    onClick={() => setOpenId(application.id)}
-                    className="group cursor-pointer transition-shadow duration-[var(--duration-fast)] ease-entrance hover:shadow-sm"
-                  >
-                    <td className={`${CELL} rounded-l-sm py-3 pl-5 pr-4`}>
-                      <button
-                        type="button"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          setOpenId(application.id);
-                        }}
-                        className="text-left text-ui-base font-medium text-ink transition-colors duration-[var(--duration-fast)] ease-entrance group-hover:text-ink-accent"
-                      >
-                        {application.name}
-                      </button>
-                      <p className="text-ui-xs text-ink-label">{application.email}</p>
-                    </td>
-                    <td className={`${CELL} px-4`}>
-                      <p className="text-ui-sm text-ink">{application.job}</p>
-                      <p className="mt-1.5">
-                        <span className="chip" data-tint="sky">
-                          {application.category}
-                        </span>
+                {SEED_REGISTRATIONS.map((registration) => (
+                  <tr key={registration.id}>
+                    <th
+                      scope="row"
+                      className={`${CELL} rounded-l-sm py-3 pl-5 pr-4 text-left font-normal`}
+                    >
+                      <p className="text-ui-sm font-medium text-ink">
+                        {registration.name}
                       </p>
+                      <p className="text-ui-xs text-ink-label">
+                        {registration.email}
+                      </p>
+                    </th>
+                    <td className={`${CELL} px-4`}>
+                      <span className="chip" data-tint="info">
+                        {registration.event}
+                      </span>
                     </td>
-                    <td className={`${CELL} px-4 text-ui-sm text-ink-body`}>
-                      {application.source}
+                    <td
+                      className={`${CELL} whitespace-nowrap px-4 text-ui-sm text-ink-body`}
+                    >
+                      {registration.eventDate}
                     </td>
-                    <td className={`${CELL} whitespace-nowrap px-4 text-ui-sm text-ink-label`}>
-                      {application.applied}
+                    <td
+                      className={`${CELL} whitespace-nowrap px-4 text-ui-sm text-ink-label`}
+                    >
+                      {registration.registered}
                     </td>
                     <td className={`${CELL} rounded-r-sm pl-4 pr-5`}>
-                      <StatusChip status={application.status} />
+                      {registration.attended ? (
+                        <span className="chip" data-state="success">
+                          Yes
+                        </span>
+                      ) : (
+                        <span className="text-ui-sm text-ink-label">—</span>
+                      )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </TableShell>
           )}
+
+          {/* §6.7. This surface handles what LOOKS like candidate data, so it
+              says plainly that it is not. */}
+          <p className="max-w-3xl text-ui-sm leading-relaxed text-ink-on-dark/80">
+            {content.caption}
+          </p>
         </div>
-      ) : (
-        <div className="mt-5">
-          <TableShell minWidth="42rem">
-            <thead>
-              <tr>
-                <th scope="col" className={`${HEAD_CELL} rounded-l-pill pl-5 pr-4`}>
-                  Registrant
-                </th>
-                <th scope="col" className={`${HEAD_CELL} px-4`}>
-                  Event
-                </th>
-                <th scope="col" className={`${HEAD_CELL} px-4`}>
-                  Event date
-                </th>
-                <th scope="col" className={`${HEAD_CELL} px-4`}>
-                  Registered
-                </th>
-                <th scope="col" className={`${HEAD_CELL} rounded-r-pill pl-4 pr-5`}>
-                  Attended
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {SEED_REGISTRATIONS.map((registration) => (
-                <tr key={registration.id}>
-                  <td className={`${CELL} rounded-l-sm py-3 pl-5 pr-4`}>
-                    <p className="text-ui-base font-medium text-ink">{registration.name}</p>
-                    <p className="text-ui-xs text-ink-label">{registration.email}</p>
-                  </td>
-                  <td className={`${CELL} px-4`}>
-                    <span className="chip" data-tint="info">
-                      {registration.event}
-                    </span>
-                  </td>
-                  <td className={`${CELL} whitespace-nowrap px-4 text-ui-sm text-ink-body`}>
-                    {registration.eventDate}
-                  </td>
-                  <td className={`${CELL} whitespace-nowrap px-4 text-ui-sm text-ink-label`}>
-                    {registration.registered}
-                  </td>
-                  <td className={`${CELL} rounded-r-sm pl-4 pr-5`}>
-                    {registration.attended ? (
-                      <span className="chip" data-state="success">
-                        Yes
-                      </span>
-                    ) : (
-                      <span className="text-ui-sm text-ink-label">—</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </TableShell>
-        </div>
-      )}
+
+        {/* --- THE STACK ------------------------------------------------- */}
+
+        {scrim((style, isOpen) =>
+          isOpen ? (
+            <animated.button
+              type="button"
+              aria-label={content.detail.closeLabel}
+              tabIndex={-1}
+              onClick={closeTop}
+              style={style}
+              className="absolute inset-0 z-20 cursor-default bg-ink/35 backdrop-blur-[2px]"
+            />
+          ) : null,
+        )}
+
+        {layers((style, layer, _t, index) => {
+          if (!open) return null;
+          const depth = stack.length - 1 - index;
+          return (
+            <animated.div
+              style={{
+                opacity: style.opacity,
+                transform: style.x.to(
+                  (x) => `translate3d(${x + depth * -1.75}%, 0, 0)`,
+                ),
+                zIndex: 30 + index,
+              }}
+              className="absolute inset-y-0 right-0 z-30 flex w-full max-w-[32rem] p-3 sm:p-4 lg:p-6"
+            >
+              {layer.kind === "application" ? (
+                <ApplicationPanel
+                  application={open}
+                  notesCount={(notes[open.id] ?? []).length}
+                  confirming={confirmingDelete}
+                  onConfirmToggle={setConfirmingDelete}
+                  onDelete={() => deleteApplication(open.id)}
+                  onStatusChange={(next) => changeStatus(open.id, next)}
+                  onOpenCandidate={() => setCandidateOpen(true)}
+                  onClose={() => setOpenId(null)}
+                />
+              ) : layer.kind === "candidate" ? (
+                <CandidatePanel
+                  application={open}
+                  notes={notes[open.id] ?? []}
+                  draft={draft}
+                  onDraft={setDraft}
+                  onAdd={() => addNote(open.id)}
+                  onOpenTimeline={() => setTimelineOpen(true)}
+                  onClose={() => setCandidateOpen(false)}
+                />
+              ) : (
+                <TimelinePanel
+                  application={open}
+                  onClose={() => setTimelineOpen(false)}
+                />
+              )}
+            </animated.div>
+          );
+        })}
+      </div>
     </div>
   );
 };
 
-interface SummaryTileProps {
-  label: string;
-  value: number;
-  /** Steps down and mutes, so the number carries and the unit does not. */
-  unit?: string;
-  /** 0–100. Renders the thin tally under the figure. */
-  fill?: number;
-}
+/* --- The application ------------------------------------------------------- */
 
-const SummaryTile = ({ label, value, unit, fill }: SummaryTileProps) => (
-  <div className="inset-tile p-4">
-    <p className="text-ui-2xs font-medium uppercase tracking-eyebrow text-ink-label">{label}</p>
-    <p className="figure mt-2 text-ui-xl">
-      {value}
-      {unit ? <span className="figure-unit">{unit}</span> : null}
-    </p>
-    {fill === undefined ? null : (
-      <div
-        className="tally mt-3 h-6"
-        style={{ "--fill": `${fill}%` } as CSSProperties}
-        aria-hidden
-      />
-    )}
-  </div>
+const ApplicationPanel = ({
+  application,
+  notesCount,
+  confirming,
+  onConfirmToggle,
+  onDelete,
+  onStatusChange,
+  onOpenCandidate,
+  onClose,
+}: {
+  application: Application;
+  notesCount: number;
+  confirming: boolean;
+  onConfirmToggle: (v: boolean) => void;
+  onDelete: () => void;
+  onStatusChange: (next: Status) => void;
+  onOpenCandidate: () => void;
+  onClose: () => void;
+}) => (
+  <Panel
+    title={application.id}
+    subtitle={
+      <p className="truncate text-ui-sm text-ink-label">
+        {content.detail.sourceLabel} {application.sourcePath}
+      </p>
+    }
+    onClose={onClose}
+  >
+    <div className="flex flex-col gap-6">
+      <section className="flex flex-col gap-3">
+        <SectionHeading>{content.detail.statusHeading}</SectionHeading>
+        <div className="flex flex-wrap items-center gap-3 rounded-card bg-surface p-3">
+          <StatusChip status={application.status} />
+          <RowSelect
+            value={application.status}
+            onChange={(next) => onStatusChange(next as Status)}
+            allLabel={content.detail.updateStatus}
+            options={STATUSES}
+            label={content.detail.updateStatus}
+            className="min-w-[10rem] flex-1"
+          />
+        </div>
+      </section>
+
+      <section>
+        <SectionHeading>{content.detail.candidateHeading}</SectionHeading>
+        <dl className="mt-2 divide-y divide-hairline">
+          <Row label={content.detail.nameLabel} value={application.name} />
+          <Row
+            label={content.detail.emailLabel}
+            value={
+              <a
+                href={`mailto:${application.email}`}
+                className="break-all text-ink-accent underline underline-offset-2"
+              >
+                {application.email}
+              </a>
+            }
+          />
+          <Row
+            label={content.detail.telephoneLabel}
+            value={application.telephone}
+          />
+          <Row
+            label={content.detail.postcodeLabel}
+            value={application.postcode}
+          />
+        </dl>
+        <button
+          type="button"
+          onClick={onOpenCandidate}
+          className="btn btn-secondary mt-3 px-4 py-2 text-ui-sm"
+        >
+          <PersonIcon />
+          {content.detail.viewCandidate}
+          {notesCount > 0 ? (
+            <span className="chip" data-tint="sky">
+              {notesCount}
+            </span>
+          ) : null}
+        </button>
+      </section>
+
+      <section>
+        <SectionHeading>{content.detail.jobHeading}</SectionHeading>
+        <dl className="mt-2 divide-y divide-hairline">
+          <Row label={content.detail.titleLabel} value={application.jobTitle} />
+          <Row label={content.detail.refLabel} value={application.jobRef} />
+          <Row
+            label={content.detail.locationLabel}
+            value={application.jobLocation}
+          />
+          <Row label={content.detail.salaryLabel} value={application.salary} />
+        </dl>
+      </section>
+
+      <section>
+        <SectionHeading>{content.detail.additionalHeading}</SectionHeading>
+        <dl className="mt-2 divide-y divide-hairline">
+          {application.additional.map((entry) => (
+            <Row
+              key={entry.question}
+              label={entry.question}
+              value={entry.answer}
+            />
+          ))}
+        </dl>
+      </section>
+
+      <section>
+        <SectionHeading>{content.detail.appliedHeading}</SectionHeading>
+        <dl className="mt-2 divide-y divide-hairline">
+          <Row
+            label={content.detail.termsLabel}
+            value={application.termsAgreed}
+          />
+          <Row
+            label={content.detail.consentLabel}
+            value={application.contactConsent}
+          />
+        </dl>
+      </section>
+
+      {/* The product's own control. It is here because "we anonymise on
+          delete" is an answer a care provider will want to see, not read. */}
+      <section className="rounded-card bg-surface p-4">
+        <SectionHeading>{content.detail.dangerHeading}</SectionHeading>
+        <p className="mt-2 text-ui-sm leading-relaxed text-ink-body">
+          {content.detail.dangerBody}
+        </p>
+        {confirming ? (
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={onDelete}
+              className="inline-flex items-center rounded-pill bg-danger px-4 py-2 text-ui-sm font-medium text-ink-on-dark transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-90"
+            >
+              {content.detail.deleteConfirm}
+            </button>
+            <button
+              type="button"
+              onClick={() => onConfirmToggle(false)}
+              className="btn btn-secondary px-4 py-2 text-ui-sm"
+            >
+              {content.detail.deleteCancel}
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => onConfirmToggle(true)}
+            className="mt-3 inline-flex items-center rounded-pill bg-danger px-4 py-2 text-ui-sm font-medium text-ink-on-dark transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-90"
+          >
+            {content.detail.delete}
+          </button>
+        )}
+      </section>
+    </div>
+  </Panel>
 );
 
-interface CandidateDetailProps {
+/* --- The candidate --------------------------------------------------------- */
+
+const CandidatePanel = ({
+  application,
+  notes,
+  draft,
+  onDraft,
+  onAdd,
+  onOpenTimeline,
+  onClose,
+}: {
   application: Application;
-  onBack: () => void;
-  onStatusChange: (next: Status) => void;
-}
+  notes: Note[];
+  draft: string;
+  onDraft: (v: string) => void;
+  onAdd: () => void;
+  onOpenTimeline: () => void;
+  onClose: () => void;
+}) => (
+  <Panel
+    title={application.name}
+    subtitle={
+      <p className="truncate text-ui-sm text-ink-label">{application.email}</p>
+    }
+    onClose={onClose}
+  >
+    <div className="flex flex-col gap-6">
+      <button
+        type="button"
+        onClick={onOpenTimeline}
+        className="btn btn-secondary self-start px-4 py-2 text-ui-sm"
+      >
+        <ClockIcon />
+        {content.detail.viewTimeline}
+      </button>
 
-/**
- * Per-candidate view, in place of the list: detail, a status control, and the
- * timeline that writes itself when the status changes. The rail marks the most
- * recent entry in the accent — which is the one the reader just caused.
- */
-const CandidateDetail = ({ application, onBack, onStatusChange }: CandidateDetailProps) => {
-  const content = dashboardContent;
-
-  return (
-    <div className="tile mt-5 p-5 sm:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h4 className="text-ui-xl font-medium tracking-tight text-ink-heading">
-            {application.name}
-          </h4>
-          <p className="mt-1 text-ui-sm text-ink-label">
-            {application.email} · {application.id}
+      <section>
+        <SectionHeading>{content.notes.heading}</SectionHeading>
+        <textarea
+          value={draft}
+          onChange={(event) =>
+            onDraft(event.target.value.slice(0, content.notes.limit))
+          }
+          placeholder={content.notes.placeholder}
+          aria-label={content.notes.placeholder}
+          rows={4}
+          /* A textarea is a paragraph, not a pill — 18px radius, per the
+             product spec's field recipe. */
+          className="mt-2 w-full resize-y rounded-[18px] bg-surface p-4 text-ui-sm text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
+        />
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <p className="text-ui-xs text-ink-label">
+            {draft.length} / {content.notes.limit}
           </p>
-          <p className="mt-3 text-ui-base text-ink">{application.job}</p>
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <span className="chip" data-tint="sky">
-              {application.category}
-            </span>
-            <span className="text-ui-xs text-ink-label">
-              Source: {application.source} · Applied {application.applied}
-            </span>
-          </div>
+          <button
+            type="button"
+            onClick={onAdd}
+            disabled={!draft.trim()}
+            className="btn btn-primary px-4 py-2 text-ui-sm disabled:opacity-40"
+          >
+            <NoteIcon />
+            {content.notes.add}
+          </button>
         </div>
 
-        <button type="button" onClick={onBack} className="btn btn-secondary px-4 py-2 text-ui-sm">
-          <BackIcon />
-          {content.detail.backLabel}
-        </button>
-      </div>
-
-      <div className="mt-5 flex flex-wrap items-center gap-3 rounded-card bg-surface p-3">
-        <span className="pl-2 text-ui-xs text-ink-label">{content.detail.statusLabel}</span>
-        <StatusChip status={application.status} onTint />
-        <SelectField
-          label="Change to"
-          value={application.status}
-          onChange={(next) => onStatusChange(next as Status)}
-        >
-          {STATUSES.map((value) => (
-            <option key={value} value={value}>
-              {value}
-            </option>
-          ))}
-        </SelectField>
-      </div>
-
-      <div className="mt-6">
-        <h5 className="text-ui-2xs font-medium uppercase tracking-eyebrow text-ink-label">
-          {content.detail.timelineHeading}
-        </h5>
-        <ol className="mt-4">
-          {application.timeline.map((entry, index) => (
-            <li
-              key={`${entry.label}-${entry.when}-${index}`}
-              className="flex gap-4 pb-4 last:pb-0"
-            >
-              <span className="flex flex-none flex-col items-center" aria-hidden>
-                <span
-                  className={`mt-1.5 h-2 w-2 rounded-pill ${
-                    index === 0 ? "bg-accent-mid" : "bg-track"
-                  }`}
-                />
-                {index < application.timeline.length - 1 ? (
-                  <span className="w-px flex-1 bg-hairline" />
-                ) : null}
-              </span>
-              <div className="flex flex-1 flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-                <span
-                  className={`text-ui-base ${
-                    entry.kind === "note" ? "italic text-ink-body" : "font-medium text-ink"
-                  }`}
-                >
-                  {entry.label}
-                </span>
-                <span className="text-ui-xs text-ink-label">
-                  {entry.by} · {entry.when}
-                </span>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
+        {notes.length === 0 ? (
+          <p className="mt-4 text-ui-sm italic text-ink-label">
+            {content.notes.empty}
+          </p>
+        ) : (
+          <ul className="mt-4 flex flex-col gap-2">
+            {notes.map((note, index) => (
+              <li
+                key={`${note.when}-${index}`}
+                className="rounded-card bg-surface p-3"
+              >
+                <p className="text-ui-sm leading-relaxed text-ink">
+                  {note.body}
+                </p>
+                <p className="mt-1.5 text-ui-xs text-ink-label">
+                  {note.by} · {note.when}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
-  );
-};
+  </Panel>
+);
+
+/* --- The timeline ---------------------------------------------------------- */
+
+const TimelinePanel = ({
+  application,
+  onClose,
+}: {
+  application: Application;
+  onClose: () => void;
+}) => (
+  <Panel
+    title={application.name}
+    subtitle={
+      <p className="text-ui-sm text-ink-label">
+        {content.detail.timelineHeading}
+      </p>
+    }
+    onClose={onClose}
+  >
+    {/* The rail marks the most recent entry in the accent — which, after a
+        status change, is the one the reader just caused. */}
+    <ol>
+      {application.timeline.map((entry, index) => (
+        <li
+          key={`${entry.label}-${entry.when}-${index}`}
+          className="flex gap-4 pb-4 last:pb-0"
+        >
+          <span className="flex flex-none flex-col items-center" aria-hidden>
+            <span
+              className={`mt-1.5 h-2 w-2 rounded-pill ${
+                index === 0 ? "bg-accent-mid" : "bg-track"
+              }`}
+            />
+            {index < application.timeline.length - 1 ? (
+              <span className="w-px flex-1 bg-hairline" />
+            ) : null}
+          </span>
+          <div className="flex flex-1 flex-col gap-1">
+            <span
+              className={`text-ui-sm ${
+                entry.kind === "note"
+                  ? "italic text-ink-body"
+                  : "font-medium text-ink"
+              }`}
+            >
+              {entry.label}
+            </span>
+            <span className="text-ui-xs text-ink-label">
+              {entry.by} · {entry.when}
+            </span>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </Panel>
+);

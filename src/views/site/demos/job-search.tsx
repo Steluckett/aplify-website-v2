@@ -340,9 +340,15 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
             label="Region"
           />
 
+          {/* `btn-primary`, not `bg-accent`. Measured at 2.54:1 — the bright
+              sky #0ea5e9 under --ink-on-dark, which is exactly the failure the
+              deepened pair exists to prevent (APLIFY-PRODUCT-UI-SPEC.md: "the
+              bright pair fails contrast for white — that's why two exist, not
+              for variety"). The deepened gradient is 4.73:1 at its light end.
+              Caught while auditing the dashboard, which had copied this. */}
           <button
             type="submit"
-            className="h-14 rounded-pill bg-accent px-8 text-ui-base font-medium text-ink-on-dark transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-90"
+            className="btn btn-primary h-14 rounded-pill px-8 text-ui-base"
           >
             {content.filters.search}
           </button>

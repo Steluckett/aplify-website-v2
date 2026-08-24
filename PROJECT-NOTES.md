@@ -178,6 +178,21 @@ negative margin instead.
   cards nested inside a deep panel and painted white ink on a #eef0f5 pill at
   1.05:1. `.tile`, `.card-quiet` and `.inset-tile` now reset it. Any new light
   surface that can hold a chip needs adding to that list.
+- **`bg-accent` cannot carry white text.** The bright pair (sky `#0ea5e9`)
+  measures **2.54:1** under `--ink-on-dark`. There are two accent pairs for
+  exactly this reason and the product spec says so — *"the bright pair fails
+  contrast for white, that's why two exist, not for variety"* — but the job
+  search's Search button reached for the bright one and shipped that way. Use
+  `.btn-primary`, whose `--accent-grad-solid` is the deepened pair: 4.73:1 at
+  `#0879b8`, 6.69:1 at `#5044d6`. Check a gradient PER STOP; an average passes
+  things that fail visibly at one end.
+- **An audit that only reads leaf elements misses every button.** A button
+  containing text plus an `<svg>` has element children, so a sweep guarded by
+  `if (el.children.length) return` skips it — which is how the 2.54:1 button
+  survived a clean-looking pass. Walk elements that OWN a non-empty text node
+  instead: `[...el.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim())`.
+  And skip `sr-only` by testing `clipPath !== 'none'`, or it reports a 1x1
+  clipped caption as a contrast failure.
 - **Dead Tailwind class names fail silently.** `text-background` survived a
   token rewrite as an invisible button label.
 - **`border-<name>` with an unbound colour paints INK, not nothing.** Tailwind
@@ -276,12 +291,23 @@ recruiter dashboard, because several are the obvious parts to reach for:
 `APLIFY-PRODUCT-UI-SPEC.md`.
 **Outstanding**
 
-- **The recruiter dashboard is next.** Stephen's words: come back to it. Two
-  things known about it already — its §6.7 caption exists in
-  `dashboard-data.ts` but is never rendered, and it is the surface the
-  retained `use-carousel` / `product-shot` / `section-head` components were
-  kept for. `bg-brand` and `bg-brand-light` inside those components are
-  UNBOUND tokens and will paint ink the moment they are used; bind them first.
+- **The recruiter dashboard was rebuilt on 2026-08-24** (ADR-0029) against the
+  job search's rules and screenshots of the shipped product. Both demos are now
+  unframed. The §6.7 caption renders. The detail view is a CONTAINED slide-over
+  stack — application → candidate → timeline — so opening a record is a 0px
+  height change where it used to collapse the section by 415px. The three
+  summary tiles are gone: they were the only part of that surface not in the
+  product.
+
+  It did NOT end up using `use-carousel` / `product-shot` / `section-head`, so
+  those three remain orphaned along with `pill-button`, `arrow-button` and
+  `eyebrow`. **`bg-brand`, `bg-brand-light`, `bg-paper` and `text-paper-ink`
+  inside them are still UNBOUND** and will paint ink the moment they are used —
+  note that `paper` and `paper-ink` are unbound too, which an earlier version of
+  this note missed, so `pill-button`'s primary variant is ink-on-ink and
+  invisible rather than merely off-brand. Bind all four before reuse.
+  `--danger` was bound properly this way (tier 2 role → tier 3 `--color-danger`)
+  and is the worked example to copy.
 - The **nav still names features** (Platform, How it works, Job search,
   Dashboard, Security) while the page now argues as two problems, and the two
   new bands have no nav entry. A task chip exists for this.
