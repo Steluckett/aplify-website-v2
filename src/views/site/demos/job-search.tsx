@@ -161,7 +161,7 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
   }
 
   return (
-    <div className={`flex flex-col ${className ?? ""}`}>
+    <div className={`flex flex-col gap-6 ${className ?? ""}`}>
       {/* THE DEPLOYMENT SETTING — its own object, above and apart.
 
           This is NOT product UI. §2: the apply route is set per client, not per
@@ -174,97 +174,99 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
           it is a separate object with its own label, sitting above the boundary
           that the filters draw. The order a reader takes it in is: headline,
           intro, this setting, then the search it governs. */}
-      <div className="grain bg-08 mx-auto w-full max-w-3xl rounded-panel p-5 text-center sm:p-7">
-        <p className="eyebrow justify-center !text-ink-on-dark/70">
-          {content.routeSwitch.eyebrow}
-        </p>
-        <div
-          role="radiogroup"
-          aria-label={content.routeSwitch.label}
-          className="mx-auto mt-5 flex w-full gap-1.5 rounded-pill bg-white/10 p-1.5 backdrop-blur-md"
-        >
-          {(
+      {/* THE DEPLOYMENT SETTING — a track on the page, not a box on it.
+
+          It is still not product UI (§2: set per client, not per candidate),
+          and the section standfirst already says so in words, which is where
+          that belongs. What it does not need is its own gradient card: a
+          heading, a caption and a filled box turned a two-state control into a
+          block, and made the setting look heavier than the search it governs.
+
+          The track is translucent, so the page ground reads through it — the
+          control sits ON the page rather than in a container of its own. */}
+      <div
+        role="radiogroup"
+        aria-label={content.routeSwitch.label}
+        className="mx-auto flex w-full max-w-3xl gap-1.5 rounded-pill bg-ink/5 p-1.5"
+      >
+        {(
+          [
             [
-              [
-                "easy",
-                content.routeSwitch.easyApply,
-                content.routeSwitch.easyApplyNote,
-              ],
-              [
-                "link",
-                content.routeSwitch.linkOut,
-                content.routeSwitch.linkOutNote,
-              ],
-            ] as const
-          ).map(([value, label, note]) => {
-            const on = route === value;
-            return (
-              <button
-                key={value}
-                type="button"
-                role="radio"
-                aria-checked={on}
-                onClick={() => setRoute(value)}
-                className={`flex-1 rounded-pill px-5 py-3 text-center transition-colors duration-[var(--duration-fast)] ease-entrance ${
-                  on
-                    ? "bg-surface-raised shadow-sm"
-                    : "text-ink-on-dark hover:bg-white/10"
+              "easy",
+              content.routeSwitch.easyApply,
+              content.routeSwitch.easyApplyNote,
+            ],
+            [
+              "link",
+              content.routeSwitch.linkOut,
+              content.routeSwitch.linkOutNote,
+            ],
+          ] as const
+        ).map(([value, label, note]) => {
+          const on = route === value;
+          return (
+            <button
+              key={value}
+              type="button"
+              role="radio"
+              aria-checked={on}
+              onClick={() => setRoute(value)}
+              className={`flex-1 rounded-pill px-5 py-3 text-center transition-colors duration-[var(--duration-fast)] ease-entrance ${
+                on ? "bg-surface-raised shadow-sm" : "hover:bg-ink/5"
+              }`}
+            >
+              <span
+                className={`block text-ui-lg font-medium tracking-tight ${
+                  on ? "text-ink" : "text-ink-body"
                 }`}
               >
-                <span
-                  className={`block text-ui-lg font-medium tracking-tight ${
-                    on ? "text-ink" : "text-ink-on-dark"
-                  }`}
-                >
-                  {label}
-                </span>
-                <span
-                  className={`mt-0.5 block text-ui-xs ${
-                    on ? "text-ink-label" : "text-ink-on-dark/70"
-                  }`}
-                >
-                  {note}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+                {label}
+              </span>
+              {/* The note needs different ink on each side. On the white
+                  active pill `--ink-label` measures 5.39:1; on the track's
+                  own grey it drops to 4.31, which is under the 4.5 this size
+                  needs. `--ink-body` clears it at 7.05. */}
+              <span
+                className={`mt-0.5 block text-ui-xs ${
+                  on ? "text-ink-label" : "text-ink-body"
+                }`}
+              >
+                {note}
+              </span>
+            </button>
+          );
+        })}
+      </div>
 
-        {/* Says plainly that this is configuration, not candidate UI. Without
-            it, a switch offering "Easy Apply or a redirect" reads as something
-            a candidate would be shown — which would be the one dishonest thing
-            on a page whose argument is honesty about trade-offs. */}
-        <p className="mx-auto mt-5 max-w-xl text-ui-sm leading-relaxed text-ink-on-dark/70">
-          {content.routeSwitch.caption}
-        </p>
-
-        {/* Link-out cost — §2's honesty, shown the moment the switch raises
+      {/* Link-out cost — §2's honesty, shown the moment the switch raises
             it. It belongs to the SETTING, not to the search, because it
             explains what the setting costs. */}
-        {route === "link" ? (
-          <Reveal variant="fade">
-            <aside
-              aria-label={content.linkOutPanel.heading}
-              className="flex items-start gap-4 rounded-card bg-white/10 p-5 backdrop-blur-md"
-            >
-              <span className="text-ink-on-dark" aria-hidden>
-                <ExternalIcon />
-              </span>
-              <div className="min-w-0">
-                <h3 className="text-ui-lg font-medium tracking-tight text-ink-on-dark">
-                  {content.linkOutPanel.heading}
-                </h3>
-                <p className="mt-2 max-w-3xl text-ui-base leading-relaxed text-ink-on-dark/85">
-                  {content.linkOutPanel.body}
-                </p>
-                <p className="mt-2 max-w-3xl text-ui-base leading-relaxed text-ink-on-dark/70">
-                  {content.linkOutPanel.cost}
-                </p>
-              </div>
-            </aside>
-          </Reveal>
-        ) : null}
-      </div>
+      {route === "link" ? (
+        <Reveal variant="fade">
+          {/* On the PAGE ground now, not the gradient — so it takes page
+                inks. It carried `--ink-on-dark` and a white/10 fill, which
+                over grey is near-white text on a surface you cannot see. */}
+          <aside
+            aria-label={content.linkOutPanel.heading}
+            className="mx-auto flex max-w-3xl items-start gap-4 rounded-card bg-surface-raised p-5 shadow-sm"
+          >
+            <span className="icon-chip h-10 w-10" aria-hidden>
+              <ExternalIcon />
+            </span>
+            <div className="min-w-0">
+              <h3 className="text-ui-lg font-medium tracking-tight text-ink-heading">
+                {content.linkOutPanel.heading}
+              </h3>
+              <p className="mt-2 text-ui-base leading-relaxed text-ink-body">
+                {content.linkOutPanel.body}
+              </p>
+              <p className="mt-2 text-ui-base leading-relaxed text-ink-label">
+                {content.linkOutPanel.cost}
+              </p>
+            </div>
+          </aside>
+        </Reveal>
+      ) : null}
 
       {/* THE SEARCH — lifted out so it STRADDLES the results panel below.
 

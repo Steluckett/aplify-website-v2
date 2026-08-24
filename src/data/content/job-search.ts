@@ -19,12 +19,6 @@ export const jobSearchContent = {
    */
   routeSwitch: {
     label: "Apply route",
-    /* Says plainly that this is a deployment setting, not a candidate control.
-       §2: the configuration is set per client, not per candidate — and a
-       switch sitting inside the search UI implies a candidate would meet it. */
-    eyebrow: "Demo control",
-    caption:
-      "A client chooses this once, when Aplify is set up. No candidate ever sees it — but everything below changes with it.",
     easyApply: "Easy Apply",
     easyApplyNote: "They finish on the page they started on",
     linkOut: "Link to your ATS",
