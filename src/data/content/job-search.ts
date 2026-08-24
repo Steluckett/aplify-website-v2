@@ -36,6 +36,14 @@ export const jobSearchContent = {
   },
 
   filters: {
+    keyword: "Keyword",
+    keywordPlaceholder: "Job title or keyword",
+    location: "Location",
+    locationPlaceholder: "Town or city",
+    useMyLocation: "Use my location",
+    /** Shown once the sample origin is applied, so nothing is implied. */
+    sampleLocationNote: "sample location",
+    clear: "Clear",
     allFamilies: "All families",
     allRegions: "All regions",
     empty: "No roles match those filters — clear one and the set refills.",

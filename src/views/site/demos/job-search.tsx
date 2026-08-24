@@ -7,8 +7,11 @@ import { jobSearchContent } from "@/data/content/job-search";
 import {
   FAMILIES,
   JOBS,
+  LOCATIONS,
   REGIONS,
+  SAMPLE_ORIGIN,
   jobKey,
+  milesBetween,
   type Job,
 } from "@/data/content/job-data";
 
@@ -50,6 +53,18 @@ const ExternalIcon = () => (
   </svg>
 );
 
+const PinIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden>
+    <path
+      d="M12 21s7-6.1 7-11a7 7 0 10-14 0c0 4.9 7 11 7 11z"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinejoin="round"
+    />
+    <circle cx="12" cy="10" r="2.4" stroke="currentColor" strokeWidth="1.7" />
+  </svg>
+);
+
 const ArrowIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden>
     <path
@@ -87,19 +102,47 @@ export interface JobSearchDemoProps {
 export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
   const [route, setRoute] = useState<ApplyRoute>("easy");
   const [view, setView] = useState<ViewName>("Grid");
+  const [keyword, setKeyword] = useState<string>("");
+  const [place, setPlace] = useState<string>("");
   const [family, setFamily] = useState<string>("");
   const [region, setRegion] = useState<string>("");
   const [applying, setApplying] = useState<Job | null>(null);
 
-  const jobs = useMemo(
+  /**
+   * One filtered set, and the origin that sorts it.
+   *
+   * `origin` is whichever town the location field names — typed or filled by
+   * "use my location". When it resolves, the set sorts by real distance from
+   * it and every card gains a mileage, which is how a candidate who only knows
+   * the town they can reach actually searches. When it does not, the order is
+   * the feed's own.
+   */
+  const origin = useMemo(
     () =>
-      JOBS.filter(
-        (job) =>
-          (!family || job.family === family) &&
-          (!region || job.region === region),
-      ),
-    [family, region],
+      place.trim()
+        ? (LOCATIONS.find(
+            (l) => l.label.toLowerCase() === place.trim().toLowerCase(),
+          ) ?? null)
+        : null,
+    [place],
   );
+
+  const jobs = useMemo(() => {
+    const term = keyword.trim().toLowerCase();
+    const matched = JOBS.filter(
+      (job) =>
+        (!family || job.family === family) &&
+        (!region || job.region === region) &&
+        (!term ||
+          `${job.title} ${job.location} ${job.summary}`
+            .toLowerCase()
+            .includes(term)),
+    );
+    if (!origin) return matched;
+    return [...matched].sort(
+      (a, b) => milesBetween(origin, a) - milesBetween(origin, b),
+    );
+  }, [keyword, family, region, origin]);
 
   const content = jobSearchContent;
 
@@ -229,6 +272,59 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
           <div className="rounded-card bg-surface-raised p-1.5">
             <div className="flex flex-col gap-3 p-2 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex flex-wrap items-center gap-2">
+                {/* Keyword and place first — the two things a candidate
+                    arrives already knowing. The selects narrow what comes
+                    back; these two ARE the search. */}
+                <label className="inline-flex items-center gap-2 rounded-pill bg-surface-chip py-1.5 pl-4 pr-3">
+                  <span className="text-ui-xs text-ink-label">
+                    {content.filters.keyword}
+                  </span>
+                  <input
+                    type="search"
+                    value={keyword}
+                    onChange={(event) => setKeyword(event.target.value)}
+                    placeholder={content.filters.keywordPlaceholder}
+                    className="w-40 bg-transparent text-ui-sm font-medium text-ink placeholder:font-normal placeholder:text-ink-label focus:outline-none"
+                  />
+                </label>
+
+                <label className="inline-flex items-center gap-2 rounded-pill bg-surface-chip py-1.5 pl-4 pr-3">
+                  <span className="text-ui-xs text-ink-label">
+                    {content.filters.location}
+                  </span>
+                  <input
+                    type="search"
+                    list="job-search-places"
+                    value={place}
+                    onChange={(event) => setPlace(event.target.value)}
+                    placeholder={content.filters.locationPlaceholder}
+                    className="w-32 bg-transparent text-ui-sm font-medium text-ink placeholder:font-normal placeholder:text-ink-label focus:outline-none"
+                  />
+                  <datalist id="job-search-places">
+                    {LOCATIONS.map((l) => (
+                      <option key={l.label} value={l.label} />
+                    ))}
+                  </datalist>
+                </label>
+
+                {/* Fills the field with a real town and sorts by genuine
+                    distance from it. See SAMPLE_ORIGIN for why this is not
+                    `navigator.geolocation`. */}
+                <button
+                  type="button"
+                  onClick={() => setPlace(SAMPLE_ORIGIN.label)}
+                  className="inline-flex items-center gap-1.5 rounded-pill bg-surface-raised px-3.5 py-1.5 text-ui-sm font-medium text-ink shadow-sm transition-colors duration-[var(--duration-fast)] ease-entrance hover:bg-surface-chip"
+                >
+                  <PinIcon />
+                  {content.filters.useMyLocation}
+                </button>
+
+                {origin ? (
+                  <span className="text-ui-xs text-ink-label">
+                    {content.filters.sampleLocationNote}
+                  </span>
+                ) : null}
+
                 <FilterSelect
                   label="Job family"
                   value={family}
@@ -274,6 +370,7 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
             jobs={jobs}
             view={view}
             route={route}
+            origin={origin}
             onApply={(job) => setApplying(job)}
           />
         </div>
@@ -353,6 +450,8 @@ const FilterSelect = ({
 /* --- The three views ------------------------------------------------------- */
 
 interface JobViewsProps {
+  /** Set when the location field resolves; adds a mileage to every card. */
+  origin: { label: string; lat: number; lon: number } | null;
   jobs: Job[];
   view: ViewName;
   route: ApplyRoute;
@@ -364,7 +463,7 @@ interface JobViewsProps {
  * that identity is the demo's point — and every action comes from the route,
  * so flipping the switch rewrites all of them at once.
  */
-const JobViews = ({ jobs, view, route, onApply }: JobViewsProps) => {
+const JobViews = ({ jobs, view, route, origin, onApply }: JobViewsProps) => {
   if (jobs.length === 0) {
     return (
       <div className="tile flex flex-col items-center gap-3 px-6 py-12 text-center">
@@ -379,18 +478,25 @@ const JobViews = ({ jobs, view, route, onApply }: JobViewsProps) => {
   }
 
   if (view === "Grid") {
-    return <GridView jobs={jobs} route={route} onApply={onApply} />;
+    return (
+      <GridView jobs={jobs} route={route} origin={origin} onApply={onApply} />
+    );
   }
 
   if (view === "List") {
-    return <ListView jobs={jobs} route={route} onApply={onApply} />;
+    return (
+      <ListView jobs={jobs} route={route} origin={origin} onApply={onApply} />
+    );
   }
 
-  return <MapView jobs={jobs} route={route} onApply={onApply} />;
+  return (
+    <MapView jobs={jobs} route={route} origin={origin} onApply={onApply} />
+  );
 };
 
 interface ViewProps {
   jobs: Job[];
+  origin: { label: string; lat: number; lon: number } | null;
   route: ApplyRoute;
   onApply: (job: Job) => void;
 }
@@ -406,7 +512,7 @@ export const PER_PAGE = 9;
  * set changes, because leaving someone on page 2 of a set that now has one
  * result shows them an empty grid and no reason for it.
  */
-const GridView = ({ jobs, route, onApply }: ViewProps) => {
+const GridView = ({ jobs, route, origin, onApply }: ViewProps) => {
   const [page, setPage] = useState(0);
   const pages = Math.max(1, Math.ceil(jobs.length / PER_PAGE));
   const current = Math.min(page, pages - 1);
@@ -434,6 +540,16 @@ const GridView = ({ jobs, route, onApply }: ViewProps) => {
               </h4>
               <p className="mt-1 text-ui-sm text-ink-label">
                 {job.location} · {job.region}
+                {origin ? (
+                  <>
+                    {" · "}
+                    <span className="text-ink-body">
+                      {milesBetween(origin, job) < 1
+                        ? "under a mile"
+                        : `${Math.round(milesBetween(origin, job))} miles`}
+                    </span>
+                  </>
+                ) : null}
               </p>
               <p className="mt-4 text-ui-base font-medium text-ink">
                 {job.salary}

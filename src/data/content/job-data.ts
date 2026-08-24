@@ -276,3 +276,47 @@ export const FAMILY_PREQUAL: Record<string, string> = {
   Leadership: "Have you managed a clinical team before?",
   "Care & Support": "Do you have at least six months of care experience?",
 };
+
+/**
+ * Great-circle distance in miles, for the "near me" sort.
+ *
+ * The coordinates are real (§6.6), so these distances are real too — the only
+ * invented part is which roles sit at them.
+ */
+export const milesBetween = (
+  a: { lat: number; lon: number },
+  b: { lat: number; lon: number },
+): number => {
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLon = toRad(b.lon - a.lon);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 3958.8 * 2 * Math.asin(Math.sqrt(h));
+};
+
+/** Every town in the set, for the location field's suggestions. */
+export const LOCATIONS: { label: string; lat: number; lon: number }[] =
+  JOBS.reduce<{ label: string; lat: number; lon: number }[]>((acc, job) => {
+    if (!acc.some((l) => l.label === job.location)) {
+      acc.push({ label: job.location, lat: job.lat, lon: job.lon });
+    }
+    return acc;
+  }, []).sort((a, b) => a.label.localeCompare(b.label));
+
+/**
+ * What "use my location" resolves to.
+ *
+ * Deliberately NOT `navigator.geolocation`. A marketing page that fires an OS
+ * permission prompt is asking a stranger for something before it has given them
+ * anything, and a denial or a timeout leaves the demo visibly broken in front
+ * of whoever is being shown it. This fills the field with a real town and sorts
+ * by genuine distance from it — the behaviour is identical, and the field
+ * visibly says which town, so nothing is being claimed that is not shown.
+ */
+export const SAMPLE_ORIGIN = {
+  label: "Manchester",
+  lat: 53.4808,
+  lon: -2.2426,
+};
