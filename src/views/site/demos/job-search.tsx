@@ -161,173 +161,199 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
   }
 
   return (
-    <div className={`flex flex-col gap-6 ${className ?? ""}`}>
-      {/* One deep panel holds the whole demo — controls and results together.
+    <div className={`flex flex-col ${className ?? ""}`}>
+      {/* THE DEPLOYMENT SETTING — its own object, above and apart.
 
-          The controls used to sit on the page above it, which separated the
-          choice from the thing it changes. They belong ON the gradient: the
-          switch, the search and the results are one instrument, and the ground
-          is what says so. */}
-      <div className="screen grain bg-08 rounded-panel p-5 sm:p-7 lg:p-10">
-        <div className="flex flex-col gap-7">
-          {/* THE SWITCH — centred, and made of the ground rather than laid on
-              top of it. The selected side is a solid white pill; the other is
-              glass, so the gradient reads straight through it and the two feel
-              like one control with a state rather than two competing buttons.
+          This is NOT product UI. §2: the apply route is set per client, not per
+          candidate, and no candidate ever meets this choice. It used to sit
+          inside the search panel styled like the filters beside it, which said
+          the two were the same class of thing and implied a candidate would see
+          a switch offering them Easy Apply or a redirect. They would not.
 
-              This is the section's whole argument in one gesture, which is why
-              it leads and why it is the only centred thing here. */}
-          <div
-            role="radiogroup"
-            aria-label={content.routeSwitch.label}
-            className="mx-auto flex w-full max-w-2xl gap-1.5 rounded-pill bg-white/10 p-1.5 backdrop-blur-md"
-          >
-            {(
+          So it keeps the brand's ground — it is still part of this page — but
+          it is a separate object with its own label, sitting above the boundary
+          that the filters draw. The order a reader takes it in is: headline,
+          intro, this setting, then the search it governs. */}
+      <div className="grain bg-08 mx-auto w-full max-w-3xl rounded-panel p-5 text-center sm:p-7">
+        <p className="eyebrow justify-center !text-ink-on-dark/70">
+          {content.routeSwitch.eyebrow}
+        </p>
+        <div
+          role="radiogroup"
+          aria-label={content.routeSwitch.label}
+          className="mx-auto mt-5 flex w-full gap-1.5 rounded-pill bg-white/10 p-1.5 backdrop-blur-md"
+        >
+          {(
+            [
               [
-                [
-                  "easy",
-                  content.routeSwitch.easyApply,
-                  content.routeSwitch.easyApplyNote,
-                ],
-                [
-                  "link",
-                  content.routeSwitch.linkOut,
-                  content.routeSwitch.linkOutNote,
-                ],
-              ] as const
-            ).map(([value, label, note]) => {
-              const on = route === value;
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  role="radio"
-                  aria-checked={on}
-                  onClick={() => setRoute(value)}
-                  className={`flex-1 rounded-pill px-5 py-3 text-center transition-colors duration-[var(--duration-fast)] ease-entrance ${
-                    on
-                      ? "bg-surface-raised shadow-sm"
-                      : "text-ink-on-dark hover:bg-white/10"
+                "easy",
+                content.routeSwitch.easyApply,
+                content.routeSwitch.easyApplyNote,
+              ],
+              [
+                "link",
+                content.routeSwitch.linkOut,
+                content.routeSwitch.linkOutNote,
+              ],
+            ] as const
+          ).map(([value, label, note]) => {
+            const on = route === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                onClick={() => setRoute(value)}
+                className={`flex-1 rounded-pill px-5 py-3 text-center transition-colors duration-[var(--duration-fast)] ease-entrance ${
+                  on
+                    ? "bg-surface-raised shadow-sm"
+                    : "text-ink-on-dark hover:bg-white/10"
+                }`}
+              >
+                <span
+                  className={`block text-ui-lg font-medium tracking-tight ${
+                    on ? "text-ink" : "text-ink-on-dark"
                   }`}
                 >
-                  <span
-                    className={`block text-ui-lg font-medium tracking-tight ${
-                      on ? "text-ink" : "text-ink-on-dark"
-                    }`}
-                  >
-                    {label}
-                  </span>
-                  <span
-                    className={`mt-0.5 block text-ui-xs ${
-                      on ? "text-ink-label" : "text-ink-on-dark/70"
-                    }`}
-                  >
-                    {note}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Link-out cost — §2's honesty, shown the moment the switch raises
-              it. Glass, so it belongs to the ground rather than interrupting
-              it. */}
-          {route === "link" ? (
-            <Reveal variant="fade">
-              <aside
-                aria-label={content.linkOutPanel.heading}
-                className="flex items-start gap-4 rounded-card bg-white/10 p-5 backdrop-blur-md"
-              >
-                <span className="text-ink-on-dark" aria-hidden>
-                  <ExternalIcon />
+                  {label}
                 </span>
-                <div className="min-w-0">
-                  <h3 className="text-ui-lg font-medium tracking-tight text-ink-on-dark">
-                    {content.linkOutPanel.heading}
-                  </h3>
-                  <p className="mt-2 max-w-3xl text-ui-base leading-relaxed text-ink-on-dark/85">
-                    {content.linkOutPanel.body}
-                  </p>
-                  <p className="mt-2 max-w-3xl text-ui-base leading-relaxed text-ink-on-dark/70">
-                    {content.linkOutPanel.cost}
-                  </p>
-                </div>
-              </aside>
-            </Reveal>
-          ) : null}
+                <span
+                  className={`mt-0.5 block text-ui-xs ${
+                    on ? "text-ink-label" : "text-ink-on-dark/70"
+                  }`}
+                >
+                  {note}
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
-          {/* THE SEARCH ROW — loose on the gradient, filling the width.
+        {/* Says plainly that this is configuration, not candidate UI. Without
+            it, a switch offering "Easy Apply or a redirect" reads as something
+            a candidate would be shown — which would be the one dishonest thing
+            on a page whose argument is honesty about trade-offs. */}
+        <p className="mx-auto mt-5 max-w-xl text-ui-sm leading-relaxed text-ink-on-dark/70">
+          {content.routeSwitch.caption}
+        </p>
 
-              It was a white bar holding small pills, which is a filter strip.
-              This is a search: five controls at field scale, each its own white
-              pill on the ground, the row balanced so nothing is an afterthought.
-              "Near me" is inside the location field as an icon, where a second
-              button beside it would have cost a whole column. */}
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              resultsRef.current?.focus();
-            }}
-            className="flex flex-col gap-2.5 lg:flex-row lg:items-center"
-          >
+        {/* Link-out cost — §2's honesty, shown the moment the switch raises
+            it. It belongs to the SETTING, not to the search, because it
+            explains what the setting costs. */}
+        {route === "link" ? (
+          <Reveal variant="fade">
+            <aside
+              aria-label={content.linkOutPanel.heading}
+              className="flex items-start gap-4 rounded-card bg-white/10 p-5 backdrop-blur-md"
+            >
+              <span className="text-ink-on-dark" aria-hidden>
+                <ExternalIcon />
+              </span>
+              <div className="min-w-0">
+                <h3 className="text-ui-lg font-medium tracking-tight text-ink-on-dark">
+                  {content.linkOutPanel.heading}
+                </h3>
+                <p className="mt-2 max-w-3xl text-ui-base leading-relaxed text-ink-on-dark/85">
+                  {content.linkOutPanel.body}
+                </p>
+                <p className="mt-2 max-w-3xl text-ui-base leading-relaxed text-ink-on-dark/70">
+                  {content.linkOutPanel.cost}
+                </p>
+              </div>
+            </aside>
+          </Reveal>
+        ) : null}
+      </div>
+
+      {/* THE SEARCH — lifted out so it STRADDLES the results panel below.
+
+          The overlap is doing real work. It draws the boundary between the
+          setting above and the product below, and it makes the search read as
+          the HEAD of the instrument rather than as one more row inside it. A
+          reader takes it in order: what this is, what governs it, then the
+          search, then what the search returned.
+
+          The bleed is `lg:` only. Stacked on a phone the row is five fields
+          tall, and a tall column straddling a panel edge reads as a mistake
+          rather than as a device. */}
+      <div className="relative z-10 mx-auto mt-8 w-full px-0 sm:px-6 lg:px-10">
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            resultsRef.current?.focus();
+          }}
+          /* A card, not a bare row. It has to read as one object crossing the
+             panel edge, and a row of loose pills straddling a boundary reads
+             as pills that happen to overlap something. */
+          className="flex flex-col gap-2.5 rounded-panel bg-surface-raised p-3 shadow-lift lg:flex-row lg:items-center"
+        >
+          <input
+            type="search"
+            value={keyword}
+            onChange={(event) => setKeyword(event.target.value)}
+            placeholder={content.filters.keywordPlaceholder}
+            aria-label={content.filters.keyword}
+            className="h-14 flex-[1.4] rounded-pill bg-surface-chip px-6 text-ui-base text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+          />
+
+          <div className="relative flex-1">
             <input
               type="search"
-              value={keyword}
-              onChange={(event) => setKeyword(event.target.value)}
-              placeholder={content.filters.keywordPlaceholder}
-              aria-label={content.filters.keyword}
-              className="h-14 flex-[1.4] rounded-pill bg-surface-raised px-6 text-ui-base text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+              list="job-search-places"
+              value={place}
+              onChange={(event) => setPlace(event.target.value)}
+              placeholder={content.filters.locationPlaceholder}
+              aria-label={content.filters.location}
+              className="h-14 w-full rounded-pill bg-surface-chip pl-6 pr-16 text-ui-base text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
             />
-
-            <div className="relative flex-1">
-              <input
-                type="search"
-                list="job-search-places"
-                value={place}
-                onChange={(event) => setPlace(event.target.value)}
-                placeholder={content.filters.locationPlaceholder}
-                aria-label={content.filters.location}
-                className="h-14 w-full rounded-pill bg-surface-raised pl-6 pr-16 text-ui-base text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-              />
-              <datalist id="job-search-places">
-                {LOCATIONS.map((l) => (
-                  <option key={l.label} value={l.label} />
-                ))}
-              </datalist>
-              <button
-                type="button"
-                onClick={() => setPlace(SAMPLE_ORIGIN.label)}
-                title={`${content.filters.useMyLocation} (${content.filters.sampleLocationNote})`}
-                aria-label={`${content.filters.useMyLocation} — ${content.filters.sampleLocationNote}`}
-                className="absolute right-1.5 top-1.5 grid h-11 w-11 place-items-center rounded-full bg-accent text-ink-on-dark transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-90"
-              >
-                <PinIcon />
-              </button>
-            </div>
-
-            <RowSelect
-              value={family}
-              onChange={setFamily}
-              allLabel={content.filters.allFamilies}
-              options={FAMILIES}
-              label="Job family"
-            />
-            <RowSelect
-              value={region}
-              onChange={setRegion}
-              allLabel={content.filters.allRegions}
-              options={REGIONS}
-              label="Region"
-            />
-
+            <datalist id="job-search-places">
+              {LOCATIONS.map((l) => (
+                <option key={l.label} value={l.label} />
+              ))}
+            </datalist>
             <button
-              type="submit"
-              className="h-14 rounded-pill bg-accent px-8 text-ui-base font-medium text-ink-on-dark transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-90"
+              type="button"
+              onClick={() => setPlace(SAMPLE_ORIGIN.label)}
+              title={`${content.filters.useMyLocation} (${content.filters.sampleLocationNote})`}
+              aria-label={`${content.filters.useMyLocation} — ${content.filters.sampleLocationNote}`}
+              className="absolute right-1.5 top-1.5 grid h-11 w-11 place-items-center rounded-full bg-accent text-ink-on-dark transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-90"
             >
-              {content.filters.search}
+              <PinIcon />
             </button>
-          </form>
+          </div>
 
+          <RowSelect
+            value={family}
+            onChange={setFamily}
+            allLabel={content.filters.allFamilies}
+            options={FAMILIES}
+            label="Job family"
+          />
+          <RowSelect
+            value={region}
+            onChange={setRegion}
+            allLabel={content.filters.allRegions}
+            options={REGIONS}
+            label="Region"
+          />
+
+          <button
+            type="submit"
+            className="h-14 rounded-pill bg-accent px-8 text-ui-base font-medium text-ink-on-dark transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-90"
+          >
+            {content.filters.search}
+          </button>
+        </form>
+      </div>
+
+      {/* THE RESULTS — only what a candidate would actually see. */}
+      <div /* Rides UP under the search card so the card straddles its edge. The
+           card is ~72px tall, so half of it is the overlap; the panel's top
+           padding carries the rest so nothing lands under the fields. */
+        className="screen grain bg-08 rounded-panel px-5 pb-7 pt-12 sm:px-7 lg:-mt-9 lg:px-10 lg:pb-10 lg:pt-20"
+      >
+        <div className="flex flex-col gap-6">
           {/* Views left, count right — the row that says what you are looking
               at and how much of it there is. */}
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -402,7 +428,7 @@ const RowSelect = ({
     aria-label={label}
     value={value}
     onChange={(event) => onChange(event.target.value)}
-    className="h-14 flex-1 rounded-pill bg-surface-raised px-6 text-ui-base text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+    className="h-14 flex-1 rounded-pill bg-surface-chip px-6 text-ui-base text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
   >
     <option value="">{allLabel}</option>
     {options.map((option) => (
