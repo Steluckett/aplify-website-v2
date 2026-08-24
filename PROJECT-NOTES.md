@@ -195,7 +195,35 @@ recruiter dashboard, because several are the obvious parts to reach for:
   currently corrected by `nudgeXPct: 2.26` in `site.ts`. Re-export it with
   even margins and delete the value.
 - Indexing is disabled everywhere. Set `ALLOW_INDEXING=true` in Vercel when
-  the site is genuinely ready to be found.
+  the site is genuinely ready to be found — but note the flag only wires up
+  HALF of it. `robots.ts` reads it correctly; `generate-page-metadata.ts`
+  hardcodes `robots: { index: true, follow: true }` and never consults it, so
+  every page ships `<meta name="robots" content="index, follow">` while
+  `/robots.txt` says `Disallow: /`. The two contradict each other. Deliberately
+  left as-is while the site is in development (Stephen's call, 2026-08-21);
+  wire the meta to the same flag before launch.
+
+## Deploying
+
+No git remote is configured on this repo, so there is nothing to `git push`
+and Vercel is NOT deploying from a git integration. The folder is linked
+directly (`.vercel/project.json` → `ste-lucketts-projects/aplify-website-v2`)
+and deploys are CLI uploads of the WORKING DIRECTORY:
+
+```
+npx --yes vercel --prod --yes
+```
+
+Two consequences. A deployment is not tied to a commit, so there is no SHA to
+trace a build back to; check the tree is clean first. And with no remote,
+every commit lives only on this machine — there is no off-machine backup.
+
+**Deployment Protection does not cover the production alias.** The hashed
+per-deployment URLs (`…-lqgw4xsi0-…`) redirect to SSO, but
+`https://aplify-website-v2.vercel.app` returns 200 with the real page to
+anyone. An earlier note claimed the URL needed a login; measured on
+2026-08-21, it does not. `robots.txt` keeps it out of search, but it is
+public, not private.
 
 **How Stephen works:** step by step, confirmation before big moves. Show
 options rather than describing them. Honest pushback over agreement. Verify
