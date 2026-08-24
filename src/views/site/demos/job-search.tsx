@@ -712,9 +712,6 @@ const PageButton = ({
   </button>
 );
 
-/** The table head is ONE continuous white pill band — normal case, quiet. */
-const HEAD_CELL =
-  "bg-surface-raised py-2.5 text-left text-ui-sm font-normal text-ink-label";
 /** Tall white row bands. `border-spacing-y-3` is what separates them: air, not
  *  hairlines, and the same 12px gap sits under the head. */
 const CELL = "h-16 bg-surface-raised align-middle";
@@ -729,36 +726,28 @@ const ListView = ({ jobs, route, onApply }: ViewProps) => (
       <caption className="sr-only">
         Sample roles matching the current filters
       </caption>
-      <thead>
-        <tr>
-          <th scope="col" className={`${HEAD_CELL} rounded-l-pill pl-5 pr-4`}>
-            Role
-          </th>
-          <th scope="col" className={`${HEAD_CELL} px-4`}>
-            Location
-          </th>
-          <th scope="col" className={`${HEAD_CELL} px-4`}>
-            Contract
-          </th>
-          <th scope="col" className={`${HEAD_CELL} px-4`}>
-            Salary
-          </th>
-          <th scope="col" className={`${HEAD_CELL} rounded-r-pill pl-4 pr-5`}>
-            <span className="sr-only">Apply</span>
-          </th>
-        </tr>
-      </thead>
+      {/* No visible head. Every row already labels itself — a title, a place,
+          a contract and a salary need no column names to be read, and the band
+          of headings was one more horizontal rule in a view whose whole point
+          is that its rows are separated by air.
+
+          It survives for screen readers. The `<caption>` above names the table
+          and each row's first cell is its own row header, so the structure is
+          still announced; only the drawn version goes. */}
       <tbody>
         {jobs.map((job) => (
           <tr key={jobKey(job)}>
-            <td className={`${CELL} rounded-l-sm py-3 pl-5 pr-4`}>
+            <th
+              scope="row"
+              className={`${CELL} rounded-l-sm py-3 pl-5 pr-4 text-left font-normal`}
+            >
               <p className="text-ui-base font-medium text-ink">{job.title}</p>
               <p className="mt-1.5">
                 <span className="chip" data-tint="sky">
                   {job.family}
                 </span>
               </p>
-            </td>
+            </th>
             <td className={`${CELL} px-4 text-ui-sm text-ink-label`}>
               {job.location} · {job.region}
             </td>
@@ -780,49 +769,92 @@ const ListView = ({ jobs, route, onApply }: ViewProps) => (
   </div>
 );
 
-const MapView = ({ jobs, route, onApply }: ViewProps) => {
+const MapView = ({ jobs, route, origin, onApply }: ViewProps) => {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const selected = jobs.find((job) => jobKey(job) === selectedKey) ?? null;
+  const cards = useRef(new Map<string, HTMLLIElement | null>());
+
+  /* PIN -> CARD. Selecting a pin brings its card into the list rather than
+     leaving the reader to find it. `block: "nearest"` so the list moves the
+     least it can — scrolling a card that is already visible into the centre
+     reads as the page jumping for no reason. */
+  useEffect(() => {
+    if (!selectedKey) return;
+    cards.current
+      .get(selectedKey)
+      ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [selectedKey]);
 
   return (
-    <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_20rem]">
-      <JobMap
-        jobs={jobs}
-        selectedKey={selectedKey}
-        onSelect={(key) => setSelectedKey(key)}
-      />
+    <div className="flex flex-col gap-3">
+      <div className="grid gap-3 lg:grid-cols-[22rem_minmax(0,1fr)]">
+        {/* The list is the index and the map is the picture, and each drives
+            the other: a pin brings its card here, a card takes the map there.
+            Either one alone is half a search. */}
+        <ul className="flex max-h-[26rem] flex-col gap-3 overflow-y-auto pr-1 sm:max-h-[32rem]">
+          {jobs.map((job) => {
+            const key = jobKey(job);
+            const on = key === selectedKey;
+            return (
+              <li
+                key={key}
+                ref={(el) => {
+                  cards.current.set(key, el);
+                }}
+              >
+                {/* CARD -> PIN. The whole card is the target, not a small
+                    control on it: the card IS the reference to the place. */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedKey(key)}
+                  aria-pressed={on}
+                  className={`tile w-full p-4 text-left transition-shadow duration-[var(--duration-fast)] ease-entrance ${
+                    on ? "ring-2 ring-accent" : "hover:shadow-tile"
+                  }`}
+                >
+                  <h4 className="text-ui-base font-medium tracking-tight text-ink-heading">
+                    {job.title}
+                  </h4>
+                  <p className="mt-1 text-ui-xs text-ink-label">
+                    {job.location} · {job.region}
+                    {origin
+                      ? ` · ${
+                          milesBetween(origin, job) < 1
+                            ? "under a mile"
+                            : `${Math.round(milesBetween(origin, job))} miles`
+                        }`
+                      : ""}
+                  </p>
+                  <p className="mt-2 text-ui-sm font-medium text-ink">
+                    {job.salary}
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <JobTags job={job} />
+                  </div>
+                </button>
 
-      <div className="flex flex-col gap-3">
-        {selected ? (
-          <Reveal key={jobKey(selected)} variant="fade">
-            <article className="tile p-5">
-              <h4 className="text-ui-lg font-medium tracking-tight text-ink-heading">
-                {selected.title}
-              </h4>
-              <p className="mt-1 text-ui-sm text-ink-label">
-                {selected.location} · {selected.region}
-              </p>
-              <p className="mt-3 text-ui-base font-medium text-ink">
-                {selected.salary}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <JobTags job={selected} />
-              </div>
-              <div className="mt-5">
-                <ApplyAction job={selected} route={route} onApply={onApply} />
-              </div>
-            </article>
-          </Reveal>
-        ) : (
-          <p className="rounded-sm border border-dashed border-hairline p-5 text-ui-sm leading-relaxed text-ink-label">
-            Select a pin to see the role — the set on the map is the same one
-            the grid and list show.
-          </p>
-        )}
-        <p className="text-ui-xs leading-relaxed text-ink-label">
-          {jobSearchContent.captions.map}
-        </p>
+                {/* The action appears on the selected card only. Eighteen
+                    buttons in a scrolling column is a list of buttons; one is
+                    a decision. */}
+                {on ? (
+                  <div className="mt-2">
+                    <ApplyAction job={job} route={route} onApply={onApply} />
+                  </div>
+                ) : null}
+              </li>
+            );
+          })}
+        </ul>
+
+        <JobMap
+          jobs={jobs}
+          selectedKey={selectedKey}
+          onSelect={(key) => setSelectedKey(key)}
+        />
       </div>
+
+      <p className="text-ui-xs leading-relaxed text-ink-on-dark/70">
+        {jobSearchContent.captions.map}
+      </p>
     </div>
   );
 };

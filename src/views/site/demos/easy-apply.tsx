@@ -82,221 +82,254 @@ const ArrowIcon = () => (
  * is a white pill and a white inset would swallow them; progress is the thin
  * tally, never a fat bar.
  */
-export const EasyApplyDemo = ({ job, onClose, className }: EasyApplyDemoProps) => {
+export const EasyApplyDemo = ({
+  job,
+  onClose,
+  className,
+}: EasyApplyDemoProps) => {
   const content = jobSearchContent;
   const questions = [RIGHT_TO_WORK, FAMILY_PREQUAL[job.family]].filter(Boolean);
 
   const [step, setStep] = useState<Step>("prequal");
   const [answers, setAnswers] = useState<Record<number, boolean>>({});
 
-  const allAnswered = questions.every((_, index) => answers[index] !== undefined);
+  const allAnswered = questions.every(
+    (_, index) => answers[index] !== undefined,
+  );
   const allYes = questions.every((_, index) => answers[index] === true);
 
   const fieldId = useId();
 
   return (
-    <div className={`flex flex-col gap-5 bg-surface p-4 sm:p-6 ${className ?? ""}`}>
-      {/* The role being applied for, and the way back. */}
-      <div className="tile flex flex-wrap items-center justify-between gap-4 p-4 sm:p-5">
-        <div className="min-w-0">
-          <h4 className="text-ui-xl font-medium tracking-tight text-ink-heading">
-            {job.title}
-          </h4>
-          <p className="mt-1 text-ui-sm text-ink-label">
-            {job.location} · {job.region} · {job.contract} · {job.salary}
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="btn btn-secondary px-4 py-2 text-ui-sm"
-        >
-          <span aria-hidden>←</span>
-          {content.prequal.backLabel}
-        </button>
-      </div>
-
-      {step === "prequal" ? (
-        <Reveal variant="fade">
-          <div className="mx-auto w-full max-w-2xl py-2">
-            <StepHeader label={content.prequal.stepLabel} fill="50%" />
-            <p className="mt-4 text-ui-base leading-relaxed text-ink-body">
-              {content.prequal.explainer}
+    /* IMMERSIVE, not centred-and-narrow.
+     *
+     * The flow used to sit on a light grey floor in a max-w-2xl column, which
+     * put the most important moment on the page — a candidate actually
+     * applying — in the smallest space in the section. It now takes the same
+     * deep ground the search does, so moving from the results into the form
+     * feels like the same instrument rather than a different screen, and the
+     * form itself is a wide white card on it: a sheet you fill in, with room
+     * around it.
+     *
+     * The internals below are unchanged and still solved against white, which
+     * is why the card is white rather than the flow being re-inked.
+     */
+    <div
+      className={`screen grain bg-08 rounded-panel p-5 sm:p-7 lg:p-10 ${className ?? ""}`}
+    >
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-5 rounded-panel bg-surface-raised p-6 shadow-lift sm:p-8 lg:p-10">
+        {/* The role being applied for, and the way back. */}
+        <div className="tile flex flex-wrap items-center justify-between gap-4 p-4 sm:p-5">
+          <div className="min-w-0">
+            <h4 className="text-ui-xl font-medium tracking-tight text-ink-heading">
+              {job.title}
+            </h4>
+            <p className="mt-1 text-ui-sm text-ink-label">
+              {job.location} · {job.region} · {job.contract} · {job.salary}
             </p>
-
-            <fieldset className="wash mt-6 rounded-card">
-              <legend className="sr-only">Pre-qualification questions</legend>
-              <div className="inset-glass flex flex-col gap-4 p-4 sm:p-5">
-                {questions.map((question, index) => (
-                  <div
-                    key={question}
-                    className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <p className="text-ui-base font-medium text-ink">{question}</p>
-                    <div className="flex flex-none gap-2">
-                      {[true, false].map((value) => {
-                        const active = answers[index] === value;
-                        return (
-                          <button
-                            key={String(value)}
-                            type="button"
-                            aria-pressed={active}
-                            onClick={() =>
-                              setAnswers((current) => ({
-                                ...current,
-                                [index]: value,
-                              }))
-                            }
-                            className={`btn px-5 py-2 text-ui-sm ${
-                              active ? "btn-primary" : "btn-secondary"
-                            }`}
-                          >
-                            {value ? content.prequal.yes : content.prequal.no}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </fieldset>
-
-            <button
-              type="button"
-              disabled={!allAnswered}
-              onClick={() => setStep(allYes ? "form" : "gate")}
-              className="btn btn-primary mt-6 px-6 py-3 text-ui-base disabled:cursor-not-allowed
-                         disabled:opacity-40 disabled:hover:[transform:none]"
-            >
-              {content.prequal.continueLabel}
-              <ArrowIcon />
-            </button>
           </div>
-        </Reveal>
-      ) : null}
-
-      {step === "gate" ? (
-        <Reveal variant="fade">
-          <div className="mx-auto w-full max-w-xl py-6 text-center">
-            <p className="flex justify-center">
-              <span className="icon-chip h-12 w-12 bg-surface-raised shadow-sm" aria-hidden>
-                <AlertIcon />
-              </span>
-            </p>
-            <h5 className="mt-5 text-ui-xl font-medium tracking-tight text-ink-heading">
-              {content.gate.heading}
-            </h5>
-            <p className="mt-3 text-ui-base leading-relaxed text-ink-body">
-              {content.gate.body}
-            </p>
-            <button
-              type="button"
-              onClick={onClose}
-              className="btn btn-secondary mt-6 px-6 py-3 text-ui-base"
-            >
-              {content.gate.backLabel}
-            </button>
-          </div>
-        </Reveal>
-      ) : null}
-
-      {step === "form" ? (
-        <Reveal variant="fade">
-          <form
-            className="mx-auto w-full max-w-2xl py-2"
-            onSubmit={(event) => {
-              event.preventDefault();
-              setStep("done");
-            }}
+          <button
+            type="button"
+            onClick={onClose}
+            className="btn btn-secondary px-4 py-2 text-ui-sm"
           >
-            <StepHeader label={content.form.stepLabel} fill="100%" />
-            <p className="mt-4 text-ui-base leading-relaxed text-ink-body">
-              {content.form.explainer}
-            </p>
+            <span aria-hidden>←</span>
+            {content.prequal.backLabel}
+          </button>
+        </div>
 
-            <div className="wash mt-6 rounded-card">
-              <div className="inset-glass flex flex-col gap-4 p-4 sm:p-5">
-                <DemoField
-                  id={`${fieldId}-name`}
-                  label={content.form.fields.name}
-                  defaultValue={content.form.sample.name}
-                />
-                <DemoField
-                  id={`${fieldId}-email`}
-                  label={content.form.fields.email}
-                  defaultValue={content.form.sample.email}
-                  type="email"
-                />
-                <DemoField
-                  id={`${fieldId}-phone`}
-                  label={content.form.fields.phone}
-                  defaultValue={content.form.sample.phone}
-                />
+        {step === "prequal" ? (
+          <Reveal variant="fade">
+            <div className="w-full py-2">
+              <StepHeader label={content.prequal.stepLabel} fill="50%" />
+              <p className="mt-4 text-ui-base leading-relaxed text-ink-body">
+                {content.prequal.explainer}
+              </p>
 
-                <div>
-                  <p className="mb-2 text-ui-xs font-medium text-ink-label">
-                    {content.form.fields.cv}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-3 rounded-pill bg-surface-raised px-3 py-2 shadow-sm">
-                    <span className="icon-chip h-8 w-8" aria-hidden>
-                      <DocIcon />
-                    </span>
-                    <span className="text-ui-sm font-medium text-ink">
-                      {content.form.sample.cv}
-                    </span>
-                    <span className="ml-auto pr-2 text-ui-xs text-ink-label">
-                      {content.form.fields.cvHint}
-                    </span>
+              <fieldset className="wash mt-6 rounded-card">
+                <legend className="sr-only">Pre-qualification questions</legend>
+                <div className="inset-glass flex flex-col gap-4 p-4 sm:p-5">
+                  {questions.map((question, index) => (
+                    <div
+                      key={question}
+                      className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <p className="text-ui-base font-medium text-ink">
+                        {question}
+                      </p>
+                      <div className="flex flex-none gap-2">
+                        {[true, false].map((value) => {
+                          const active = answers[index] === value;
+                          return (
+                            <button
+                              key={String(value)}
+                              type="button"
+                              aria-pressed={active}
+                              onClick={() =>
+                                setAnswers((current) => ({
+                                  ...current,
+                                  [index]: value,
+                                }))
+                              }
+                              className={`btn px-5 py-2 text-ui-sm ${
+                                active ? "btn-primary" : "btn-secondary"
+                              }`}
+                            >
+                              {value ? content.prequal.yes : content.prequal.no}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+
+              <button
+                type="button"
+                disabled={!allAnswered}
+                onClick={() => setStep(allYes ? "form" : "gate")}
+                className="btn btn-primary mt-6 px-6 py-3 text-ui-base disabled:cursor-not-allowed
+                         disabled:opacity-40 disabled:hover:[transform:none]"
+              >
+                {content.prequal.continueLabel}
+                <ArrowIcon />
+              </button>
+            </div>
+          </Reveal>
+        ) : null}
+
+        {step === "gate" ? (
+          <Reveal variant="fade">
+            <div className="mx-auto w-full max-w-2xl py-6 text-center">
+              <p className="flex justify-center">
+                <span
+                  className="icon-chip h-12 w-12 bg-surface-raised shadow-sm"
+                  aria-hidden
+                >
+                  <AlertIcon />
+                </span>
+              </p>
+              <h5 className="mt-5 text-ui-xl font-medium tracking-tight text-ink-heading">
+                {content.gate.heading}
+              </h5>
+              <p className="mt-3 text-ui-base leading-relaxed text-ink-body">
+                {content.gate.body}
+              </p>
+              <button
+                type="button"
+                onClick={onClose}
+                className="btn btn-secondary mt-6 px-6 py-3 text-ui-base"
+              >
+                {content.gate.backLabel}
+              </button>
+            </div>
+          </Reveal>
+        ) : null}
+
+        {step === "form" ? (
+          <Reveal variant="fade">
+            <form
+              className="w-full py-2"
+              onSubmit={(event) => {
+                event.preventDefault();
+                setStep("done");
+              }}
+            >
+              <StepHeader label={content.form.stepLabel} fill="100%" />
+              <p className="mt-4 text-ui-base leading-relaxed text-ink-body">
+                {content.form.explainer}
+              </p>
+
+              <div className="wash mt-6 rounded-card">
+                <div className="inset-glass flex flex-col gap-4 p-4 sm:p-5">
+                  <DemoField
+                    id={`${fieldId}-name`}
+                    label={content.form.fields.name}
+                    defaultValue={content.form.sample.name}
+                  />
+                  <DemoField
+                    id={`${fieldId}-email`}
+                    label={content.form.fields.email}
+                    defaultValue={content.form.sample.email}
+                    type="email"
+                  />
+                  <DemoField
+                    id={`${fieldId}-phone`}
+                    label={content.form.fields.phone}
+                    defaultValue={content.form.sample.phone}
+                  />
+
+                  <div>
+                    <p className="mb-2 text-ui-xs font-medium text-ink-label">
+                      {content.form.fields.cv}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-3 rounded-pill bg-surface-raised px-3 py-2 shadow-sm">
+                      <span className="icon-chip h-8 w-8" aria-hidden>
+                        <DocIcon />
+                      </span>
+                      <span className="text-ui-sm font-medium text-ink">
+                        {content.form.sample.cv}
+                      </span>
+                      <span className="ml-auto pr-2 text-ui-xs text-ink-label">
+                        {content.form.fields.cvHint}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <button
-              type="submit"
-              className="btn btn-primary mt-6 px-6 py-3 text-ui-base"
-            >
-              {content.form.submitLabel}
-              <ArrowIcon />
-            </button>
-            <p className="mt-3 text-ui-xs text-ink-label">{content.form.note}</p>
-          </form>
-        </Reveal>
-      ) : null}
+              <button
+                type="submit"
+                className="btn btn-primary mt-6 px-6 py-3 text-ui-base"
+              >
+                {content.form.submitLabel}
+                <ArrowIcon />
+              </button>
+              <p className="mt-3 text-ui-xs text-ink-label">
+                {content.form.note}
+              </p>
+            </form>
+          </Reveal>
+        ) : null}
 
-      {step === "done" ? (
-        <Reveal variant="fade">
-          <div className="mx-auto w-full max-w-xl py-6 text-center">
-            <p className="flex justify-center">
-              <span className="icon-chip h-12 w-12 bg-surface-raised shadow-sm" aria-hidden>
-                <CheckIcon />
-              </span>
-            </p>
-            <h5 className="mt-5 text-ui-xl font-medium tracking-tight text-ink-heading">
-              {content.confirmation.heading}
-            </h5>
-            <p className="mt-3 text-ui-base leading-relaxed text-ink-body">
-              {content.confirmation.body}
-            </p>
+        {step === "done" ? (
+          <Reveal variant="fade">
+            <div className="mx-auto w-full max-w-2xl py-6 text-center">
+              <p className="flex justify-center">
+                <span
+                  className="icon-chip h-12 w-12 bg-surface-raised shadow-sm"
+                  aria-hidden
+                >
+                  <CheckIcon />
+                </span>
+              </p>
+              <h5 className="mt-5 text-ui-xl font-medium tracking-tight text-ink-heading">
+                {content.confirmation.heading}
+              </h5>
+              <p className="mt-3 text-ui-base leading-relaxed text-ink-body">
+                {content.confirmation.body}
+              </p>
 
-            <div className="wash mt-6 rounded-card">
-              <div className="inset-tile p-5 text-left">
-                <p className="text-ui-base leading-relaxed text-ink-body">
-                  {content.confirmation.fork}
-                </p>
+              <div className="wash mt-6 rounded-card">
+                <div className="inset-tile p-5 text-left">
+                  <p className="text-ui-base leading-relaxed text-ink-body">
+                    {content.confirmation.fork}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <button
-              type="button"
-              onClick={onClose}
-              className="btn btn-primary mt-6 px-6 py-3 text-ui-base"
-            >
-              {content.confirmation.backLabel}
-            </button>
-          </div>
-        </Reveal>
-      ) : null}
+              <button
+                type="button"
+                onClick={onClose}
+                className="btn btn-primary mt-6 px-6 py-3 text-ui-base"
+              >
+                {content.confirmation.backLabel}
+              </button>
+            </div>
+          </Reveal>
+        ) : null}
+      </div>
     </div>
   );
 };
@@ -326,9 +359,17 @@ interface DemoFieldProps {
 
 /** `autoComplete="off"` throughout, as in the original: a demonstration form
  *  should not be offering to fill itself from the reader's own address book. */
-const DemoField = ({ id, label, defaultValue, type = "text" }: DemoFieldProps) => (
+const DemoField = ({
+  id,
+  label,
+  defaultValue,
+  type = "text",
+}: DemoFieldProps) => (
   <div>
-    <label htmlFor={id} className="mb-2 block text-ui-xs font-medium text-ink-label">
+    <label
+      htmlFor={id}
+      className="mb-2 block text-ui-xs font-medium text-ink-label"
+    >
       {label}
     </label>
     <input
