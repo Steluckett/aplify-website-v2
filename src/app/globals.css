@@ -786,6 +786,27 @@ body {
     backdrop-filter: blur(12px) saturate(1.2);
   }
 
+  /* ...and a chip on a LIGHT CARD *inside* a deep ground comes back too.
+
+     The deep-ground rule above keys on the ancestor, which assumed a chip
+     inside `.bg-07`–`.bg-15` sits ON that gradient. It often does not: the job
+     cards are white tiles nested inside the deep panel, and the rule painted
+     `--ink-on-dark` onto them — white text on a #eef0f5 pill, measured at
+     1.05:1, the label simply absent. What a chip sits on is its nearest
+     SURFACE, not its furthest ancestor, so every light surface has to say so.
+
+     Declared after the deep rule and before the tints, so a classification
+     chip still keeps its own colour on either ground. */
+  .tile .chip,
+  .card-quiet .chip,
+  .inset-tile .chip {
+    background: var(--surface-chip);
+    color: var(--ink-label);
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
   /* ...but a chip back on a WHITE inset returns to the neutral wash. The
      white pill only makes sense against tint; on white it would vanish.
      Equal specificity to the rule above, so source order decides — and the

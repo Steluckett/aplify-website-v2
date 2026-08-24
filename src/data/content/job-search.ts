@@ -44,6 +44,8 @@ export const jobSearchContent = {
     /** Shown once the sample origin is applied, so nothing is implied. */
     sampleLocationNote: "sample location",
     clear: "Clear",
+    search: "Search",
+    found: "{n} jobs found",
     allFamilies: "All families",
     allRegions: "All regions",
     empty: "No roles match those filters — clear one and the set refills.",

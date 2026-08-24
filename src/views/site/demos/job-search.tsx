@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Reveal } from "@/components/ui/reveal";
 import { jobSearchContent } from "@/data/content/job-search";
@@ -107,6 +107,10 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
   const [family, setFamily] = useState<string>("");
   const [region, setRegion] = useState<string>("");
   const [applying, setApplying] = useState<Job | null>(null);
+  /* Search is a real action, not decoration: filtering is live, so pressing it
+     moves focus to the count — which is an aria-live region, so the result is
+     announced rather than only re-rendered. */
+  const resultsRef = useRef<HTMLParagraphElement>(null);
 
   /**
    * One filtered set, and the origin that sorts it.
@@ -157,213 +161,210 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
   }
 
   return (
-    <div className={`flex flex-col gap-8 ${className ?? ""}`}>
-      {/* THE CONTROL, on the page rather than inside the demo.
+    <div className={`flex flex-col gap-6 ${className ?? ""}`}>
+      {/* One deep panel holds the whole demo — controls and results together.
 
-          This is the section's whole argument in one gesture — Easy Apply
-          against a link-out — so it sits above the deep panel, at PAGE scale,
-          with a line under each option saying what it actually does. It was a
-          small segmented pill inside the demo's own chrome, at product scale,
-          reading as one filter among several. The explainer that sat beside it
-          has folded into the section standfirst.
+          The controls used to sit on the page above it, which separated the
+          choice from the thing it changes. They belong ON the gradient: the
+          switch, the search and the results are one instrument, and the ground
+          is what says so. */}
+      <div className="screen grain bg-08 rounded-panel p-5 sm:p-7 lg:p-10">
+        <div className="flex flex-col gap-7">
+          {/* THE SWITCH — centred, and made of the ground rather than laid on
+              top of it. The selected side is a solid white pill; the other is
+              glass, so the gradient reads straight through it and the two feel
+              like one control with a state rather than two competing buttons.
 
-          Each button carries its own ground AND its own ink, so what sits
-          behind it does not matter. */}
-      <div
-        role="radiogroup"
-        aria-label={content.routeSwitch.label}
-        className="grid gap-3 sm:grid-cols-2"
-      >
-        {(
-          [
-            [
-              "easy",
-              content.routeSwitch.easyApply,
-              content.routeSwitch.easyApplyNote,
-            ],
-            [
-              "link",
-              content.routeSwitch.linkOut,
-              content.routeSwitch.linkOutNote,
-            ],
-          ] as const
-        ).map(([value, label, note]) => (
-          <button
-            key={value}
-            type="button"
-            role="radio"
-            aria-checked={route === value}
-            onClick={() => setRoute(value)}
-            className={`rounded-panel px-6 py-5 text-left transition-colors duration-[var(--duration-fast)] ease-entrance ${
-              route === value
-                ? "bg-ink text-ink-on-dark shadow-lift"
-                : "bg-surface-raised text-ink hover:bg-surface-chip"
-            }`}
+              This is the section's whole argument in one gesture, which is why
+              it leads and why it is the only centred thing here. */}
+          <div
+            role="radiogroup"
+            aria-label={content.routeSwitch.label}
+            className="mx-auto flex w-full max-w-2xl gap-1.5 rounded-pill bg-white/10 p-1.5 backdrop-blur-md"
           >
-            {/* `!` is load bearing. `.display` sets its own colour
-                (--ink-heading), which beat the button's `text-ink-on-dark` and
-                painted near-black on the near-black active button — measured
-                at 1:1, the title simply absent. */}
-            <span
-              className={`display block text-h4 ${
-                route === value ? "!text-ink-on-dark" : ""
-              }`}
-            >
-              {label}
-            </span>
-            <span
-              className={`mt-2 block text-body leading-[1.5] ${
-                route === value ? "text-ink-on-dark/70" : "text-ink-body"
-              }`}
-            >
-              {note}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* Link-out explainer — shown only on that route, so the honest cost
-          lands exactly when the switch raises it. */}
-      {route === "link" ? (
-        <Reveal variant="fade">
-          <aside
-            aria-label={content.linkOutPanel.heading}
-            className="wash rounded-card"
-          >
-            <div className="inset-tile flex items-start gap-4 p-5">
-              <span className="icon-chip h-10 w-10" aria-hidden>
-                <ExternalIcon />
-              </span>
-              <div className="min-w-0">
-                <h3 className="text-ui-lg font-medium tracking-tight text-ink-heading">
-                  {content.linkOutPanel.heading}
-                </h3>
-                <p className="mt-2 max-w-3xl text-ui-base leading-relaxed text-ink-body">
-                  {content.linkOutPanel.body}
-                </p>
-                <p className="mt-2 max-w-3xl text-ui-base leading-relaxed text-ink-label">
-                  {content.linkOutPanel.cost}
-                </p>
-              </div>
-            </div>
-          </aside>
-        </Reveal>
-      ) : null}
-
-      {/* Everything below sits on the DEEP ground: the search, its results and
-          the apply flow. The demo used to be handed a light grey floor of its
-          own so its white tiles had something to sit on — the gradient does
-          that better, and stops the whole thing reading as a website pasted
-          into the page.
-
-          `.screen` stays. It is the product type register, Aurora's 11–24px
-          scale, and without it a demo reads as more marketing page. Dropping
-          the browser chrome does not mean dropping the register. */}
-      <div className="screen grain bg-08 rounded-panel p-4 sm:p-6 lg:p-8">
-        <div className="flex flex-col gap-5">
-          {/* Filters + view tabs. The panel dips into the wash; every control
-              on it is a white pill — the suite's own rule, and the reason a
-              filter bar reads as a filter bar without a single border. */}
-          {/* A SOLID bar, not the glass it used to be. `inset-glass` is 55%
-              white, which reads as a light surface over the page ground and as
-              a mid blue-grey over this one — and every ink on it was solved
-              against white. Composited over #123a7a the label ink measured
-              2.18:1. A solid surface keeps its inks true wherever it lands. */}
-          <div className="rounded-card bg-surface-raised p-1.5">
-            <div className="flex flex-col gap-3 p-2 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex flex-wrap items-center gap-2">
-                {/* Keyword and place first — the two things a candidate
-                    arrives already knowing. The selects narrow what comes
-                    back; these two ARE the search. */}
-                <label className="inline-flex items-center gap-2 rounded-pill bg-surface-chip py-1.5 pl-4 pr-3">
-                  <span className="text-ui-xs text-ink-label">
-                    {content.filters.keyword}
-                  </span>
-                  <input
-                    type="search"
-                    value={keyword}
-                    onChange={(event) => setKeyword(event.target.value)}
-                    placeholder={content.filters.keywordPlaceholder}
-                    className="w-40 bg-transparent text-ui-sm font-medium text-ink placeholder:font-normal placeholder:text-ink-label focus:outline-none"
-                  />
-                </label>
-
-                <label className="inline-flex items-center gap-2 rounded-pill bg-surface-chip py-1.5 pl-4 pr-3">
-                  <span className="text-ui-xs text-ink-label">
-                    {content.filters.location}
-                  </span>
-                  <input
-                    type="search"
-                    list="job-search-places"
-                    value={place}
-                    onChange={(event) => setPlace(event.target.value)}
-                    placeholder={content.filters.locationPlaceholder}
-                    className="w-32 bg-transparent text-ui-sm font-medium text-ink placeholder:font-normal placeholder:text-ink-label focus:outline-none"
-                  />
-                  <datalist id="job-search-places">
-                    {LOCATIONS.map((l) => (
-                      <option key={l.label} value={l.label} />
-                    ))}
-                  </datalist>
-                </label>
-
-                {/* Fills the field with a real town and sorts by genuine
-                    distance from it. See SAMPLE_ORIGIN for why this is not
-                    `navigator.geolocation`. */}
+            {(
+              [
+                [
+                  "easy",
+                  content.routeSwitch.easyApply,
+                  content.routeSwitch.easyApplyNote,
+                ],
+                [
+                  "link",
+                  content.routeSwitch.linkOut,
+                  content.routeSwitch.linkOutNote,
+                ],
+              ] as const
+            ).map(([value, label, note]) => {
+              const on = route === value;
+              return (
                 <button
+                  key={value}
                   type="button"
-                  onClick={() => setPlace(SAMPLE_ORIGIN.label)}
-                  className="inline-flex items-center gap-1.5 rounded-pill bg-surface-raised px-3.5 py-1.5 text-ui-sm font-medium text-ink shadow-sm transition-colors duration-[var(--duration-fast)] ease-entrance hover:bg-surface-chip"
+                  role="radio"
+                  aria-checked={on}
+                  onClick={() => setRoute(value)}
+                  className={`flex-1 rounded-pill px-5 py-3 text-center transition-colors duration-[var(--duration-fast)] ease-entrance ${
+                    on
+                      ? "bg-surface-raised shadow-sm"
+                      : "text-ink-on-dark hover:bg-white/10"
+                  }`}
                 >
-                  <PinIcon />
-                  {content.filters.useMyLocation}
-                </button>
-
-                {origin ? (
-                  <span className="text-ui-xs text-ink-label">
-                    {content.filters.sampleLocationNote}
+                  <span
+                    className={`block text-ui-lg font-medium tracking-tight ${
+                      on ? "text-ink" : "text-ink-on-dark"
+                    }`}
+                  >
+                    {label}
                   </span>
-                ) : null}
+                  <span
+                    className={`mt-0.5 block text-ui-xs ${
+                      on ? "text-ink-label" : "text-ink-on-dark/70"
+                    }`}
+                  >
+                    {note}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
 
-                <FilterSelect
-                  label="Job family"
-                  value={family}
-                  onChange={setFamily}
-                  allLabel={content.filters.allFamilies}
-                  options={FAMILIES}
-                />
-                <FilterSelect
-                  label="Region"
-                  value={region}
-                  onChange={setRegion}
-                  allLabel={content.filters.allRegions}
-                  options={REGIONS}
-                />
-                <p
-                  className="px-1 text-ui-xs text-ink-label"
-                  aria-live="polite"
-                >
-                  {jobs.length} of {JOBS.length} roles
-                </p>
-              </div>
-
-              <div
-                role="tablist"
-                aria-label="Result views"
-                className="inline-flex w-fit flex-none rounded-pill bg-surface-chip p-1"
+          {/* Link-out cost — §2's honesty, shown the moment the switch raises
+              it. Glass, so it belongs to the ground rather than interrupting
+              it. */}
+          {route === "link" ? (
+            <Reveal variant="fade">
+              <aside
+                aria-label={content.linkOutPanel.heading}
+                className="flex items-start gap-4 rounded-card bg-white/10 p-5 backdrop-blur-md"
               >
-                {content.views.map((name) => (
-                  <Segment
+                <span className="text-ink-on-dark" aria-hidden>
+                  <ExternalIcon />
+                </span>
+                <div className="min-w-0">
+                  <h3 className="text-ui-lg font-medium tracking-tight text-ink-on-dark">
+                    {content.linkOutPanel.heading}
+                  </h3>
+                  <p className="mt-2 max-w-3xl text-ui-base leading-relaxed text-ink-on-dark/85">
+                    {content.linkOutPanel.body}
+                  </p>
+                  <p className="mt-2 max-w-3xl text-ui-base leading-relaxed text-ink-on-dark/70">
+                    {content.linkOutPanel.cost}
+                  </p>
+                </div>
+              </aside>
+            </Reveal>
+          ) : null}
+
+          {/* THE SEARCH ROW — loose on the gradient, filling the width.
+
+              It was a white bar holding small pills, which is a filter strip.
+              This is a search: five controls at field scale, each its own white
+              pill on the ground, the row balanced so nothing is an afterthought.
+              "Near me" is inside the location field as an icon, where a second
+              button beside it would have cost a whole column. */}
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              resultsRef.current?.focus();
+            }}
+            className="flex flex-col gap-2.5 lg:flex-row lg:items-center"
+          >
+            <input
+              type="search"
+              value={keyword}
+              onChange={(event) => setKeyword(event.target.value)}
+              placeholder={content.filters.keywordPlaceholder}
+              aria-label={content.filters.keyword}
+              className="h-14 flex-[1.4] rounded-pill bg-surface-raised px-6 text-ui-base text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+            />
+
+            <div className="relative flex-1">
+              <input
+                type="search"
+                list="job-search-places"
+                value={place}
+                onChange={(event) => setPlace(event.target.value)}
+                placeholder={content.filters.locationPlaceholder}
+                aria-label={content.filters.location}
+                className="h-14 w-full rounded-pill bg-surface-raised pl-6 pr-16 text-ui-base text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+              />
+              <datalist id="job-search-places">
+                {LOCATIONS.map((l) => (
+                  <option key={l.label} value={l.label} />
+                ))}
+              </datalist>
+              <button
+                type="button"
+                onClick={() => setPlace(SAMPLE_ORIGIN.label)}
+                title={`${content.filters.useMyLocation} (${content.filters.sampleLocationNote})`}
+                aria-label={`${content.filters.useMyLocation} — ${content.filters.sampleLocationNote}`}
+                className="absolute right-1.5 top-1.5 grid h-11 w-11 place-items-center rounded-full bg-accent text-ink-on-dark transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-90"
+              >
+                <PinIcon />
+              </button>
+            </div>
+
+            <RowSelect
+              value={family}
+              onChange={setFamily}
+              allLabel={content.filters.allFamilies}
+              options={FAMILIES}
+              label="Job family"
+            />
+            <RowSelect
+              value={region}
+              onChange={setRegion}
+              allLabel={content.filters.allRegions}
+              options={REGIONS}
+              label="Region"
+            />
+
+            <button
+              type="submit"
+              className="h-14 rounded-pill bg-accent px-8 text-ui-base font-medium text-ink-on-dark transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-90"
+            >
+              {content.filters.search}
+            </button>
+          </form>
+
+          {/* Views left, count right — the row that says what you are looking
+              at and how much of it there is. */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div
+              role="tablist"
+              aria-label="Result views"
+              className="inline-flex gap-1 rounded-pill bg-white/10 p-1 backdrop-blur-md"
+            >
+              {content.views.map((name) => {
+                const on = view === name;
+                return (
+                  <button
                     key={name}
+                    type="button"
                     role="tab"
-                    active={view === name}
+                    aria-selected={on}
                     onClick={() => setView(name)}
+                    className={`rounded-pill px-5 py-2 text-ui-sm font-medium transition-colors duration-[var(--duration-fast)] ease-entrance ${
+                      on
+                        ? "bg-surface-raised text-ink"
+                        : "text-ink-on-dark hover:bg-white/10"
+                    }`}
                   >
                     {name}
-                  </Segment>
-                ))}
-              </div>
+                  </button>
+                );
+              })}
             </div>
+
+            <p
+              ref={resultsRef}
+              tabIndex={-1}
+              aria-live="polite"
+              className="text-ui-lg font-medium text-ink-on-dark focus:outline-none"
+            >
+              {content.filters.found.replace("{n}", String(jobs.length))}
+            </p>
           </div>
 
           <JobViews
@@ -378,6 +379,39 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
     </div>
   );
 };
+
+/**
+ * A select at FIELD scale for the search row — a white pill on the gradient,
+ * the same height as the inputs beside it. `FilterSelect` below is the small
+ * inline version and is kept for anywhere that still wants a compact control.
+ */
+const RowSelect = ({
+  value,
+  onChange,
+  allLabel,
+  options,
+  label,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  allLabel: string;
+  options: string[];
+  label: string;
+}) => (
+  <select
+    aria-label={label}
+    value={value}
+    onChange={(event) => onChange(event.target.value)}
+    className="h-14 flex-1 rounded-pill bg-surface-raised px-6 text-ui-base text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+  >
+    <option value="">{allLabel}</option>
+    {options.map((option) => (
+      <option key={option} value={option}>
+        {option}
+      </option>
+    ))}
+  </select>
+);
 
 /* --- Controls -------------------------------------------------------------- */
 
@@ -525,7 +559,7 @@ const GridView = ({ jobs, route, origin, onApply }: ViewProps) => {
 
   return (
     <div className="flex flex-col gap-5">
-      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {shown.map((job, i) => (
           <Reveal
             key={jobKey(job)}
@@ -575,7 +609,10 @@ const GridView = ({ jobs, route, origin, onApply }: ViewProps) => {
           aria-label={jobSearchContent.pagination.label}
           className="flex items-center justify-between gap-3"
         >
-          <p className="text-ui-sm text-ink-label" aria-live="polite">
+          {/* On the deep ground now, so --ink-label (2.04:1 there) will not do.
+              The buttons beside it carry their own white grounds and are fine
+              as they are. */}
+          <p className="text-ui-sm text-ink-on-dark/80" aria-live="polite">
             {jobSearchContent.pagination.showing
               .replace("{from}", String(current * PER_PAGE + 1))
               .replace(
@@ -766,13 +803,37 @@ const MapView = ({ jobs, route, onApply }: ViewProps) => {
  * Family and contract are CLASSIFICATION, not state — so the family carries the
  * quiet sky tint and the contract stays neutral, and neither takes a status dot.
  */
+/**
+ * Category and hours, as two pills.
+ *
+ * The hours used to be a bare `.chip`, whose default fill is #eef0f5 — on a
+ * white card that is a 1.4 ΔE difference and reads as grey text, not as a pill
+ * beside a coloured one. It gets the chip wash and a clock, so the pair scans
+ * as what it is: what the job is, and when you would do it.
+ */
 const JobTags = ({ job }: { job: Job }) => (
   <>
     <span className="chip" data-tint="sky">
       {job.family}
     </span>
-    <span className="chip">{job.contract}</span>
+    <span className="chip bg-surface-chip">
+      <ClockIcon />
+      {job.contract}
+    </span>
   </>
+);
+
+const ClockIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" aria-hidden>
+    <circle cx="12" cy="12" r="8.2" stroke="currentColor" strokeWidth="1.7" />
+    <path
+      d="M12 7.8V12l2.8 1.8"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
 );
 
 /**

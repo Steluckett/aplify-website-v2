@@ -147,6 +147,18 @@ negative margin instead.
   this page leans on.
 - **Opacity tuned on a solid colour breaks on a gradient.** `white/45`
   measured 4.49:1 on flat navy and 2.78:1 on Midnight.
+
+- **Measure composited colour on a canvas, not by parsing the string.** Alpha
+  utilities compile to `oklab(... / 0.8)`, which a naive RGB parser reads as
+  garbage — it will report a passing colour as failing and vice versa. Paint
+  the background then the ink onto a 1x1 canvas and read the pixel back; that
+  resolves `oklab`, alpha and blending in one step:
+  `x.fillStyle=bg; x.fillRect(0,0,1,1); x.fillStyle=ink; x.fillRect(0,0,1,1);`
+- **A chip sits on its nearest SURFACE, not its furthest ancestor.** The
+  deep-ground chip rule keys on `.bg-07`–`.bg-15`, which caught chips on white
+  cards nested inside a deep panel and painted white ink on a #eef0f5 pill at
+  1.05:1. `.tile`, `.card-quiet` and `.inset-tile` now reset it. Any new light
+  surface that can hold a chip needs adding to that list.
 - **Dead Tailwind class names fail silently.** `text-background` survived a
   token rewrite as an invisible button label.
 - **`border-<name>` with an unbound colour paints INK, not nothing.** Tailwind
