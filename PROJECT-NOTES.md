@@ -211,18 +211,17 @@ recruiter dashboard, because several are the obvious parts to reach for:
 
 ## Deploying
 
-No git remote is configured on this repo, so there is nothing to `git push`
-and Vercel is NOT deploying from a git integration. The folder is linked
-directly (`.vercel/project.json` → `ste-lucketts-projects/aplify-website-v2`)
-and deploys are CLI uploads of the WORKING DIRECTORY:
-
 ```
-npx --yes vercel --prod --yes
+repo    https://github.com/Steluckett/aplify-website-v2   (public)
+live    https://aplify-website-v2.vercel.app
 ```
 
-Two consequences. A deployment is not tied to a commit, so there is no SHA to
-trace a build back to; check the tree is clean first. And with no remote,
-every commit lives only on this machine — there is no off-machine backup.
+Vercel deploys from the repo. **Push to `main` and it ships** — no CLI step,
+and every build traces back to a commit SHA. `npx --yes vercel --prod --yes`
+still works from this folder for a one-off, but it uploads the working
+directory rather than a commit, so prefer pushing.
+
+Nothing pushes automatically after a commit. `git push` is the deploy.
 
 **Deployment Protection does not cover the production alias.** The hashed
 per-deployment URLs (`…-lqgw4xsi0-…`) redirect to SSO, but
