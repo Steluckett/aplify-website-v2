@@ -154,8 +154,11 @@ export const BrandKitDemo = ({ className }: BrandKitDemoProps) => {
 
   const { from, to, u } = useMemo(() => segmentAt(t), [t]);
 
-  /** Font and shadow cannot be blended, so they take the nearer stop. */
+  /** Font, shadow and the employer's name cannot be blended, so they take the
+   *  nearer stop and all snap together at the same halfway point. */
   const nearer: BrandStop = u < 0.5 ? from : to;
+  /** 0 below u=0.4, 1 above u=0.6 — a short cross-fade for the mark only. */
+  const blend = Math.min(1, Math.max(0, (u - 0.4) / 0.2));
   const radius = lerp(from.radius, to.radius, u);
 
   const vars = {
@@ -181,10 +184,16 @@ export const BrandKitDemo = ({ className }: BrandKitDemoProps) => {
 
   return (
     <div className={className} style={vars}>
-      {/* --- THE CONTROL. One slider, centred, and deliberately unlabelled
-              beyond the two employers at its ends: naming what it changes
-              would make a list of it, and the point is that it changes
-              everything at once. --- */}
+      {/* --- THE CONTROL. One slider, centred, and completely unlabelled.
+              The employer names that used to sit at each end are gone
+              (Stephen, 2026-08-24) — cleaner without, and the example already
+              names whichever brand the slider is on. Nothing here should ever
+              itemise what the slider changes: the point is that it changes
+              everything at once.
+
+              `aria-label` and `aria-valuetext` stay. They are the only route a
+              screen reader has to what this control is and where it currently
+              sits, and they cost the visual design nothing. --- */}
       <div className="mx-auto w-full max-w-[42rem]">
         {/* Styled with arbitrary variants rather than a class in globals.css,
             on purpose: a range input needs four vendor pseudo-elements and
@@ -206,21 +215,6 @@ export const BrandKitDemo = ({ className }: BrandKitDemoProps) => {
           }}
           className="h-4 w-full cursor-grab appearance-none rounded-pill focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid focus-visible:ring-offset-4 active:cursor-grabbing [&::-moz-range-thumb]:h-11 [&::-moz-range-thumb]:w-11 [&::-moz-range-thumb]:cursor-grab [&::-moz-range-thumb]:rounded-pill [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[var(--b-accent)] [&::-moz-range-thumb]:shadow-lift [&::-webkit-slider-thumb]:h-11 [&::-webkit-slider-thumb]:w-11 [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-pill [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[var(--b-accent)] [&::-webkit-slider-thumb]:shadow-lift"
         />
-        <div className="mt-4 flex items-center justify-between gap-6">
-          <span className="text-ui-sm text-ink-label">
-            {brandKit.slider.from}
-          </span>
-          <span className="text-ui-sm text-ink-label">
-            {brandKit.slider.to}
-          </span>
-        </div>
-
-        {/* §6.7, and it has to live here rather than under the section: the
-            example below bleeds out of the band, so anything after it would be
-            dragged over it. */}
-        <p className="mt-6 text-center text-fine leading-relaxed text-ink-label">
-          {brandKit.disclosure}
-        </p>
       </div>
 
       {/* --- THE EXAMPLE. Centred under the control, and it runs off the foot
@@ -241,9 +235,10 @@ export const BrandKitDemo = ({ className }: BrandKitDemoProps) => {
           {/* The employer's own page furniture — schematic on purpose. */}
           <div className="flex items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              {/* Two marks stacked and cross-faded: a hard swap mid-drag reads
-                  as a glitch, and the lockup is the one place the reader is
-                  looking while they move the control. */}
+              {/* The mark cross-fades, but only across a NARROW window either
+                  side of the halfway point. A full-segment cross-fade puts both
+                  marks at 50% for most of the drag, which does not read as a
+                  blend, it reads as a double exposure. */}
               <span
                 className="relative grid h-10 w-10 flex-none place-items-center p-2.5"
                 style={{
@@ -254,30 +249,28 @@ export const BrandKitDemo = ({ className }: BrandKitDemoProps) => {
               >
                 <span
                   className="absolute inset-0 grid place-items-center p-2.5"
-                  style={{ opacity: 1 - u }}
+                  style={{ opacity: 1 - blend }}
                 >
                   <Mark kind={from.mark} />
                 </span>
                 <span
                   className="absolute inset-0 grid place-items-center p-2.5"
-                  style={{ opacity: u }}
+                  style={{ opacity: blend }}
                 >
                   <Mark kind={to.mark} />
                 </span>
               </span>
+              {/* The NAME does not cross-fade at all — it snaps, with the font
+                  and the shadow, at the same halfway point. Two names at 50%
+                  over each other are not a transition, they are two words of
+                  mush: "Northbank Health" under "Meridian Care" rendered as
+                  `Meridlan Cafealth`. A label swapping as you drag past the
+                  midpoint is ordinary; an unreadable one is a bug. */}
               <span
-                className="relative block"
+                className="font-medium"
                 style={{ fontSize: "calc(1rem * var(--b-scale))" }}
               >
-                <span className="font-medium" style={{ opacity: 1 - u }}>
-                  {from.name}
-                </span>
-                <span
-                  className="absolute left-0 top-0 whitespace-nowrap font-medium"
-                  style={{ opacity: u }}
-                >
-                  {to.name}
-                </span>
+                {nearer.name}
               </span>
             </div>
             <nav className="hidden items-center gap-6 sm:flex">

@@ -264,7 +264,25 @@ screenshot in browser chrome — it is the product working, on `bg-08`:
   country's, or the UK strands a portrait sliver in a landscape box.
 - The apply form takes the full panel width on the deep ground.
 
-**Captions:** the lines that sat UNDER sections are gone (Stephen's call,
+**Captions — STANDING DECISION, 2026-08-24: do not add them.** Stephen's words:
+*"from now on leave this type of thing out — i dont want it."* That covers
+illustrative disclosures generally, not just the one it was said about (the
+brand kit's "invented employers" line). Two were removed on his instruction that
+day: the dashboard's caption under the table, and the brand kit's.
+
+This is a deliberate divergence from V2_HANDOVER §6.7, whose first clause asks
+that *every demo carries a caption saying what is illustrative*. It is recorded
+here so that a future session reading §6.7 does not "fix" it back — the rule was
+read, the conflict was raised twice, and this is the client-side call.
+
+What that does NOT change: §6.5 still binds, so sample people stay invented and
+stay on reserved `example.*` domains and Ofcom's 07700 900xxx range, whether or
+not anything on screen says so. And two in-demo lines survive because they sit
+with a form rather than under a section — the Easy Apply flow's "nothing is
+sent, stored or read" (that form asks for a CV) and the AI rewrite's
+traceability line. Neither has been removed; ask before adding any more.
+
+**Earlier:** the lines that sat UNDER sections are gone (Stephen's call,
 2026-08-21). What stays is what lives inside a demo and does work there — the
 Easy Apply form's "nothing is sent, stored or read" (§6.7 names that case,
 and that form asks for a CV) and the AI rewrite's traceability line (§6.10).
@@ -303,7 +321,10 @@ corners, shadow, spacing and logo while the arrangement holds. It exists because
 §3 names employer brand consistency as a concern of the PRIMARY buyer and the
 page had no answer to it.
 
-It is ONE SLIDER, running Northbank → Halden, square corners → fully rounded.
+It is ONE SLIDER, running Northbank → Halden, square corners → fully rounded,
+and it carries NO visible label of any kind — the employer names at each end
+were removed on 2026-08-24. `aria-label` and `aria-valuetext` stay; they are the
+only route a screen reader has to the control, and they cost the design nothing.
 Four stops with everything between them interpolated in Oklab. The example is
 centred under it and BLEEDS out under `#proof`, using `MapBand`'s trick — which
 is why `#proof` carries `relative`, and why nothing may follow the demo inside

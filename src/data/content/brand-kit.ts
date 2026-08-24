@@ -148,10 +148,13 @@ export const brandKit = {
   standfirst:
     "Search, apply and event registration render inside your own career site or campaign landing page, wearing your colours, type, corners, shadows, spacing and logo. Only the layout stays fixed — which is what keeps it working on every screen.",
   slider: {
-    /** The control's accessible name. Nothing on screen labels it. */
+    /**
+     * The control's accessible name. NOTHING labels it on screen — the
+     * employer names that sat at each end were removed on 2026-08-24 because
+     * the control reads cleaner bare, and the example already names the brand
+     * the slider is on. This string is for assistive technology only.
+     */
     label: "Brand style",
-    from: "Northbank Health",
-    to: "Halden Group",
   },
   /** The schematic page around the block, so it reads as somebody's site. */
   page: {
@@ -179,10 +182,4 @@ export const brandKit = {
     consent: "I agree to {brand} holding my details for this application.",
     submit: "Submit application",
   },
-  /**
-   * §6.7, and the same rule the notes field follows: the line sits with the
-   * thing it is about rather than under the section.
-   */
-  disclosure:
-    "Invented employers, and a form that does nothing — nothing you type is sent, stored or read.",
 };
