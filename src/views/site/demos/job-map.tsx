@@ -92,9 +92,19 @@ export const JobMap = ({ jobs, selectedKey, onSelect }: JobMapProps) => {
   const r = selected ? 1 / ZOOM : 1;
 
   return (
+    /* GLASS, not a white tile.
+     *
+     * The map was `.tile`, the same solid white as the job cards beside it, so
+     * the two read as the same kind of object — a card containing a picture,
+     * next to cards containing jobs. A map is not a card. On glass the
+     * gradient becomes the sea, the land floats on it, and the panel belongs
+     * to the ground rather than sitting on it.
+     *
+     * Every colour below is therefore solved against the GLASS composite, not
+     * against white. */
     <div
       ref={box}
-      className="tile relative h-[26rem] overflow-hidden p-2 sm:h-[34rem]"
+      className="relative h-[26rem] overflow-hidden rounded-card bg-white/10 p-2 backdrop-blur-md sm:h-[34rem]"
     >
       <animated.svg
         viewBox={to(
@@ -106,9 +116,12 @@ export const JobMap = ({ jobs, selectedKey, onSelect }: JobMapProps) => {
         aria-label="Map of sample roles across the UK"
         className="h-full w-full"
       >
+        {/* Land is a light translucent fill so it reads against the gradient
+            showing through as sea — the same relationship a real map has, and
+            the reason the outline is legible without a solid card behind it. */}
         <path
           d={UK_PATH}
-          className="fill-surface stroke-track"
+          className="fill-white/55 stroke-white/40"
           strokeWidth={2}
         />
         {jobs.map((job) => {
@@ -140,8 +153,12 @@ export const JobMap = ({ jobs, selectedKey, onSelect }: JobMapProps) => {
                     onSelect(key);
                   }
                 }}
+                /* Pins sit ON the land, so they are measured against the land
+                   composite rather than the panel. `--ink` at 45% cleared 3:1
+                   on the old white tile and does not on this lighter,
+                   bluer surface. */
                 className={`cursor-pointer outline-none focus-visible:stroke-accent focus-visible:stroke-[4] ${
-                  isSelected ? "fill-accent" : "fill-ink/45 hover:fill-accent"
+                  isSelected ? "fill-accent" : "fill-ink/75 hover:fill-accent"
                 }`}
               />
             </g>
