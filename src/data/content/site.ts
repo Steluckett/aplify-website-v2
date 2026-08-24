@@ -76,9 +76,6 @@ export const siteMap = {
     h: 918,
     alt: "Aplify's two halves in one frame: on the left, the feed mapping screen showing source fields such as job_id and location_postcode mapped onto Aplify's own fields; on the right, a phone showing a job search for Manchester and the Assistant General Manager role at £34–38k; between them, a candidate looking at her phone.",
   },
-  /** §6.7 — a composition this close to the product discloses its sample data. */
-  caption:
-    "Illustrative. The roles and feed rows shown are invented, as everywhere on this page.",
 } as const;
 
 /**

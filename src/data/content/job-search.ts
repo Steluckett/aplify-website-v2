@@ -108,6 +108,5 @@ export const jobSearchContent = {
 
   captions: {
     demo: "A working demonstration on sample roles — every employer, vacancy and salary is invented; the geography is real.",
-    map: "Locations are the genuine coordinates of each city. No roads, no tiles — the map shows where roles sit relative to each other.",
   },
 };

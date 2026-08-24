@@ -860,9 +860,6 @@ const MapView = ({ jobs, route, origin, onApply }: ViewProps) => {
         />
       </div>
 
-      <p className="text-ui-xs leading-relaxed text-ink-on-dark/70">
-        {jobSearchContent.captions.map}
-      </p>
     </div>
   );
 };
