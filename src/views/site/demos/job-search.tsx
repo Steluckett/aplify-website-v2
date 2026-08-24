@@ -790,7 +790,15 @@ const MapView = ({ jobs, route, origin, onApply }: ViewProps) => {
         {/* The list is the index and the map is the picture, and each drives
             the other: a pin brings its card here, a card takes the map there.
             Either one alone is half a search. */}
-        <ul className="flex max-h-[26rem] flex-col gap-3 overflow-y-auto pr-1 sm:max-h-[32rem]">
+        {/* `data-lenis-prevent` is required, not optional. Lenis drives the
+            page and captures wheel events globally, so a nested scroll area
+            silently does nothing on a wheel — the list scrolled by drag and by
+            keyboard and looked broken to a mouse. This hands the wheel back
+            while the pointer is over it. */}
+        <ul
+          data-lenis-prevent
+          className="flex max-h-[26rem] flex-col gap-3 overflow-y-auto overscroll-contain pr-1 sm:max-h-[34rem]"
+        >
           {jobs.map((job) => {
             const key = jobKey(job);
             const on = key === selectedKey;
