@@ -303,11 +303,29 @@ corners, shadow, spacing and logo while the arrangement holds. It exists because
 §3 names employer brand consistency as a concern of the PRIMARY buyer and the
 page had no answer to it.
 
-Two things not to undo. The Aplify block is deliberately unlabelled — the page
+It is ONE SLIDER, running Northbank → Halden, square corners → fully rounded.
+Four stops with everything between them interpolated in Oklab. The example is
+centred under it and BLEEDS out under `#proof`, using `MapBand`'s trick — which
+is why `#proof` carries `relative`, and why nothing may follow the demo inside
+`#brand` (a sibling after it gets dragged up over the example by the negative
+margin), and why that section must never gain `overflow-hidden`.
+
+Three things not to undo. The Aplify block is deliberately unlabelled — the page
 around it is schematic and the block is fully drawn, which says which is which
-without a caption, and a label would contradict the claim. And "layout is fixed"
-means ARRANGEMENT: widths are identical across presets (measured, 1096px every
-time), heights are not, because type scale and spacing are configurable too.
+without a caption, and a label would contradict the claim. "Layout is fixed"
+means ARRANGEMENT: widths are identical at every slider position (measured, 992px
+every time), heights are not, because type scale and spacing are configurable
+too. And the schematic page FOOTER exists so the bleed has something expendable
+to cut through — without it the crop landed across the submit button.
+
+**Every ground is light, and that is arithmetic, not taste.** A continuous slider
+cannot travel from a light theme to a dark one and stay readable: ground
+light→dark against ink dark→light must cross, and at the crossing the contrast is
+1:1. No easing or colour space avoids it. Halden was dark in the first cut and is
+now graphite on pale. A dark theme is still fine in the PRODUCT — it just cannot
+be a point on a slider, only a discrete switch. Verified across 21 slider
+positions, 474 checks, zero failures; re-run that sweep if a stop is ever edited,
+because safe endpoints prove nothing about t = 0.5.
 
 **The configurable list is wider than the handover records.** V2_HANDOVER §1 says
 only "colours, imagery and fonts"; `APLIFY-PRODUCT-UI-SPEC.md` hedges to "some of

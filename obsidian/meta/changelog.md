@@ -10,6 +10,26 @@ This is a human-curated log — not a mirror of `git log`.
 
 ## 2026-08-24
 
+- **The brand kit becomes one slider.** Four cards to choose between was a menu;
+  a slider is a transformation, and transformation is the claim. Corners run
+  square at Northbank to fully rounded at Halden, monotonic, and the example
+  bleeds out under `#proof` — `MapBand`'s trick, which is why `#proof` is now
+  `relative`. [[decisions-log]] ADR-0030, revised.
+
+  **Every ground had to stay light, and that is arithmetic rather than taste.**
+  A continuous slider cannot go from a light theme to a dark one and stay
+  readable: ground light→dark against ink dark→light must cross, and at the
+  crossing contrast is 1:1. Halden was dark in the first cut and is now graphite
+  on pale. A dark theme is still fine in the product — it just cannot be a point
+  on a slider, only a discrete switch.
+
+  Colour interpolates in **Oklab**; sRGB sags into a dead grey crossing blue →
+  terracotta, and on a slider the midpoint is somewhere people rest. Four stops
+  rather than two, so every resting position is a plausible brand.
+
+  Verified across **21 slider positions, 474 checks, zero contrast failures**,
+  with the example measuring 992px wide at every one.
+
 - **A new band: the brand kit.** `#brand`, between `#job-search` and `#proof`.
   [[decisions-log]] **ADR-0030**.
 

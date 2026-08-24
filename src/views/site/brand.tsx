@@ -14,26 +14,27 @@ import { BrandKitDemo } from "./demos/brand-kit";
  * the hero speaks to — and until now the page answered the other two concerns
  * in that sentence and ignored this one.
  *
- * The cost is one beat of delay before the 85%→30% payoff, which was worth it:
- * arriving at the number having already dealt with the objection is stronger
- * than arriving at it with the objection still open.
+ * THE BLEED. The example runs on past the foot of this band and is cut by the
+ * white of `#proof` below. Mechanically it is the same trick `MapBand` uses:
+ * this section drops its bottom padding, the demo carries a negative bottom
+ * margin so the next section starts before the picture ends, and `#proof` is
+ * `relative` so its white background paints OVER the overflow. That last part
+ * is the whole thing — in normal painting order a later sibling's background
+ * goes down before an earlier sibling's in-flow content, so without the
+ * positioning the example would sit on top of the white instead of under it.
  *
- * BAND ORDER. ADR-0027 constrains this. `#proof` below is `band-white` with its
- * own deep card, and `#job-search` above closes on a deep panel, so this band
- * stays on the page ground and keeps its own colour INSIDE the preview rather
- * than painting the whole band. Three heavy blocks in a row would have flattened
- * all three. It also happens to be truer: a careers page is a light page with a
- * brand on it, not a brand-coloured slab.
- *
- * FULL HEIGHT, on `lg:` only. `min-h` rather than `h`, because the preview grows
- * with its own content and a hard height would either clip a brand or strand it
- * in space. On a phone it is simply as tall as it needs to be — a forced
- * viewport height there is a scroll trap, not an immersion.
+ * FULL HEIGHT on `lg:` only, and `min-h` rather than `h`: the example grows
+ * with its own type scale, so a hard height would either clip a brand or
+ * strand it. On a phone it is as tall as it needs to be — a forced viewport
+ * height there is a scroll trap, not immersion.
  */
 export const BrandSection = () => (
+  /* NO `overflow-hidden` here, ever. It would clip the exact overflow the
+     bleed depends on, and the failure looks like the negative margin simply
+     not working. */
   <section
     id="brand"
-    className="flex flex-col justify-center py-26 lg:min-h-svh"
+    className="flex flex-col justify-center pt-26 pb-0 lg:min-h-svh"
   >
     <div className="shell">
       <SectionIntro
@@ -42,7 +43,11 @@ export const BrandSection = () => (
         linesSm={[...brandKit.linesSm]}
         standfirst={brandKit.standfirst}
       />
-      <BrandKitDemo className="mt-16" />
+      {/* The negative margin is what bleeds. Nothing may follow the demo in
+          this section — a sibling after it gets dragged up over the example,
+          which is why the §6.7 disclosure lives INSIDE the demo, under the
+          slider, rather than here. */}
+      <BrandKitDemo className="mt-14 -mb-16 lg:-mb-24" />
     </div>
   </section>
 );

@@ -119,7 +119,11 @@ export const Roadmap = () => (
  * opacity that was tuned against a solid colour.
  */
 export const Proof = () => (
-  <section id="proof" className="band-white py-26">
+    /* `relative` is load-bearing: the brand band above bleeds its example
+       under this section, and only a positioned later sibling paints its
+       background over an earlier sibling's in-flow overflow. See
+       `brand.tsx`. */
+  <section id="proof" className="relative band-white py-26">
     <div className="shell">
       <Reveal variant="rise">
         <div className="grain bg-10 rounded-panel px-8 py-20 text-center lg:py-28">

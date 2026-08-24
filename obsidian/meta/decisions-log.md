@@ -12,8 +12,38 @@ consequences. Use [[templates/adr-note]] for new entries. Newest first.
 
 ## ADR-0030 — The brand kit band, and theming as a demonstration rather than a claim
 
-- **Status:** Accepted
+- **Status:** Accepted — **amended the same day**, see *Revision* below
 - **Date:** 2026-08-24
+
+> [!note] Revision, 2026-08-24 — one slider, not four cards
+> The decision below stands in full: the band, its placement, and theming shown
+> rather than described. Only the MECHANIC changed, and the reason is worth
+> keeping. Four brand cards is a menu; one slider is a transformation, and the
+> claim is about transformation. It also lets the corner journey be the
+> headline — square at Northbank, fully rounded at Halden, monotonic all the way.
+>
+> Three things follow that were not obvious:
+>
+> **Every ground had to stay light.** A continuous slider cannot travel from a
+> light theme to a dark one and stay readable. If the ground goes light→dark
+> while the ink goes dark→light, the two must cross, and at the crossing the
+> contrast is 1:1. No easing and no colour space avoids it — it is arithmetic,
+> not a tuning problem. Halden was a dark theme in the first cut and is now a
+> graphite-on-pale one. A dark theme remains perfectly possible in the product;
+> it simply cannot be a POINT ON A SLIDER, only a discrete switch.
+>
+> **Interpolation is in Oklab, not sRGB.** Crossing blue → terracotta through
+> sRGB sags into a dead grey at the midpoint, and on a slider the midpoint is a
+> resting position somebody will look at.
+>
+> **Four stops, not two.** Two endpoints would have put a mush of blue and
+> graphite in the middle. Four means every resting position is a brand somebody
+> could plausibly have.
+>
+> Verified across **21 slider positions, 474 checks, zero contrast failures** —
+> and the example measures 992px wide at every one of them, which is the
+> "layout is fixed" claim as a measurement. The example now bleeds under
+> `#proof` using `MapBand`'s trick, which is why `#proof` gained `relative`.
 
 **Context.** §3 names three concerns of the primary buyer — the talent acquisition
 lead the hero speaks to — and the page answered two of them. The third, *employer
