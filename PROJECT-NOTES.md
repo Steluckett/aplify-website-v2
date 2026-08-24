@@ -39,8 +39,12 @@ APLIFY-PRODUCT-UI-SPEC.md    Handoff sheet for other projects
 V2_HANDOVER.md               The source of truth for CLAIMS. See below.
 ```
 
-The old dark-luxury build is still in `src/views/home/` — dead, unrendered,
-kept only because it type-checks. Safe to delete.
+The old dark-luxury build has been deleted. Notes elsewhere describing dark
+tokens, Instrument Serif or `ProductShot` are describing that build, not this
+one. Thirteen modules it left orphaned — the carousel, scroll-progress,
+product-shot and section furniture, plus `src/lib/scene/*` and the `three`
+dependency — are kept ON PURPOSE for the job-search and dashboard work; see
+"Deliberately retained" below.
 
 ---
 
@@ -100,7 +104,9 @@ negative margin instead.
 - **Shell** `min(95vw, 1440px)`.
 - **Backgrounds** — 15 numbered blob grounds at `/backgrounds`, with measured
   contrast per band. In use: 09 platform card, 12/11/13/14 the four candidate
-  rows, 10 the stats section.
+  steps, 10 the stats section, 15 the AI rewrite panel. Unused: 01–06 (light),
+  07, 08. A `.chip` inside any of 07–15 automatically takes the glass fill —
+  see the four-case table in `design-system.md`.
 
 ---
 
