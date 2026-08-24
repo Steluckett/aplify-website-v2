@@ -180,10 +180,56 @@ negative margin instead.
 
 ## State as of this handover
 
-**Done:** the full page — hero, problem, payoff, platform bento, four-step
-candidate journey, six stages, job search / AI rewrite / dashboard (all four
-demos live and interactive, reskinned into Aurora), security, integrations,
-roadmap, proof, testimonials, footer. Plus `/styleguide` and `/backgrounds`.
+**Done:** the full page, restructured on 2026-08-21 into TWO PROBLEMS, each
+followed by the thing that answers it and then the proof it worked:
+
+```
+hero → where it sits → THE FEED PROBLEM → the platform → AI rewrite
+     → six stages → THE DROP-OFF PROBLEM → the payoff → four steps
+     → job search → 85%→30% → testimonials → dashboard → integrations
+     → security → roadmap → book a demo
+```
+
+The page used to tell the clean-data claim three times and the apply claim
+twice, which is what made the halves of the product read as bleeding into
+each other. Each claim is made once now, and the sections between them are
+its evidence. Two bands are new: **where it sits** (§7's structural claim,
+promoted out of a standfirst) and **the drop-off** (the second problem, which
+the page had never actually stated). See ADR-0027 and the note at the top of
+`src/views/site/index.tsx` — the band order is CONSTRAINED, not free.
+
+Also done that day: the candidate journey became a scroll-pinned card stack;
+the share card was rebuilt (Inter, the page's own ground, copy from
+`site.ts`); `src/views/home/` was deleted; the repo was created and wired to
+Vercel; and the job search was rebuilt end to end.
+
+**The job search is the most recently worked surface.** It is no longer a
+screenshot in browser chrome — it is the product working, on `bg-08`:
+
+- The apply-route switch is a **deployment setting**, not product UI (§2: set
+  per client, not per candidate). It sits ABOVE the panel on a translucent
+  track, deliberately not styled like the filters, because a candidate never
+  meets that choice.
+- The search row is a white card **straddling the panel's top edge**, ~45%
+  below it. That overlap draws the boundary between the setting and the
+  product. `lg:` only — stacked on a phone it reads as a mistake.
+- Filters: keyword, location with a "near me" icon inside the field, family,
+  region, and a real Search submit. Distances are GENUINE (the coordinates
+  always were), so Manchester returns Liverpool 31, Sheffield 33, Leeds 36.
+- 18 sample roles, nine to a page, each with a two-sentence summary.
+- The map is **glass**, not a card, and links both ways: a pin scrolls its
+  card into the list and highlights it; a card takes the map to its pin, at a
+  bounded 2.5x. Its viewBox is built to the CONTAINER's shape, not the
+  country's, or the UK strands a portrait sliver in a landscape box.
+- The apply form takes the full panel width on the deep ground.
+
+**Captions:** the lines that sat UNDER sections are gone (Stephen's call,
+2026-08-21). What stays is what lives inside a demo and does work there — the
+Easy Apply form's "nothing is sent, stored or read" (§6.7 names that case,
+and that form asks for a CV) and the AI rewrite's traceability line (§6.10).
+**Known gap:** `dashboard-data.ts` has a caption that is never rendered, so
+the dashboard demo carries no illustrative disclosure at all. Render it
+INSIDE the demo when that surface is next worked.
 
 **Deliberately retained — do not "clean up":**
 
@@ -209,6 +255,21 @@ recruiter dashboard, because several are the obvious parts to reach for:
 `src/data/content/job-search.ts`, `job-data.ts`, `uk-map-data.ts`,
 `dashboard-data.ts` and `ai-rewrite.ts`. Draw product surfaces against
 `APLIFY-PRODUCT-UI-SPEC.md`.
+**Outstanding**
+
+- **The recruiter dashboard is next.** Stephen's words: come back to it. Two
+  things known about it already — its §6.7 caption exists in
+  `dashboard-data.ts` but is never rendered, and it is the surface the
+  retained `use-carousel` / `product-shot` / `section-head` components were
+  kept for. `bg-brand` and `bg-brand-light` inside those components are
+  UNBOUND tokens and will paint ink the moment they are used; bind them first.
+- The **nav still names features** (Platform, How it works, Job search,
+  Dashboard, Security) while the page now argues as two problems, and the two
+  new bands have no nav entry. A task chip exists for this.
+- `obsidian/frontend/design-system.md`'s "Current theme state" section
+  documents the DELETED dark-luxury build. It carries a warning callout but
+  has not been rewritten. ADR-0019 (dark-only by brand) needs SUPERSEDING, not
+  editing. A task chip exists for this.
 - The cookie banner and preferences modal link to `/privacy-policy`, which
   404s. Needs the page, a real external URL, or the link removing.
 - `jamie.okafor@email.com` appears in the step 03 and step 04 artwork.
@@ -237,6 +298,24 @@ Vercel deploys from the repo. **Push to `main` and it ships** — no CLI step,
 and every build traces back to a commit SHA. `npx --yes vercel --prod --yes`
 still works from this folder for a one-off, but it uploads the working
 directory rather than a commit, so prefer pushing.
+
+Nothing pushes automatically after a commit. `git push` IS the deploy.
+
+The order that works, and the reason for it:
+
+```
+1. stop the dev server on 3100        # a build while it runs breaks it
+2. npx tsc --noEmit && npm run lint
+3. npm run build
+4. start 3200, verify there
+5. git push origin main               # Vercel builds from the commit, ~50s
+6. verify the live URL actually has the change
+7. restart 3100
+```
+
+Step 6 is not ceremony — `curl` the live page and grep for a string you just
+added. A green Vercel build says the build succeeded, not that the change is
+on the page.
 
 Nothing pushes automatically after a commit. `git push` is the deploy.
 
