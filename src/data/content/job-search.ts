@@ -10,12 +10,19 @@ export const jobSearchContent = {
   standfirst:
     "Three views of one filtered set — grid, list and map — running live on this page, the way it would run on your career site or campaign landing page.",
 
+  /**
+   * The demo's main control, promoted out of the demo panel and onto the page
+   * above it. The explainer that used to sit beside it has folded into the
+   * section standfirst, so the two buttons can be the whole of it — each with
+   * a line saying what it does, because "Easy Apply" and "Link to your ATS"
+   * name the routes without saying what either costs.
+   */
   routeSwitch: {
     label: "Apply route",
-    explainer:
-      "Set per client, not per candidate. Switch it to see what changes on every card below — in all three views.",
     easyApply: "Easy Apply",
+    easyApplyNote: "They finish on the page they started on",
     linkOut: "Link to your ATS",
+    linkOutNote: "They leave, and your workflow is untouched",
   },
 
   views: ["Grid", "List", "Map"] as const,

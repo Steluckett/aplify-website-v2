@@ -34,10 +34,13 @@ export const JobSearchSection = () => (
         linesSm={[...demos.jobSearch.linesSm]}
         standfirst={demos.jobSearch.standfirst}
       />
+      {/* No frame. The demo used to sit inside browser chrome on a wash,
+            which said "this is a page on somebody's site" — true, and it also
+            made the search read as a screenshot of a website rather than as
+            the thing itself. On its own deep ground it is just the product,
+            working, in the middle of the page. */}
       <div className="mt-16">
-        <ScreenCard ground="wash" pad="generous" url={demos.jobSearch.shot.url}>
-          <JobSearchDemo />
-        </ScreenCard>
+        <JobSearchDemo />
         {/* The roles are invented and the page must say so — a demo that
               looks this much like the product is exactly the one that needs
               its sample data disclosed. */}

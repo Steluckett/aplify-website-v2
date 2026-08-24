@@ -431,7 +431,7 @@ export const demos = {
     lines: ["The search your", "candidates would get"],
     linesSm: ["The search", "your", "candidates get"],
     standfirst:
-      "Three views of one filtered set — grid, list and map — running the way it would run on your career site or campaign landing page.",
+      "Three views of one filtered set — grid, list and map — running the way it would run on your career site or campaign landing page. The switch decides where a candidate goes when they press apply, and it is set per client rather than per candidate — move it and every card below changes with it.",
     shot: {
       url: "yourcompany.co.uk/careers",
       placeholder: "Job search — grid, list and map",

@@ -114,35 +114,69 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
   }
 
   return (
-    <div
-      className={`flex flex-col gap-5 bg-surface p-4 sm:p-6 ${className ?? ""}`}
-    >
-      {/* Route switch — the demo's own control strip. */}
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div
-          role="radiogroup"
-          aria-label={content.routeSwitch.label}
-          className="inline-flex w-fit flex-none rounded-pill bg-surface-chip p-1"
-        >
-          {(
+    <div className={`flex flex-col gap-8 ${className ?? ""}`}>
+      {/* THE CONTROL, on the page rather than inside the demo.
+
+          This is the section's whole argument in one gesture — Easy Apply
+          against a link-out — so it sits above the deep panel, at PAGE scale,
+          with a line under each option saying what it actually does. It was a
+          small segmented pill inside the demo's own chrome, at product scale,
+          reading as one filter among several. The explainer that sat beside it
+          has folded into the section standfirst.
+
+          Each button carries its own ground AND its own ink, so what sits
+          behind it does not matter. */}
+      <div
+        role="radiogroup"
+        aria-label={content.routeSwitch.label}
+        className="grid gap-3 sm:grid-cols-2"
+      >
+        {(
+          [
             [
-              ["easy", content.routeSwitch.easyApply],
-              ["link", content.routeSwitch.linkOut],
-            ] as const
-          ).map(([value, label]) => (
-            <Segment
-              key={value}
-              role="radio"
-              active={route === value}
-              onClick={() => setRoute(value)}
+              "easy",
+              content.routeSwitch.easyApply,
+              content.routeSwitch.easyApplyNote,
+            ],
+            [
+              "link",
+              content.routeSwitch.linkOut,
+              content.routeSwitch.linkOutNote,
+            ],
+          ] as const
+        ).map(([value, label, note]) => (
+          <button
+            key={value}
+            type="button"
+            role="radio"
+            aria-checked={route === value}
+            onClick={() => setRoute(value)}
+            className={`rounded-panel px-6 py-5 text-left transition-colors duration-[var(--duration-fast)] ease-entrance ${
+              route === value
+                ? "bg-ink text-ink-on-dark shadow-lift"
+                : "bg-surface-raised text-ink hover:bg-surface-chip"
+            }`}
+          >
+            {/* `!` is load bearing. `.display` sets its own colour
+                (--ink-heading), which beat the button's `text-ink-on-dark` and
+                painted near-black on the near-black active button — measured
+                at 1:1, the title simply absent. */}
+            <span
+              className={`display block text-h4 ${
+                route === value ? "!text-ink-on-dark" : ""
+              }`}
             >
               {label}
-            </Segment>
-          ))}
-        </div>
-        <p className="max-w-md text-ui-sm leading-relaxed text-ink-label">
-          {content.routeSwitch.explainer}
-        </p>
+            </span>
+            <span
+              className={`mt-2 block text-body leading-[1.5] ${
+                route === value ? "text-ink-on-dark/70" : "text-ink-body"
+              }`}
+            >
+              {note}
+            </span>
+          </button>
+        ))}
       </div>
 
       {/* Link-out explainer — shown only on that route, so the honest cost
@@ -173,56 +207,77 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
         </Reveal>
       ) : null}
 
-      {/* Filters + view tabs. The panel dips into the wash; every control on
-          it is a white pill — the suite's own rule, and the reason a filter
-          bar reads as a filter bar without a single border. */}
-      <div className="wash rounded-card">
-        <div className="inset-glass flex flex-col gap-3 p-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap items-center gap-2">
-            <FilterSelect
-              label="Job family"
-              value={family}
-              onChange={setFamily}
-              allLabel={content.filters.allFamilies}
-              options={FAMILIES}
-            />
-            <FilterSelect
-              label="Region"
-              value={region}
-              onChange={setRegion}
-              allLabel={content.filters.allRegions}
-              options={REGIONS}
-            />
-            <p className="px-1 text-ui-xs text-ink-label" aria-live="polite">
-              {jobs.length} of {JOBS.length} roles
-            </p>
+      {/* Everything below sits on the DEEP ground: the search, its results and
+          the apply flow. The demo used to be handed a light grey floor of its
+          own so its white tiles had something to sit on — the gradient does
+          that better, and stops the whole thing reading as a website pasted
+          into the page.
+
+          `.screen` stays. It is the product type register, Aurora's 11–24px
+          scale, and without it a demo reads as more marketing page. Dropping
+          the browser chrome does not mean dropping the register. */}
+      <div className="screen grain bg-08 rounded-panel p-4 sm:p-6 lg:p-8">
+        <div className="flex flex-col gap-5">
+          {/* Filters + view tabs. The panel dips into the wash; every control
+              on it is a white pill — the suite's own rule, and the reason a
+              filter bar reads as a filter bar without a single border. */}
+          {/* A SOLID bar, not the glass it used to be. `inset-glass` is 55%
+              white, which reads as a light surface over the page ground and as
+              a mid blue-grey over this one — and every ink on it was solved
+              against white. Composited over #123a7a the label ink measured
+              2.18:1. A solid surface keeps its inks true wherever it lands. */}
+          <div className="rounded-card bg-surface-raised p-1.5">
+            <div className="flex flex-col gap-3 p-2 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex flex-wrap items-center gap-2">
+                <FilterSelect
+                  label="Job family"
+                  value={family}
+                  onChange={setFamily}
+                  allLabel={content.filters.allFamilies}
+                  options={FAMILIES}
+                />
+                <FilterSelect
+                  label="Region"
+                  value={region}
+                  onChange={setRegion}
+                  allLabel={content.filters.allRegions}
+                  options={REGIONS}
+                />
+                <p
+                  className="px-1 text-ui-xs text-ink-label"
+                  aria-live="polite"
+                >
+                  {jobs.length} of {JOBS.length} roles
+                </p>
+              </div>
+
+              <div
+                role="tablist"
+                aria-label="Result views"
+                className="inline-flex w-fit flex-none rounded-pill bg-surface-chip p-1"
+              >
+                {content.views.map((name) => (
+                  <Segment
+                    key={name}
+                    role="tab"
+                    active={view === name}
+                    onClick={() => setView(name)}
+                  >
+                    {name}
+                  </Segment>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div
-            role="tablist"
-            aria-label="Result views"
-            className="inline-flex w-fit flex-none rounded-pill bg-surface-chip p-1"
-          >
-            {content.views.map((name) => (
-              <Segment
-                key={name}
-                role="tab"
-                active={view === name}
-                onClick={() => setView(name)}
-              >
-                {name}
-              </Segment>
-            ))}
-          </div>
+          <JobViews
+            jobs={jobs}
+            view={view}
+            route={route}
+            onApply={(job) => setApplying(job)}
+          />
         </div>
       </div>
-
-      <JobViews
-        jobs={jobs}
-        view={view}
-        route={route}
-        onApply={(job) => setApplying(job)}
-      />
     </div>
   );
 };
