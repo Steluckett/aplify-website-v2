@@ -459,9 +459,15 @@ const PageButton = ({
     type="button"
     onClick={onClick}
     disabled={disabled}
+    /* Each pill carries its OWN ground and its own ink, so what is behind it
+       is irrelevant — which is the point, because this whole demo is about to
+       move onto a deep gradient. `text-on-brand` was here and is not a bound
+       token: Tailwind fell back to inherited colour and painted ink on an ink
+       pill, 1:1, so the active page number was invisible. Both classes below
+       resolve (`--color-ink-on-dark`, `--color-ink-body`). */
     className={`rounded-pill px-3 py-1.5 text-ui-sm transition-colors duration-[var(--duration-fast)] ease-entrance disabled:opacity-40 ${
       active
-        ? "bg-ink text-on-brand"
+        ? "bg-ink text-ink-on-dark"
         : "bg-surface-raised text-ink-body hover:text-ink"
     }`}
     {...rest}

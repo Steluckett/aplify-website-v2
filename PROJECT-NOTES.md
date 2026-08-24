@@ -152,10 +152,15 @@ negative margin instead.
 - **`border-<name>` with an unbound colour paints INK, not nothing.** Tailwind
   v4 falls back to `currentColor`, so a border whose colour token was never
   bound in `@theme` renders as a near-black hairline on a light card. The
-  hairline colour here is `--hairline` (`--raw-color-border` `#e6e9f0`) and it
-  has **no** `--color-*` binding, so `border-border` and `border-hairline` both
-  silently produce ink. Check `getComputedStyle(el).borderColor` against
-  `.color` — if they match, the token never resolved.
+  bound colour class paints ink. `border-hairline` DOES work
+  (`--color-hairline` is bound); `border-border` does not, because there is no
+  such token. The bound colour utilities are exactly: accent, accent-end,
+  accent-mid, canvas, hairline, ink, ink-accent, ink-body, ink-heading,
+  ink-label, ink-on-dark, surface, surface-chip, surface-dark, surface-raised,
+  track. Anything else silently inherits. The check: compare
+  `getComputedStyle(el).borderColor` (or `.color`) against `.color` /
+  `.backgroundColor` — if they match, the token never resolved. Seen three
+  times now: `text-background`, `border-border`, `text-on-brand`.
 - **Drop images in `public/assets/…`, not `public/` root.** The page only
   reads from the subfolders; a file in root does nothing, quietly.
 
