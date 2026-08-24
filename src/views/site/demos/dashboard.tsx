@@ -58,10 +58,22 @@ import {
  * that candidate's timeline. Each lower layer peeks out by a sliver so the
  * depth is legible.
  *
- * §6.7 — the caption is rendered, at the foot of the panel. It had existed in
- * `dashboard-data.ts` since this surface was built and was never once put on
- * screen, so the one demo on the page handling anything resembling candidate
- * data carried no illustrative disclosure at all.
+ * §6.7 — READ THIS BEFORE MOVING THE DISCLOSURE AGAIN. The rule has two
+ * clauses: every demo carries a caption saying what is illustrative, AND any
+ * form that looks submittable states plainly that nothing is sent, stored or
+ * read. They are discharged in different places here.
+ *
+ *   Clause 2 is covered, inside the notes panel, beside the textarea it is
+ *   about — `dashboardContent.notes.disclosure`. That field looks submittable
+ *   and its Add button works, so the line is mandatory and must not be moved
+ *   away from the field.
+ *
+ *   Clause 1 is NOT currently rendered. `dashboardContent.caption` was shown at
+ *   the foot of this panel and Stephen removed it on 2026-08-24, under the same
+ *   call that dropped the section captions on 21 Aug: a line sitting under a
+ *   section is not what this page does. The string is still in
+ *   `dashboard-data.ts` and is deliberately unused, pending a home that is
+ *   inside the demo and doing work there rather than captioning it.
  */
 
 const content = dashboardContent;
@@ -262,9 +274,27 @@ const DateField = ({
    under the head and the 12px between rows, so there is not a hairline
    anywhere in the table. */
 
+/* The head stays a SOLID white pill band. It is the one part of the table that
+   is not data, and letting the ground through it would put the busiest part of
+   the gradient behind the smallest, quietest type on the surface. */
 const HEAD_CELL =
   "bg-surface-raised py-2.5 text-left text-ui-sm font-normal text-ink-label";
-const CELL = "h-16 bg-surface-raised align-middle text-ui-base";
+
+/* The rows are GLASS, at the density a DEEP ground needs. Solid white bricks on
+   the gradient read as pasted on; translucent, the ground moves under them and
+   the table belongs to its panel.
+
+   `.glass-dense`, NOT `.glass`. Plain glass is 0.72 — right on the light page
+   ground the nav sits on, and it leaves --ink-label at 3.19:1 here. That grey
+   is the email and the applied date, measured on the DARKEST point of `.bg-08`
+   (its bare base; all three blobs lighten it). The curve crosses AA at exactly
+   0.90, so the token is 0.92: 4.68:1 for the label grey, 6.95:1 for body.
+
+   It is still a LIGHT surface, so the inks are unchanged, and `.glass-dense` is
+   in the chip-reset list in globals.css. Without that the deep-ground chip rule
+   paints --ink-on-dark onto a #eef0f5 pill — the 1.05:1 failure that block
+   exists to prevent. On the opaque chip fill the six status inks run 4.51–6.23. */
+const CELL = "h-16 glass-dense align-middle text-ui-base";
 
 const TableShell = ({
   minWidth,
@@ -379,9 +409,13 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
 
   const [applications, setApplications] =
     useState<Application[]>(SEED_APPLICATIONS);
+  /* The open record, and an EXPLICIT stack of layers over it. This replaced a
+     pair of booleans once the notes icon in the table had to open the candidate
+     panel in its own right: with booleans, "notes open" implied "application
+     open underneath", which is not what that icon means. A list says what is
+     actually on screen and in what order, and popping it is one operation. */
   const [openId, setOpenId] = useState<string | null>(null);
-  const [candidateOpen, setCandidateOpen] = useState(false);
-  const [timelineOpen, setTimelineOpen] = useState(false);
+  const [layers, setLayers] = useState<LayerKind[]>([]);
   const [notes, setNotes] = useState<Record<string, Note[]>>({});
   const [draft, setDraft] = useState("");
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -412,16 +446,21 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
   useEffect(() => {
     if (openId && !open) {
       setOpenId(null);
-      setCandidateOpen(false);
-      setTimelineOpen(false);
+      setLayers([]);
     }
   }, [openId, open]);
 
-  const closeTop = () => {
-    if (timelineOpen) return setTimelineOpen(false);
-    if (candidateOpen) return setCandidateOpen(false);
-    setOpenId(null);
-  };
+  const pop = () =>
+    setLayers((current) => {
+      const next = current.slice(0, -1);
+      if (next.length === 0) setOpenId(null);
+      return next;
+    });
+
+  const push = (kind: LayerKind) =>
+    setLayers((current) =>
+      current.includes(kind) ? current : [...current, kind],
+    );
 
   /* ESC peels one layer at a time, which is what a stack should do. Focus
      returns to whatever opened the first layer. */
@@ -429,14 +468,11 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
   useEffect(() => {
     if (!openId) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      if (timelineOpen) setTimelineOpen(false);
-      else if (candidateOpen) setCandidateOpen(false);
-      else setOpenId(null);
+      if (event.key === "Escape") pop();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [openId, candidateOpen, timelineOpen]);
+  }, [openId]);
 
   useEffect(() => {
     if (openId) return;
@@ -445,11 +481,19 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
     triggerRef.current = null;
   }, [openId]);
 
-  const openApplication = (id: string, trigger: HTMLElement | null) => {
+  /** Open a record with ONE named layer showing. The table has two ways in
+   *  now: the row itself opens the application, the notes icon opens the
+   *  candidate — and the notes icon is not a shortcut through the application
+   *  panel, it is its own destination. */
+  const openAt = (
+    id: string,
+    kind: LayerKind,
+    trigger: HTMLElement | null,
+  ) => {
     triggerRef.current = trigger;
     setOpenId(id);
-    setCandidateOpen(false);
-    setTimelineOpen(false);
+    setLayers([kind]);
+    setDraft("");
     setConfirmingDelete(false);
   };
 
@@ -483,8 +527,7 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
   const deleteApplication = (id: string) => {
     setApplications((current) => current.filter((a) => a.id !== id));
     setOpenId(null);
-    setCandidateOpen(false);
-    setTimelineOpen(false);
+    setLayers([]);
     setConfirmingDelete(false);
   };
 
@@ -556,17 +599,14 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
   );
 
   /* The open stack, bottom-first. */
-  const stack: { key: string; kind: LayerKind }[] = [];
-  if (open) stack.push({ key: `application-${open.id}`, kind: "application" });
-  if (open && candidateOpen)
-    stack.push({ key: `candidate-${open.id}`, kind: "candidate" });
-  if (open && timelineOpen)
-    stack.push({ key: `timeline-${open.id}`, kind: "timeline" });
+  const stack = open
+    ? layers.map((kind) => ({ key: `${kind}-${open.id}`, kind }))
+    : [];
 
   /* Spring-driven, per AGENTS.md rule 1 — a slide-over is revealing motion, so
      it is a spring, not a `transition-*`. Friction is high: the panel arrives
      and settles, matching `Reveal`'s signature rather than inventing a second. */
-  const layers = useTransition(stack, {
+  const layerTransitions = useTransition(stack, {
     keys: (layer) => layer.key,
     from: { x: 104, opacity: 0 },
     enter: { x: 0, opacity: 1 },
@@ -805,65 +845,120 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                     <th scope="col" className={`${HEAD_CELL} px-4`}>
                       Source
                     </th>
+                    <th scope="col" className={`${HEAD_CELL} px-4`}>
+                      Applied
+                    </th>
                     <th
                       scope="col"
-                      className={`${HEAD_CELL} rounded-r-pill pl-4 pr-5`}
+                      className={`${HEAD_CELL} rounded-r-pill pl-4 pr-5 text-right`}
                     >
-                      Applied
+                      Notes
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map((application) => (
-                    <tr
-                      key={application.id}
-                      className="group transition-shadow duration-[var(--duration-fast)] ease-entrance hover:shadow-tile"
-                    >
-                      <th
-                        scope="row"
-                        className={`${CELL} rounded-l-sm py-3 pl-5 pr-4 text-left font-normal`}
+                  {filtered.map((application) => {
+                    const noteCount = (notes[application.id] ?? []).length;
+                    return (
+                      /* THE WHOLE ROW OPENS THE RECORD. The mouse target is the
+                         row; the button in the first cell is the same action
+                         for a keyboard, because a `tr` cannot take focus and
+                         `onClick` on a non-interactive element is invisible to
+                         one. Both call the same handler — this is one control
+                         with two ways in, not two controls. */
+                      <tr
+                        key={application.id}
+                        onClick={(event) =>
+                          openAt(
+                            application.id,
+                            "application",
+                            event.currentTarget.querySelector("button"),
+                          )
+                        }
+                        className="group cursor-pointer transition-shadow duration-[var(--duration-fast)] ease-entrance hover:shadow-tile"
                       >
-                        <button
-                          type="button"
-                          onClick={(event) =>
-                            openApplication(application.id, event.currentTarget)
-                          }
-                          className="text-left text-ui-sm font-medium text-ink transition-colors duration-[var(--duration-fast)] ease-entrance group-hover:text-ink-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
+                        <th
+                          scope="row"
+                          className={`${CELL} rounded-l-sm py-3 pl-5 pr-4 text-left font-normal`}
                         >
-                          {application.id}
-                        </button>
-                      </th>
-                      <td className={`${CELL} px-4`}>
-                        <p className="text-ui-sm font-medium text-ink">
-                          {application.name}
-                        </p>
-                        <p className="text-ui-xs text-ink-label">
-                          {application.email}
-                        </p>
-                      </td>
-                      <td className={`${CELL} px-4`}>
-                        <p className="text-ui-sm text-ink">
-                          {application.jobTitle} ({application.jobRef})
-                        </p>
-                        <p className="mt-1.5">
-                          <span className="chip" data-tint="sky">
-                            {application.category}
-                          </span>
-                        </p>
-                      </td>
-                      <td className={`${CELL} px-4`}>
-                        <StatusChip status={application.status} />
-                      </td>
-                      <td className={`${CELL} px-4 text-ui-sm text-ink-body`}>
-                        {application.source}
-                      </td>
-                      <td
-                        className={`${CELL} whitespace-nowrap rounded-r-sm pl-4 pr-5 text-ui-sm text-ink-label`}
-                      >
-                        {application.applied}
-                      </td>
-                    </tr>
-                  ))}
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              openAt(
+                                application.id,
+                                "application",
+                                event.currentTarget,
+                              );
+                            }}
+                            className="text-left text-ui-sm font-medium text-ink transition-colors duration-[var(--duration-fast)] ease-entrance group-hover:text-ink-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
+                          >
+                            {application.id}
+                          </button>
+                        </th>
+                        <td className={`${CELL} px-4`}>
+                          <p className="text-ui-sm font-medium text-ink">
+                            {application.name}
+                          </p>
+                          <p className="text-ui-xs text-ink-label">
+                            {application.email}
+                          </p>
+                        </td>
+                        <td className={`${CELL} px-4`}>
+                          <p className="text-ui-sm text-ink">
+                            {application.jobTitle} ({application.jobRef})
+                          </p>
+                        </td>
+                        <td className={`${CELL} px-4`}>
+                          <StatusChip status={application.status} />
+                        </td>
+                        <td className={`${CELL} px-4 text-ui-sm text-ink-body`}>
+                          {application.source}
+                        </td>
+                        <td
+                          className={`${CELL} whitespace-nowrap px-4 text-ui-sm text-ink-label`}
+                        >
+                          {application.applied}
+                        </td>
+                        {/* Notes is its OWN way in, not a shortcut through the
+                            application panel — the product puts it in the table
+                            because a recruiter reading a list wants the note,
+                            not the record around it. */}
+                        <td
+                          className={`${CELL} rounded-r-sm pl-4 pr-5 text-right`}
+                        >
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              openAt(
+                                application.id,
+                                "candidate",
+                                event.currentTarget,
+                              );
+                            }}
+                            aria-label={
+                              noteCount > 0
+                                ? `${content.notes.heading} for ${application.name} (${noteCount})`
+                                : `${content.notes.add} for ${application.name}`
+                            }
+                            className={`relative inline-grid h-9 w-9 place-items-center rounded-pill transition-colors duration-[var(--duration-fast)] ease-entrance focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid ${
+                              noteCount > 0
+                                ? "bg-accent-mid text-ink-on-dark"
+                                : "bg-surface-chip text-ink-label hover:text-ink"
+                            }`}
+                          >
+                            <NoteIcon />
+                            {noteCount > 0 ? (
+                              <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-pill bg-ink px-1 text-[0.625rem] font-medium leading-none text-ink-on-dark">
+                                {noteCount}
+                              </span>
+                            ) : null}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </TableShell>
             )
@@ -941,11 +1036,6 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
             </TableShell>
           )}
 
-          {/* §6.7. This surface handles what LOOKS like candidate data, so it
-              says plainly that it is not. */}
-          <p className="max-w-3xl text-ui-sm leading-relaxed text-ink-on-dark/80">
-            {content.caption}
-          </p>
         </div>
 
         {/* --- THE STACK ------------------------------------------------- */}
@@ -956,14 +1046,14 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
               type="button"
               aria-label={content.detail.closeLabel}
               tabIndex={-1}
-              onClick={closeTop}
+              onClick={pop}
               style={style}
               className="absolute inset-0 z-20 cursor-default bg-ink/35 backdrop-blur-[2px]"
             />
           ) : null,
         )}
 
-        {layers((style, layer, _t, index) => {
+        {layerTransitions((style, layer, _t, index) => {
           if (!open) return null;
           const depth = stack.length - 1 - index;
           return (
@@ -975,7 +1065,23 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                 ),
                 zIndex: 30 + index,
               }}
-              className="absolute inset-y-0 right-0 z-30 flex w-full max-w-[32rem] p-3 sm:p-4 lg:p-6"
+              /* Inset to the panel's own padding, not pinned to its edges.
+                 `inset-y-0` ran these up BEHIND the filter card, which
+                 straddles this panel's top edge — that is what "crashing into
+                 the filters" was.
+
+                 One value covers both filter states, which is not obvious and
+                 is worth not re-deriving: the overlap is always 36px. The card
+                 is in normal flow ABOVE the panel and the panel is pulled up
+                 under it by a fixed `-mt-9`, so expanding the filters grows the
+                 card downward and pushes the whole panel down with it. The card
+                 never reaches further in. Measured, expanded and collapsed:
+                 form bottom sits 36px inside the panel in both.
+
+                 `top-24` is 96px, so 60px of air below the card — a touch below
+                 the panel's own content top (`pt-20`), which reads as deliberate
+                 rather than as the panel happening to start there. */
+              className="absolute right-5 top-12 bottom-7 z-30 flex w-full max-w-[32rem] sm:right-7 lg:right-10 lg:bottom-10 lg:top-24"
             >
               {layer.kind === "application" ? (
                 <ApplicationPanel
@@ -985,8 +1091,8 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                   onConfirmToggle={setConfirmingDelete}
                   onDelete={() => deleteApplication(open.id)}
                   onStatusChange={(next) => changeStatus(open.id, next)}
-                  onOpenCandidate={() => setCandidateOpen(true)}
-                  onClose={() => setOpenId(null)}
+                  onOpenCandidate={() => push("candidate")}
+                  onClose={pop}
                 />
               ) : layer.kind === "candidate" ? (
                 <CandidatePanel
@@ -995,14 +1101,11 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                   draft={draft}
                   onDraft={setDraft}
                   onAdd={() => addNote(open.id)}
-                  onOpenTimeline={() => setTimelineOpen(true)}
-                  onClose={() => setCandidateOpen(false)}
+                  onOpenTimeline={() => push("timeline")}
+                  onClose={pop}
                 />
               ) : (
-                <TimelinePanel
-                  application={open}
-                  onClose={() => setTimelineOpen(false)}
-                />
+                <TimelinePanel application={open} onClose={pop} />
               )}
             </animated.div>
           );
@@ -1225,6 +1328,9 @@ const CandidatePanel = ({
              product spec's field recipe. */
           className="mt-2 w-full resize-y rounded-[18px] bg-surface p-4 text-ui-sm text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
         />
+        <p className="mt-2 text-ui-xs leading-relaxed text-ink-label">
+          {content.notes.disclosure}
+        </p>
         <div className="mt-2 flex items-center justify-between gap-3">
           <p className="text-ui-xs text-ink-label">
             {draft.length} / {content.notes.limit}

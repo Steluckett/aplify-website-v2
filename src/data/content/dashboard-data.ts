@@ -423,6 +423,15 @@ export const dashboardContent = {
     limit: 1000,
     author: "You",
     when: "Just now",
+    /**
+     * §6.7, second clause: "any form that looks submittable must state plainly
+     * that nothing is sent, stored or read". This textarea looks submittable
+     * and has a working Add button, so the line is not optional — it sits with
+     * the field it is about rather than under the section, which is the only
+     * kind of caption this page keeps.
+     */
+    disclosure:
+      "Sample data. Notes you add here stay in this browser and are gone on refresh.",
   },
   caption:
     "A working demonstration — invented people on reserved example.* domains and Ofcom's reserved 07700 900xxx numbers. Nothing here is real candidate data, and nothing you change is saved.",
