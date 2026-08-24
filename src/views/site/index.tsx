@@ -2,6 +2,7 @@ import { NavBar } from "@/components/ui/nav-bar";
 import { nav } from "@/data/content/site";
 
 import { DropOffBand, MapBand } from "./bands";
+import { BrandSection } from "./brand";
 import { SiteFooter } from "./footer";
 import { Hero } from "./hero";
 import { HowItWorks } from "./how-it-works";
@@ -87,6 +88,11 @@ export const SiteView = () => (
       <Payoff />
       <Capabilities />
       <JobSearchSection />
+
+      {/* The objection the demo above raises and cannot answer: they have just
+          used it in OUR blue. §3 names employer brand consistency as a concern
+          of the primary buyer, and the page had no reply. See `brand.tsx`. */}
+      <BrandSection />
 
       {/* The only hard number the site has, immediately after the claim it
           proves rather than nine sections later, behind the objections. */}

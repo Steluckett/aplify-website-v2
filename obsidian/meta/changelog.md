@@ -10,6 +10,32 @@ This is a human-curated log — not a mirror of `git log`.
 
 ## 2026-08-24
 
+- **A new band: the brand kit.** `#brand`, between `#job-search` and `#proof`.
+  [[decisions-log]] **ADR-0030**.
+
+  §3 names employer brand consistency as a concern of the primary buyer and the
+  page had never answered it. Four invented employers — Northbank Health, Meridian
+  Care, Ashgrove Trust, Halden Group — each a set of CSS custom properties on one
+  wrapper, plus a corner slider. Picking one restyles colour, type, type scale,
+  corners, shadow, spacing and logo at once, while the arrangement does not move.
+
+  The demo is the mechanism rather than a picture of it: nothing inside reads a
+  preset, everything reads `var(--b-…)`, which is how the plugin themes a scope.
+  The employer's page around the block is schematic and the Aplify block is fully
+  drawn, so nobody has to be told which part is ours — on a real site you should
+  not be able to tell, and a label would contradict the claim.
+
+  Zero contrast failures across all four presets, 18 checks each. The preview
+  measures **1096px wide on every preset**, which is the "layout is fixed" line as
+  a measurement. Heights differ by design — type scale and spacing are configurable
+  too, so Halden sits 15px shorter than Northbank.
+
+- **Placeholders were failing in every preset and would have shipped.** Left alone,
+  `::placeholder` is derived by the UA from the input's `color` at 50% alpha —
+  3.06–4.25:1 across the four brands, and invisible to a contrast sweep that walks
+  text nodes, because a placeholder is not one. Now set explicitly, with
+  `opacity-100` for Firefox.
+
 - **The recruiter dashboard is rebuilt to the job search's rules, and both demos
   lose their browser chrome.** [[decisions-log]] **ADR-0029**.
 

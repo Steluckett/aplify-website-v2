@@ -10,6 +10,75 @@ consequences. Use [[templates/adr-note]] for new entries. Newest first.
 
 ---
 
+## ADR-0030 — The brand kit band, and theming as a demonstration rather than a claim
+
+- **Status:** Accepted
+- **Date:** 2026-08-24
+
+**Context.** §3 names three concerns of the primary buyer — the talent acquisition
+lead the hero speaks to — and the page answered two of them. The third, *employer
+brand consistency*, had no section at all. The product is themeable down to
+colours, type, type scale, corners, shadows, spacing, imagery and logo (in the
+apply flow **and** the dashboard); only layout is fixed. That is a large USP the
+site never made.
+
+It is also a claim a reader discounts. "It can look like your site" is unfalsifiable
+prose, which is exactly the case §11 legislates for: *the page lets the reader use
+the product rather than look at pictures of it.*
+
+**Decision.** A new band, `#brand`, between `#job-search` and `#proof`.
+
+- **Placement is argued.** The objection lands hardest immediately after the reader
+  has used the search and apply flow *in Aplify's own blue* and thinks "yes, but it
+  will look like them." The cost is one beat before the 85%→30% payoff; arriving at
+  that number with the objection already dealt with is worth more than the beat.
+- **The demonstration is the mechanism.** Four invented employers, each a set of CSS
+  custom properties on ONE wrapper. Nothing in the demo reads a preset directly;
+  everything reads `var(--b-…)`. That is the plugin's own model — theme a scope by
+  swapping variables, leave the markup alone — so the demo is not a picture of
+  theming, it is theming.
+- **One exposed dial.** A corner slider, no numeric readout, no checklist of what a
+  preset touches. Stephen's steer: convey brand control without itemising it.
+- **The fidelity trick.** The employer's page around the block is schematic; the
+  Aplify block is fully drawn. Nobody is told which part is ours, because on a real
+  site you should not be able to tell — a label would contradict the claim.
+
+**Band order.** ADR-0027 still binds. `#proof` below is `band-white` with a deep card
+and `#job-search` above closes on a deep panel, so this band stays on the page ground
+and keeps its colour INSIDE the preview rather than painting the whole band. Three
+heavy blocks in a row would have flattened all three. It is also truer: a careers page
+is a light page wearing a brand, not a brand-coloured slab.
+
+**Consequences.**
+
+- Verified on 3100 across all four presets: **zero contrast failures**, 18 checks each,
+  canvas-composited.
+- The preview measures **1096px wide on every preset** — the "layout is fixed" claim as
+  a measurement rather than an assertion.
+- **Be precise about that claim.** Widths and arrangement are identical; HEIGHTS are
+  not, and should not be, because type scale and spacing are themselves configurable.
+  Halden renders 15px shorter than Northbank. The standfirst says *layout*, meaning
+  structure, and must not drift into "nothing changes size", which would be false.
+
+**A trap worth the whole exercise.** The field placeholders failed in all four presets
+(3.06–4.25:1). Left alone the UA derives `::placeholder` from the input's `color` at
+50% alpha, so it fails wherever the ink is close to its ground — and it is invisible to
+any audit that only walks text nodes, because a placeholder is not one. It is now set
+explicitly to `--b-ink-soft` with `opacity-100` for Firefox.
+
+**§6 compliance.** All four employers are invented and Northbank is reused from the
+step-03 artwork so the page keeps one world; the §5 inventory allows exactly one logo
+on this site and none of these is it. §6.2's "career site **or campaign landing page**"
+is in the standfirst. §6.7's disclosure sits with the controls, naming both the invented
+employers and the inert form.
+
+**One thing the handover does not yet cover.** V2_HANDOVER §1 records only *"colours,
+imagery and fonts are set inside the plugin"*, and `APLIFY-PRODUCT-UI-SPEC.md` hedges to
+*"inherits some of that client's brand"*. The wider list is Stephen's, confirmed
+2026-08-24. **Widen the handover before treating this section's copy as sourced.**
+
+---
+
 ## ADR-0029 — Both product demos are unframed, and the dashboard is rebuilt to the job search's rules
 
 - **Status:** Accepted

@@ -193,6 +193,13 @@ negative margin instead.
   instead: `[...el.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim())`.
   And skip `sr-only` by testing `clipPath !== 'none'`, or it reports a 1x1
   clipped caption as a contrast failure.
+- **`::placeholder` is not a text node, and it fails on its own.** Unstyled, the
+  UA derives it from the input's `color` at 50% alpha, so it fails wherever the
+  ink is anywhere near its ground — measured at 3.06–4.25:1 across all four
+  brand-kit presets. No contrast sweep that walks text nodes will see it, because
+  a placeholder is not one. Read it with
+  `getComputedStyle(el, '::placeholder').color`, and set it explicitly (plus
+  `opacity-100`, or Firefox dims it again).
 - **Dead Tailwind class names fail silently.** `text-background` survived a
   token rewrite as an invisible button label.
 - **`border-<name>` with an unbound colour paints INK, not nothing.** Tailwind
@@ -220,8 +227,8 @@ followed by the thing that answers it and then the proof it worked:
 ```
 hero → where it sits → THE FEED PROBLEM → the platform → AI rewrite
      → six stages → THE DROP-OFF PROBLEM → the payoff → four steps
-     → job search → 85%→30% → testimonials → dashboard → integrations
-     → security → roadmap → book a demo
+     → job search → BRAND KIT → 85%→30% → testimonials → dashboard
+     → integrations → security → roadmap → book a demo
 ```
 
 The page used to tell the clean-data claim three times and the apply claim
@@ -289,6 +296,26 @@ recruiter dashboard, because several are the obvious parts to reach for:
 `src/data/content/job-search.ts`, `job-data.ts`, `uk-map-data.ts`,
 `dashboard-data.ts` and `ai-rewrite.ts`. Draw product surfaces against
 `APLIFY-PRODUCT-UI-SPEC.md`.
+**The brand kit band is new (2026-08-24, ADR-0030).** `#brand`, between the job
+search and the proof. Four invented employers as CSS-variable sets on one
+wrapper, plus a corner slider; picking one restyles colour, type, type scale,
+corners, shadow, spacing and logo while the arrangement holds. It exists because
+§3 names employer brand consistency as a concern of the PRIMARY buyer and the
+page had no answer to it.
+
+Two things not to undo. The Aplify block is deliberately unlabelled — the page
+around it is schematic and the block is fully drawn, which says which is which
+without a caption, and a label would contradict the claim. And "layout is fixed"
+means ARRANGEMENT: widths are identical across presets (measured, 1096px every
+time), heights are not, because type scale and spacing are configurable too.
+
+**The configurable list is wider than the handover records.** V2_HANDOVER §1 says
+only "colours, imagery and fonts"; `APLIFY-PRODUCT-UI-SPEC.md` hedges to "some of
+that client's brand". Stephen confirmed the full list on 2026-08-24 — colours,
+type, font sizes, corners, shadows, gaps, images and the logo, in the apply flow
+AND the dashboard; layout alone is fixed. **Widen the handover before treating
+that copy as sourced.**
+
 **Outstanding**
 
 - **The recruiter dashboard was rebuilt on 2026-08-24** (ADR-0029) against the
