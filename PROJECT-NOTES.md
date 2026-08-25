@@ -232,182 +232,161 @@ negative margin instead.
 
 ## State as of this handover
 
-**Done:** the full page, restructured on 2026-08-21 into TWO PROBLEMS, each
-followed by the thing that answers it and then the proof it worked:
+**RESTRUCTURED AND REWRITTEN 2026-08-25** to the Brand Playbook v3, the Homepage
+Strategy Rationale v2 and the "What Makes People Stop Scrolling" addendum. Those
+three client documents are now **the source of truth for Aplify's language**.
+See ADR-0031 and ADR-0032, and `COPY-DECK-V3.md` for every string.
+
+**The argument is inverted from what the notes above describe.** The page used
+to open on the feed problem and reach Easy Apply nine bands later. That is the
+recruitment-OPERATIONS buyer's concern leading a page whose primary audience
+(§3) is the talent acquisition lead, whose question is "will more people
+finish?" Completion now leads; job data is what makes Easy Apply perform better
+rather than the opening act. **This supersedes V2_HANDOVER §4's ordering**, on
+Stephen's explicit call: *"we are going in a new direction - dont let previous
+handovers interfere in any way with this."*
+
+Eighteen bands, five acts:
 
 ```
-hero → where it sits → THE FEED PROBLEM → the platform → AI rewrite
-     → six stages → THE DROP-OFF PROBLEM → the payoff → four steps
-     → job search → BRAND KIT → 85%→30% → testimonials → dashboard
-     → integrations → security → roadmap → book a demo
+RECOGNITION  hero → why they leave → what it costs → why we built it
+THE ANSWER   where it sits → four steps → job search
+             → brand kit → 85%→30% + two quotes
+ATTRACT      better data → AI rewrite → Google for Jobs → six stages
+IMPROVE      dashboard + the third quote
+RISK         integrations → security → book a demo
 ```
 
-The page used to tell the clean-data claim three times and the apply claim
-twice, which is what made the halves of the product read as bleeding into
-each other. Each claim is made once now, and the sections between them are
-its evidence. Two bands are new: **where it sits** (§7's structural claim,
-promoted out of a standfirst) and **the drop-off** (the second problem, which
-the page had never actually stated). See ADR-0027 and the note at the top of
-`src/views/site/index.tsx` — the band order is CONSTRAINED, not free.
+**Seventeen bands, not eighteen. `#payoff` was deleted on 2026-08-25** because
+it repeated the page: it CLAIMED "no redirect, no account, search and apply on
+your page", and `#candidates` right below it DEMONSTRATES exactly that, with the
+same two chips. `#friction` had already named the same things as problems. The
+claim was the only one of the three with no evidence attached.
 
-Also done that day: the candidate journey became a scroll-pinned card stack;
-the share card was rebuilt (Inter, the page's own ground, copy from
-`site.ts`); `src/views/home/` was deleted; the repo was created and wired to
-Vercel; and the job search was rebuilt end to end.
+**The map band's bleed receiver is `#candidates` now.** `MapBand` bleeds past its
+own foot and whatever follows it must carry `relative` AND a painted background,
+or the artwork sits on top of the next band instead of being cut by it. That job
+has moved twice: `#problem` → `#payoff` → `#candidates`. Check it after any
+reorder of act two.
 
-**The job search is the most recently worked surface.** It is no longer a
-screenshot in browser chrome — it is the product working, on `bg-08`:
+**Four bands are new.** `#friction` (eight cuts, a weighted bento, two cells on
+deep grounds with **placeholder artwork** — flip `ready: true` in `site.ts` when
+the files land), `#cost` (the spend itemised like a statement), `#origin` (the
+playbook's One Sentence alone on Blush) and `#google`.
 
-- The apply-route switch is a **deployment setting**, not product UI (§2: set
-  per client, not per candidate). It sits ABOVE the panel on a translucent
-  track, deliberately not styled like the filters, because a candidate never
-  meets that choice.
-- The search row is a white card **straddling the panel's top edge**, ~45%
-  below it. That overlap draws the boundary between the setting and the
-  product. `lg:` only — stacked on a phone it reads as a mistake.
-- Filters: keyword, location with a "near me" icon inside the field, family,
-  region, and a real Search submit. Distances are GENUINE (the coordinates
-  always were), so Manchester returns Liverpool 31, Sheffield 33, Leeds 36.
-- 18 sample roles, nine to a page, each with a two-sentence summary.
-- The map is **glass**, not a card, and links both ways: a pin scrolls its
-  card into the list and highlights it; a card takes the map to its pin, at a
-  bounded 2.5x. Its viewBox is built to the CONTAINER's shape, not the
-  country's, or the UK strands a portrait sliver in a landscape box.
-- The apply form takes the full panel width on the deep ground.
+**Three bands are gone.** The platform bento, the testimonials wall, the roadmap.
+The bento's four claims were checked line by line against the six stages and the
+AI guardrail before it went; nothing was lost. **`LAYOUT-INVENTORY.md` records
+every layout and every piece of functionality on the page**, written before any
+of this was cut, so anything removed can be brought back.
+
+**Two writing rules now bind, both Stephen's, both superseding the handover.**
+
+1. **No em dashes in prose.** They read as machine-written. This overturns
+   V2_HANDOVER §10's *"em dashes are used freely and are part of the voice"*.
+   En dashes stay in numeric ranges; the em dashes in `story.rows` stay because
+   that is sample data imitating an ATS export. Check with
+   `grep -c '—' src/data/content/*.ts`.
+2. **"Career site or campaign landing page" is relaxed**, thirteen uses down to
+   three. Campaign landing pages are still separately sold, so do not trim the
+   remaining three.
+
+**Two handover facts were wrong and are now amended, both dated in V2_HANDOVER.**
+
+- **Google for Jobs has SHIPPED.** §1 listed it under "Roadmap — not yet
+  available". Confirmed live 2026-08-25 with JSON-LD on every published job.
+  This is the second capability filed as forthcoming when it had shipped, after
+  native ATS integration; both errors went the damaging direction.
+- **The themeable list is wider than "colours, imagery and fonts."** Now
+  recorded in full in §1, with Stephen's "layout alone is fixed" qualifier.
+
+**Three bands must sit on white**, and one of them is a new constraint:
+`#security` (its pastels), `#proof` (two `wash-soft` quote cards) and
+**`#dashboard`**, which was tinted until Ben's quote moved into it. `#platform`'s
+old must-stay-tinted rule died with the bento.
+
+**The brand kit lost its three cards** and is 197px shorter. They were claims
+standing next to a demonstration. **They were also structural** — the phone is
+`lg:absolute`, so their height was what cropped it — so the crop now comes from
+an aspect ratio, per ADR-0027. Everything else in ADR-0030 still stands: one
+slider, no visible label, four stops interpolated in Oklab, every ground light
+because a slider cannot cross from light to dark without passing through 1:1.
+
+**The three quotes are split**, each beside what §5 says it proves. Louise and
+Sammi under the figure, Ben beside the dashboard. Picked BY NAME in `site.ts`,
+so reordering the approved array cannot silently swap them.
+
+**Verified on 3100** at 1512 and at 375: eighteen bands, none collapsed, no
+horizontal overflow, `tsc` and `lint` clean. Contrast measured by MODELLING the
+gradients, not by reading the DOM. Two traps caught in review and fixed:
+
+- The three cards under `#google` were `card-quiet` on tint — ΔE 0.35, so they
+  rendered as floating text with no card at all.
+- **White at /80 measures 3.97 on bg-09 (Forest)** and fails AA for small text.
+  Forest has the lowest white ceiling of the deep grounds in use — 5.26 at full
+  white, against bg-07's 6.53. Body ink on the deep friction cells moved /80 →
+  /90 for the same reason: /80 cleared 4.5 by **0.02** on bg-08.
+
+**Known and deliberately NOT patched:** the big faded numerals measure
+**1.73–1.75** against their cards, in `#friction`, `#how-it-works` and
+`#candidates` alike. It is a house-wide treatment that predates this work.
+Changing it in one band only would be worse than leaving it. Needs a decision.
 
 **Captions — STANDING DECISION, 2026-08-24: do not add them.** Stephen's words:
 *"from now on leave this type of thing out — i dont want it."* That covers
-illustrative disclosures generally, not just the one it was said about (the
-brand kit's "invented employers" line). Two were removed on his instruction that
-day: the dashboard's caption under the table, and the brand kit's.
+illustrative disclosures generally. This is a deliberate divergence from
+V2_HANDOVER §6.7, recorded so a future session does not "fix" it back.
 
-This is a deliberate divergence from V2_HANDOVER §6.7, whose first clause asks
-that *every demo carries a caption saying what is illustrative*. It is recorded
-here so that a future session reading §6.7 does not "fix" it back — the rule was
-read, the conflict was raised twice, and this is the client-side call.
-
-What that does NOT change: §6.5 still binds, so sample people stay invented and
-stay on reserved `example.*` domains and Ofcom's 07700 900xxx range, whether or
-not anything on screen says so. And two in-demo lines survive because they sit
-with a form rather than under a section — the Easy Apply flow's "nothing is
-sent, stored or read" (that form asks for a CV) and the AI rewrite's
-traceability line. Neither has been removed; ask before adding any more.
-
-**Earlier:** the lines that sat UNDER sections are gone (Stephen's call,
-2026-08-21). What stays is what lives inside a demo and does work there — the
-Easy Apply form's "nothing is sent, stored or read" (§6.7 names that case,
-and that form asks for a CV) and the AI rewrite's traceability line (§6.10).
-**Known gap:** `dashboard-data.ts` has a caption that is never rendered, so
-the dashboard demo carries no illustrative disclosure at all. Render it
-INSIDE the demo when that surface is next worked.
+What that does NOT change: §6.5 still binds, so sample people stay invented, on
+reserved `example.*` domains and Ofcom's 07700 900xxx range. Three in-demo lines
+survive because they sit with forms that look submittable — Easy Apply's
+"nothing is sent, stored or read", the dashboard's notes disclosure, and the AI
+rewrite's traceability line. Ask before adding any more.
 
 **Deliberately retained — do not "clean up":**
 
 `src/views/home/` was deleted on 2026-08-19, which orphaned thirteen modules.
-They are kept **on purpose**, pending work on the job-search demo and the
-recruiter dashboard, because several are the obvious parts to reach for:
-
-| Kept | |
-|---|---|
-| `components/ui/carousel-dots`, `hooks/use-carousel` | paging a demo |
-| `components/ui/product-shot` | framed product screenshots |
-| `components/ui/section-head`, `components/ui/pill-button` | section furniture |
-| `hooks/use-scroll-progress` | scroll-driven set pieces (the vendored `ProgressTrigger` does not fire for a `top top`→`bottom bottom` pin — see the changelog) |
-| `hooks/use-contact-modal` | the demo CTA |
-| `src/lib/scene/*` + `three` ^0.185.1 | the particle hero. Least likely of the group to serve either surface, but Stephen's call and it stays until he says otherwise. |
-| `components/animation/springs/handle` | inside the `#do-not-modify` folder — needs sign-off regardless (AGENTS.md rule 2) |
-
-`three` currently has **zero importers**. That is expected, not a bug to fix.
-
-**Starting points for that work:** the demos already live in
-`src/views/site/demos/` — `job-search.tsx`, `job-map.tsx`, `easy-apply.tsx`,
-`dashboard.tsx`, `ai-rewrite.tsx` — with their data in
-`src/data/content/job-search.ts`, `job-data.ts`, `uk-map-data.ts`,
-`dashboard-data.ts` and `ai-rewrite.ts`. Draw product surfaces against
-`APLIFY-PRODUCT-UI-SPEC.md`.
-**The brand kit band is new (2026-08-24, ADR-0030).** `#brand`, between the job
-search and the proof. Four invented employers as CSS-variable sets on one
-wrapper, plus a corner slider; picking one restyles colour, type, type scale,
-corners, shadow, spacing and logo while the arrangement holds. It exists because
-§3 names employer brand consistency as a concern of the PRIMARY buyer and the
-page had no answer to it.
-
-It is ONE SLIDER, running Northbank → Halden, square corners → fully rounded,
-and it carries NO visible label of any kind — the employer names at each end
-were removed on 2026-08-24. `aria-label` and `aria-valuetext` stay; they are the
-only route a screen reader has to the control, and they cost the design nothing.
-Four stops with everything between them interpolated in Oklab. The example is
-centred under it and BLEEDS out under `#proof`, using `MapBand`'s trick — which
-is why `#proof` carries `relative`, and why nothing may follow the demo inside
-`#brand` (a sibling after it gets dragged up over the example by the negative
-margin), and why that section must never gain `overflow-hidden`.
-
-Three things not to undo. The Aplify block is deliberately unlabelled — the page
-around it is schematic and the block is fully drawn, which says which is which
-without a caption, and a label would contradict the claim. "Layout is fixed"
-means ARRANGEMENT: widths are identical at every slider position (measured, 992px
-every time), heights are not, because type scale and spacing are configurable
-too. And the schematic page FOOTER exists so the bleed has something expendable
-to cut through — without it the crop landed across the submit button.
-
-**Every ground is light, and that is arithmetic, not taste.** A continuous slider
-cannot travel from a light theme to a dark one and stay readable: ground
-light→dark against ink dark→light must cross, and at the crossing the contrast is
-1:1. No easing or colour space avoids it. Halden was dark in the first cut and is
-now graphite on pale. A dark theme is still fine in the PRODUCT — it just cannot
-be a point on a slider, only a discrete switch. Verified across 21 slider
-positions, 474 checks, zero failures; re-run that sweep if a stop is ever edited,
-because safe endpoints prove nothing about t = 0.5.
-
-**The configurable list is wider than the handover records.** V2_HANDOVER §1 says
-only "colours, imagery and fonts"; `APLIFY-PRODUCT-UI-SPEC.md` hedges to "some of
-that client's brand". Stephen confirmed the full list on 2026-08-24 — colours,
-type, font sizes, corners, shadows, gaps, images and the logo, in the apply flow
-AND the dashboard; layout alone is fixed. **Widen the handover before treating
-that copy as sourced.**
+They are kept **on purpose**. See `LAYOUT-INVENTORY.md` Part 3 for the full list
+and, crucially, for the warning that `bg-brand`, `bg-brand-light`, `bg-paper`
+and `text-paper-ink` inside them are **unbound tokens** that paint ink rather
+than nothing. Bind all four before reuse. `three` has zero importers and that is
+expected.
 
 **Outstanding**
 
-- **The recruiter dashboard was rebuilt on 2026-08-24** (ADR-0029) against the
-  job search's rules and screenshots of the shipped product. Both demos are now
-  unframed. The §6.7 caption renders. The detail view is a CONTAINED slide-over
-  stack — application → candidate → timeline — so opening a record is a 0px
-  height change where it used to collapse the section by 415px. The three
-  summary tiles are gone: they were the only part of that surface not in the
-  product.
+**Artwork waiting on Stephen**
 
-  It did NOT end up using `use-carousel` / `product-shot` / `section-head`, so
-  those three remain orphaned along with `pill-button`, `arrow-button` and
-  `eyebrow`. **`bg-brand`, `bg-brand-light`, `bg-paper` and `text-paper-ink`
-  inside them are still UNBOUND** and will paint ink the moment they are used —
-  note that `paper` and `paper-ink` are unbound too, which an earlier version of
-  this note missed, so `pill-button`'s primary variant is ink-on-ink and
-  invisible rather than merely off-brand. Bind all four before reuse.
-  `--danger` was bound properly this way (tier 2 role → tier 3 `--color-danger`)
-  and is the worked example to copy.
-- The **nav still names features** (Platform, How it works, Job search,
-  Dashboard, Security) while the page now argues as two problems, and the two
-  new bands have no nav entry. A task chip exists for this.
-- `obsidian/frontend/design-system.md`'s "Current theme state" section
-  documents the DELETED dark-luxury build. It carries a warning callout but
-  has not been rewritten. ADR-0019 (dark-only by brand) needs SUPERSEDING, not
-  editing. A task chip exists for this.
-- The cookie banner and preferences modal link to `/privacy-policy`, which
-  404s. Needs the page, a real external URL, or the link removing.
-- `jamie.okafor@email.com` appears in the step 03 and step 04 artwork.
-  `email.com` is a live domain; content rule §6.5 requires invented people on
-  reserved `example.*` domains. Needs re-exporting from source.
-- `event-registration.png` is off-centre inside its own canvas and is
-  currently corrected by `nudgeXPct: 2.26` in `site.ts`. Re-export it with
-  even margins and delete the value.
-- Indexing is disabled everywhere. Set `ALLOW_INDEXING=true` in Vercel when
-  the site is genuinely ready to be found — but note the flag only wires up
-  HALF of it. `robots.ts` reads it correctly; `generate-page-metadata.ts`
-  hardcodes `robots: { index: true, follow: true }` and never consults it, so
-  every page ships `<meta name="robots" content="index, follow">` while
-  `/robots.txt` says `Disallow: /`. The two contradict each other. Deliberately
-  left as-is while the site is in development (Stephen's call, 2026-08-21);
-  wire the meta to the same flag before launch.
+- **A new right-hand image for `#friction`.** The current one,
+  `not-frustrated.png`, is a placeholder in the sense that it is going to be
+  replaced. Three things to carry into the new file:
+  - **It contains `jamie.okafor@email.com`.** `email.com` is a live domain and
+    §6.5 requires reserved `example.*`. Same breach as the step 03 and step 04
+    artwork.
+  - **It is off-centre in its own canvas** — left margin 184px, right 13px — so
+    it carries a measured `contentOffsetXPct: 4.6`. Export with even margins
+    and delete the value. The ZERO bottom margin is correct and should stay;
+    the panel is meant to cut the phone off at its foot.
+  - **It says "Northbank Group"** where the rest of the site says "Northbank
+    Health". Halden is the one that is a Group.
+- **A small-screen crop of `application-progress.png`.** At 375 the card renders
+  about 330px wide, so "Step 14 of 150" reads at roughly 19px but the field list
+  under the progress bar is ~6px and illegible. The fix is a separate, taller
+  crop for phones — a squarer composition with fewer elements — not more
+  scaling of the existing file. It also carries a measured
+  `contentOffsetYPct: -6.4` because its canvas was cut around the drop shadow
+  rather than the card; even margins would remove the need.
+- `obsidian/frontend/design-system.md`'s "Current theme state" still documents
+  the DELETED dark-luxury build. ADR-0019 needs SUPERSEDING, not editing.
+- The cookie banner links to `/privacy-policy`, which 404s.
+- `jamie.okafor@email.com` is baked into the step 03 and step 04 artwork.
+  `email.com` is a live domain; §6.5 requires reserved `example.*`. Those steps
+  survive the reorder, so this does not go away. Needs re-exporting.
+- `event-registration.png` is off-centre in its own canvas, corrected by
+  `nudgeXPct: 2.26` in `site.ts`. Re-export centred and delete the value.
+- Indexing: `ALLOW_INDEXING` only wires `robots.ts`. `generate-page-metadata.ts`
+  hardcodes `index, follow`, so the two contradict each other. Left as-is during
+  development (Stephen's call, 2026-08-21); wire the meta before launch.
+- The faded-numeral contrast decision above.
 
 ## Deploying
 

@@ -2,13 +2,7 @@
 
 import { Reveal } from "@/components/ui/reveal";
 import { SectionIntro } from "@/components/ui/section-intro";
-import {
-  integrations,
-  proof,
-  roadmap,
-  security,
-  testimonials,
-} from "@/data/content/site";
+import { integrations, proof, proofQuotes, security } from "@/data/content/site";
 
 /** Security — the pastel four, on white so the tints separate. */
 export const Security = () => (
@@ -26,7 +20,7 @@ export const Security = () => (
             <article
               className={`pastel-${point.ground} h-full rounded-panel p-8 lg:p-10`}
             >
-              <h3 className="display text-h4">{point.title}</h3>
+              <h3 className="display card-title text-h4">{point.title}</h3>
               <p className="mt-5 text-body leading-[1.6] text-ink-body">
                 {point.body}
               </p>
@@ -84,39 +78,33 @@ export const Integrations = () => (
   </section>
 );
 
-/** Roadmap — three rows, quiet on purpose. It is a promise, not a feature. */
-export const Roadmap = () => (
-  <section id="roadmap" className="band-white py-26">
-    <div className="shell">
-      <SectionIntro
-        eyebrow={roadmap.eyebrow}
-        lines={roadmap.lines}
-        standfirst={roadmap.standfirst}
-      />
-      <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-3">
-        {roadmap.items.map((item, i) => (
-          <Reveal key={item.when} variant="up" delay={i * 80}>
-            <article className="h-full card-quiet rounded-panel p-8">
-              <p className="eyebrow">{item.when}</p>
-              <p className="mt-6 text-body leading-[1.6] text-ink-body">
-                {item.what}
-              </p>
-            </article>
-          </Reveal>
-        ))}
-      </div>
-    </div>
-  </section>
-);
-
 /**
- * The proof. One figure, given the whole width and the page's only dark
- * surface — ground 10, Midnight, and there is exactly one.
+ * The proof, and the two quotes that prove the same thing.
  *
- * Every faded white here was raised to 80%. Midnight is not flat: where its
+ * ONE FIGURE, on the page's only dark surface — ground 10, Midnight, and there
+ * is exactly one of it. Do not add a second Midnight band; its whole force is
+ * that nothing else on the page looks like it.
+ *
+ * Every faded white here is 80%, never 45%. Midnight is not flat: where its
  * three fields stack it lightens to #3650ab, and the 45% white that measured
- * 4.49:1 on the old navy measures 2.78:1 there. A blob ground breaks any
- * opacity that was tuned against a solid colour.
+ * 4.49:1 on the old solid navy measures 2.78:1 there. A blob ground breaks any
+ * opacity that was tuned against a flat colour.
+ *
+ * THE QUOTES MOVED HERE ON 2026-08-25, and which two is not arbitrary. §5 is
+ * explicit that the three are not interchangeable: Louise proves completion,
+ * Sammi proves the candidate experience, Ben proves the dashboard is usable.
+ * The page used to run all three as one grid under an "In their words"
+ * heading, which is the weakest possible use of them — a wall of praise reads
+ * as a wall of praise whichever quotes are in it, and Ben was sitting nine
+ * bands away from the dashboard he is describing.
+ *
+ * Louise and Sammi are both about the act that has just finished arguing, so
+ * they sit under the number that measures it. Ben is in `product.tsx`, beside
+ * the dashboard. They are picked BY NAME in `site.ts`, so reordering the
+ * approved array cannot silently swap them.
+ *
+ * The quote cards are `wash-soft`, a 10%-alpha gradient, which is why this
+ * section has to stay `band-white`. On the tinted ground they wash out.
  */
 export const Proof = () => (
   <section id="proof" className="band-white py-26">
@@ -142,24 +130,9 @@ export const Proof = () => (
           <p className="mt-10 text-xs text-white/80">{proof.client}</p>
         </div>
       </Reveal>
-    </div>
-  </section>
-);
 
-/**
- * Testimonials, inheriting the card language exactly — the quote set in the
- * display register at card scale, attribution quiet beneath a rule.
- */
-export const Testimonials = () => (
-  <section id="testimonials" className="band-white py-26">
-    <div className="shell">
-      <SectionIntro
-        eyebrow={testimonials.eyebrow}
-        lines={testimonials.lines}
-        linesSm={testimonials.linesSm}
-      />
-      <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-3">
-        {testimonials.quotes.map((q, i) => (
+      <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-2">
+        {proofQuotes.map((q, i) => (
           <Reveal key={q.org} variant="up" delay={i * 90}>
             <figure className="wash-soft flex h-full flex-col rounded-panel p-8 lg:p-10">
               <blockquote className="text-lead leading-[1.5] text-ink-heading">

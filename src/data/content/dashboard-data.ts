@@ -103,7 +103,7 @@ export const SEED_APPLICATIONS: Application[] = [
     additional: [
       { question: "Where would you like to work", answer: "Bristol, UK" },
       { question: "Do you have the right to work in the UK", answer: "Yes" },
-      { question: "Are you NMC registered", answer: "Yes — PIN held since 2019" },
+      { question: "Are you NMC registered", answer: "Yes, PIN held since 2019" },
       { question: "Do you hold a full, current UK driving licence?", answer: "Yes" },
     ],
     termsAgreed: "30 Jul 2026, 14:15",
@@ -111,7 +111,7 @@ export const SEED_APPLICATIONS: Application[] = [
     timeline: [
       { kind: "status", label: "Shortlisted → Accepted", by: "L. Hart", when: "4 Aug, 09:12" },
       { kind: "status", label: "Reviewed → Shortlisted", by: "L. Hart", when: "2 Aug, 16:40" },
-      { kind: "note", label: "Strong interview — references requested.", by: "L. Hart", when: "2 Aug, 16:38" },
+      { kind: "note", label: "Strong interview, references requested.", by: "L. Hart", when: "2 Aug, 16:38" },
       { kind: "status", label: "Submitted → Reviewed", by: "R. Adeyemi", when: "31 Jul, 10:05" },
       { kind: "submitted", label: "Application submitted", by: "Amara Osei", when: "30 Jul, 14:15" },
     ],
@@ -137,7 +137,7 @@ export const SEED_APPLICATIONS: Application[] = [
     additional: [
       { question: "Where would you like to work", answer: "Plymouth, UK" },
       { question: "Do you have the right to work in the UK", answer: "Yes" },
-      { question: "Do you have previous care experience", answer: "No — happy to complete the Care Certificate" },
+      { question: "Do you have previous care experience", answer: "No, happy to complete the Care Certificate" },
       { question: "Do you hold a full, current UK driving licence?", answer: "No" },
     ],
     termsAgreed: "30 Jul 2026, 13:55",
@@ -347,12 +347,16 @@ export const SEED_REGISTRATIONS: Registration[] = [
   { id: "REG-771263", name: "Holly Dunne", email: "holly.dunne@example.com", event: EVENTS[0], eventDate: "22 Aug, 10:00", registered: "25 Jul, 19:34", attended: true },
 ];
 
-/** Section copy — handover §8.10, quoted verbatim where quoted there. */
+/* `eyebrow`, `headline` and `standfirst` were DELETED here on 2026-08-25.
+
+   None was rendered. The section furniture comes from `demos.dashboard` in
+   `site.ts`, and the standfirst here was the LONGER variant that PROJECT-NOTES
+   had flagged for months as "held but not rendered". It is now the one that
+   actually renders, from `site.ts`, so keeping a second copy here would
+   recreate the drift the move was meant to end.
+
+   CANONICAL SOURCE: `demos.dashboard` in `src/data/content/site.ts`. */
 export const dashboardContent = {
-  eyebrow: "For your recruiters",
-  headline: "One place to action all of it",
-  standfirst:
-    "Applications and event registrations arrive in the same dashboard, on separate tabs, and move through a status workflow your team controls — or, with native ATS integration, they bypass it entirely and land in the system you already use.",
   tabs: {
     applications: "Applications",
     registrations: "Registrations",
@@ -434,24 +438,18 @@ export const dashboardContent = {
       "Sample data. Notes you add here stay in this browser and are gone on refresh.",
   },
   caption:
-    "A working demonstration — invented people on reserved example.* domains and Ofcom's reserved 07700 900xxx numbers. Nothing here is real candidate data, and nothing you change is saved.",
-  /* NOT RENDERED, and deliberately left rather than quietly deleted.
+    "A working demonstration. Invented people on reserved example.* domains and Ofcom's reserved 07700 900xxx numbers. Nothing here is real candidate data, and nothing you change is saved.",
+  /* The `ats` block that used to sit here was DELETED on 2026-08-25.
      
-     Every line here is said on the page already, by the #integrations section
-     from `site.ts` — including the Eploy sentence, which is VERBATIM APPROVED
-     COPY under V2_HANDOVER §5 and now exists in two files. That is a drift
-     risk, not a convenience: edit one and the other silently disagrees, and
-     the dead one is the more likely to be picked up later and reintroduce a
-     stale claim about the single named third-party product.
+     It was never rendered, and every line of it was already said on the page
+     by #integrations. One of those lines was the Eploy sentence — VERBATIM
+     APPROVED COPY under V2_HANDOVER §5 — which meant approved copy existed in
+     two files. That is a drift risk rather than a convenience: edit one and
+     the other silently disagrees, and the dead copy is the more likely to be
+     picked up later and reintroduce a stale claim about the one named
+     third-party product.
 
-     CANONICAL SOURCE: `integrations.lead` in `src/data/content/site.ts`.
-     Change it there. If this block is ever wanted on this surface, delete it
-     here and read from `integrations` instead of copying the string again. */
-  ats: {
-    kicker: "Or skip the dashboard and keep the workflow you have",
-    heading: "Native ATS integration",
-    body: "Where native integration is in place, applications are pushed straight into your ATS as they arrive. No export step, no second system for your team to learn — they carry on working exactly as they do now, on cleaner jobs and with the drop-off already solved upstream.",
-    eploy:
-      "It is live today with Eploy. Other systems are added as clients need them — if yours isn't connected yet, that's a conversation we have with you rather than a queue you wait in.",
-  },
+     CANONICAL SOURCE for anything about ATS integration: `integrations` in
+     `src/data/content/site.ts`. If this surface ever needs it, READ from there
+     rather than copying the string again. */
 };

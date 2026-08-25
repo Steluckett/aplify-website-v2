@@ -91,39 +91,31 @@ export const BRAND_STOPS: BrandStop[] = [
 
 export const brandKit = {
   eyebrow: "Your brand, not ours",
-  lines: ["Part of your page,", "not stuck on it"],
-  linesSm: ["Part of", "your page,", "not stuck on it"],
+  lines: ["It should look like you,", "not like us"],
+  linesSm: ["It should look", "like you,", "not like us"],
   /**
-   * SHORTER than it was, deliberately: the two cards beside the demo now carry
-   * the apply-flow and dashboard detail that used to be crammed in here, so the
-   * intro only has to set up the idea.
+   * REWRITTEN 2026-08-25 with the band, which lost its three cards.
    *
-   * §6.2 — "career site or campaign landing page", never the first alone.
-   * The configurable list is Stephen's, confirmed 2026-08-24, and is wider than
-   * V2_HANDOVER §1 records ("colours, imagery and fonts"). Widen the handover
-   * before treating this as sourced.
+   * The old standfirst spent its length on WHERE things render. Stephen's
+   * steer: "we need to reduce the need to mention careers site or landing page
+   * - that should be obvious... it is less about where it lives but why it
+   * should be used." So it now spends its length on WHAT is configurable, and
+   * ends by telling the reader to use the control.
+   *
+   * "Surface" is gone, here and in the cards, under the plain-English rule.
+   * It was the clearest bit of software-speak left on the page.
+   *
+   * ⚠️ The configurable list is Stephen's, confirmed 2026-08-24, and is wider
+   * than V2_HANDOVER §1 used to record. §1 was amended on 2026-08-25 to match,
+   * so this copy IS now sourced — but the amendment is attributed to him
+   * rather than to a client document, and it is dated. Do not widen it further
+   * without asking.
    */
   standfirst:
-    "Every Aplify surface renders inside your own career site or campaign landing page, and every one of them reads the same brand settings. Set them once. Done.",
+    "Colours, type, corners, shadows, spacing, photography, your logo. The apply flow and the dashboard your team works in both read the same settings. Set it once, then drag the slider.",
 
   /** The control's accessible name. Nothing labels it on screen. */
   sliderLabel: "Brand style",
-
-  /** The three cards down the right. */
-  cards: {
-    control: {
-      heading: "Set it once",
-      body: "Colours and type, corners and shadows, spacing, photography, your logo — the whole visual layer is configuration rather than code. Set it in the plugin and every surface picks it up.",
-    },
-    apply: {
-      heading: "The apply flow follows",
-      body: "Easy Apply takes the same settings — fields, buttons, the consent step, the confirmation — and all of it happens on your page. So does the applications dashboard your team works in. End to end, one brand.",
-    },
-    responsive: {
-      heading: "Built for the phone first",
-      body: "Most candidates arrive on a handset, so that is what every surface is designed for before anything else — and the same layout holds together on a tablet and a desktop without a second version to maintain.",
-    },
-  },
 
   phone: {
     keywordPlaceholder: "Job title or keyword",

@@ -1,12 +1,314 @@
 ---
 tags: [meta, changelog]
-updated: 2026-08-24
+updated: 2026-08-25
 ---
 
 # Changelog
 
 Chronological log of notable changes to the project. Newest first.
 This is a human-curated log — not a mirror of `git log`.
+
+## 2026-08-25
+
+- **The page is restructured and rewritten to the Brand Playbook v3.** Three
+  client documents arrived — the playbook, a homepage strategy rationale and an
+  addendum on what makes people stop scrolling — and they are now the source of
+  truth for Aplify's language. [[decisions-log]] **ADR-0031**.
+
+  **The argument is inverted.** The page used to open on the feed problem, which
+  is the recruitment-operations buyer's concern, and reached Easy Apply nine
+  bands later. §3 names the talent acquisition lead as the PRIMARY audience and
+  their question is "will more people finish?" So completion leads, Easy Apply
+  is the payoff, and job data became what makes Easy Apply perform better rather
+  than the opening act. **This supersedes V2_HANDOVER §4's ordering**, on
+  Stephen's explicit call.
+
+  Eighteen bands in five acts: recognition, the answer, attract, improve, risk.
+
+- **Four new bands.** `#friction`, `#cost` (the spend itemised like a statement, everything
+  marked paid and the application marked abandoned), `#origin` (the playbook's
+  One Sentence alone on Blush) and `#google`.
+
+- **`#friction` took three builds, and the third one was MEASURED.** Build 1
+  was a four-column bento with faded numerals and a full-width closer
+  ("messy"). Build 2 was strict thirds with two pictures side by side in a row
+  of their own ("it's not DESIGNED it's plonked without thought"). Both failed
+  the same way: reaching for a grid shape instead of designing a composition.
+
+  Build 3 is drawn against workable.com **measured in the browser**, not
+  eyeballed from a screenshot. Container 1202px, three 374px columns, 40px gap,
+  and a card vocabulary of exactly two shapes:
+
+  | | measured | ratio |
+  |---|---|---|
+  | thirds | 374 × 340 and 374 × 380 | **1.10 / 0.98** |
+  | halves | 581 × 220 | **2.64** |
+  | the big picture | 788 × 606, 2 cols × 2 rows | **1.30** |
+
+  **Their cards are square because the ROW HEIGHT IS SET** — the grid declares
+  `grid-template-rows: 380px` and the copy sits top-aligned with air beneath.
+  Not because the copy fills it. That answers the question of whether to
+  inflate body copy to buy height: no. Their body is small against a large
+  heading, and inflating ours would fight the type ladder, where 24px is
+  already `lead`'s job.
+
+  **The big picture is never in a picture-only row.** It sits beside two
+  stacked cards so the eye reads down the text while the picture holds the
+  other side. Build 2's two-pictures-in-a-row is what killed the flow.
+
+  Ours now measures: **every card 452 × 400, ratio 1.13** against the
+  reference's 1.10, and the big picture at **1.12** against 1.30. The band went
+  1894px → 2976px, which is the scroll journey the reference has and build 2
+  did not. Card gap corrected 32px → **40px**, our own spec's figure, which
+  build 2 also got wrong.
+
+  A fourth pass closed it on a row of three rather than a card-and-picture
+  pair, and dropped the third picture with it (Stephen: "dont see the need for
+  the last image"). So the band ends with ONE card shape where the reference
+  has two — there is no honest place for a letterbox row when eight cuts split
+  3 / 2 / 3, and inventing one to show off the second shape would be
+  decoration. Noted in the component for whoever adds a ninth cut.
+
+- **The card type was NOT too small, which is worth recording.** Stephen: "what
+  font size do workable use in their cards? It's bigger than ours - i like
+  theirs." Measured on both sites, the sizes are **identical**: 32px headings
+  over 18px body, at 1.1 and 1.6 leading, in 32-40px of padding.
+
+  | | Workable | ours, before |
+  |---|---|---|
+  | heading size | 32px | 32px |
+  | heading weight | **700** | **550** |
+  | heading tracking | normal | **-0.035em** |
+  | body ink | rgb(15,22,30) | **rgb(74,81,92)** |
+  | text column | 310px | 373px |
+
+  So growing the type would have been the wrong fix. The friction cards now
+  take weight 700 and full-strength body ink, and **tracking is deliberately
+  left alone** — -0.035em runs through every heading on the site, and dropping
+  it in one band would make those headings look like a different typeface.
+  Contrast moved in the safe direction: body measures 16.32:1 on `card-quiet`
+  and 16.86:1 on the amber card.
+
+  **That treatment was applied to `#friction` alone at first, and it was the
+  wrong shape of fix.** Stephen: "The font weight in the card headlines in this
+  section now feels heavier than everywhere else." Correct — one band at 700
+  against six at 550.
+
+  It is now a single definition, `.card-title` in `globals.css`, used alongside
+  `.display` on all seven card headings: `#friction`, `#cost`, `#candidates`,
+  `#google` (twice), `#how-it-works` and `#security`.
+
+  **600, not 700, and the reason is the typeface.** The reference sets 700, but
+  in Proxima Nova at NORMAL tracking. Ours is Inter at -0.035em, and tight
+  tracking makes a given weight read denser, so a straight 700 lands heavier
+  here than 700 does there. Unlike the ratios elsewhere in this entry that is a
+  JUDGEMENT rather than a measurement, and it is a fair thing to argue with —
+  one value, one place, easy to move.
+
+  A section heading is deliberately NOT a card title. The ladder already
+  separates them by size; separating them by weight too would flatten the
+  difference. Verified across the whole page: every heading role now carries
+  exactly one weight — hero 550, section heads 550, card titles 600, demo UI
+  500 — with no outlier band.
+
+- **`.icon-chip` is now an ink outline with no fill, everywhere.** Stephen:
+  "I dont like the icons in blue - they should be ink", then "they should just
+  be ink outline and ink icon - no fill."
+
+  It fixes a measured failure on the way. The accent blue is #3c78eb and on the
+  chip's own #eef0f5 fill that measured **3.63:1** — every icon chip on the page
+  is small type (20px marks, 13px quote monograms), so all of them needed 4.5
+  and none had it. Three monograms in `#proof` and `#dashboard` had been sitting
+  at 3.63 since they were written. They now measure **16.32:1**.
+
+  **This reverses the reasoning in the old `.icon-chip` note, and the reversal
+  holds.** The fill existed so the chip carried its own edge; an INK ring
+  carries one far better than a #eef0f5 disc, which measured ΔL* 0.00 against a
+  quiet grey card — the same colour, not merely low contrast.
+
+  Two exceptions, both principled rather than ad hoc:
+  - **`.bg-07`–`.bg-15`** flip the ring and glyph to white, or a bare chip
+    vanishes on a deep ground. Four chips in `#ai-enrichment` sit on `bg-15`
+    and are caught by it. This mirrors what the `.chip` system already does at
+    those grounds.
+  - **`.screen`** keeps the accent: inside the product register an icon chip is
+    an affordance, not a marketing mark, and Aurora uses the accent for exactly
+    that. `[data-ai]` keeps its gradient, where the accent IS the meaning.
+
+- **Icons, bottom right of every friction card.** The square card shape leaves
+  air under the copy by design, and the marks give that air a reason to exist.
+  **Not arrows**, which is what the reference uses — its cards are links, ours
+  are not, and an arrow pointing nowhere is a promise the page does not keep.
+  Each mark draws the thing that goes wrong in that cut.
+
+  This also cleared dead code: `ICONS` and its chip were drawn for the feature
+  bento and left in `platform.tsx` with zero call sites when that band was cut.
+  They now live in `src/components/ui/icon-chip.tsx` with the eight new marks
+  and the drawing rules for a ninth.
+
+- **The band's anchor became the UI card on its own, floating on a light
+  ground.** It started as a photograph of a candidate with the progress panel
+  composited into it; Stephen replaced it with the panel alone — "it should
+  basically float in the middle of the box big enough to have impact and have
+  one of our lighter grad bgs." It is the band's whole argument in one object:
+  step 14 of 150, an hour and three quarters to go, 9 per cent done.
+
+  **Ground 04, Harbour.** The artwork is a WHITE card and needs something to
+  lift off, so a near-white ground would lose it; Harbour's base is #eaf0f8, it
+  is the widest spread of the light set, and its amber note answers the card's
+  own amber pill. Spectrum (06) is louder but its own note says one per page at
+  most, and this band is about loss rather than celebration. **This is the first
+  use of any of grounds 01-06** — all six had been sitting unused.
+
+  The panel gets SHALLOWER as the screen narrows, which is the opposite of the
+  usual instinct: the card is a 3.73 letterbox, so on a narrow screen it can
+  only get so wide and a deep panel just banks empty ground. At 375 a 4/3 panel
+  left 97px of air over a 71px card.
+
+  ⚠️ **Its small print does not survive a phone.** At 375 the card renders about
+  330px wide, so "Step 14 of 150" reads at roughly 19px but the field list under
+  the bar is ~6px. The headline number is the point and it lands; the rest is
+  texture there. The fix, if that is not good enough, is a separate taller crop
+  for small screens rather than more scaling.
+
+- **Both pieces of friction artwork are off-centre in their own canvases**, in
+  different directions, and centring the FILE centres its empty margin.
+  - `not-frustrated.png` HORIZONTALLY: left margin 184px (9.9%), right margin
+    13px (0.7%), bottom 0. Its content centre sits 4.6% right of the canvas
+    centre, so centring it pushed the confirmation card's right edge outside
+    the panel and clipped it while 10% of blank canvas sat unused on the left.
+  - `application-progress.png` VERTICALLY: the card runs y 108..539 in a 742
+    canvas, because the drop shadow falls downwards and the canvas was cut
+    around the shadow rather than the card. Its centre is 6.4% above the canvas
+    centre, which left 138px of air above the card and 196px below.
+
+  Both are corrected by `contentOffsetXPct` / `contentOffsetYPct`, measured off
+  each file's alpha channel and folded into the centring transform — the same
+  reasoning as `nudgeXPct` on `event-registration.png`. **Delete each one when
+  its file is re-exported with even margins.**
+
+  Two other things the measuring caught:
+  - The crop was first written as a width plus a top offset, which produced a
+    109px cut at 1512 and a 54px **gap** at 1257 — the panel's height comes
+    from the card stack and is fixed at 840 while its width scales, so its
+    ratio moves from 1.12 to 0.93 across that range. Pinning `bottom: -13%`
+    against the panel's own height makes the cut identical at every width.
+  - Below `lg` the panel needed to be SQUARE, not 4/3. At 375 a landscape
+    panel clipped 30px off the top of the confirmation card while still cutting
+    the phone at the foot.
+
+- **`#cost` rebuilt full width.** Stephen: "Do you think that looks nice in the
+  slightest?" It did not. The first build put the ledger in a 736px white box
+  inside a 1436 shell, so every row was ~700px of empty space between the item
+  and a small "Paid" chip, four identical chips ran down the right, and the
+  abandoned line — the band's entire point — was the same size as everything
+  above it, differing only in pill colour.
+
+  Now: **no box.** Five lines run the full shell width and sit directly on the
+  band. Items rise from 18px body to **24px** (they are the things being
+  counted, so they lead their row) and "Paid" drops to 13px muted at the other
+  end. The loss breaks the pattern completely — its own panel, its own ground,
+  its own scale, and copy instead of a label.
+
+  **The right-hand column continues into the loss panel**, which is what makes
+  it read as the fifth line of the same account rather than a box that happens
+  to follow one: "Paid" at 13px muted four times, then **"Abandoned" at 24px in
+  `--danger`**. The rows carry the panel's own horizontal padding so both
+  columns line up exactly — without it they missed by 66px.
+
+  **Ground 05, Orchard, and the choice is measured.** It is the only vivid
+  ground whose BODY ink clears AA: 5.29:1, against Harbour's 4.31 and
+  Spectrum's 3.72, so it is the only one of the three that can carry a
+  paragraph. `--danger` measures **5.74:1** on it; `ink-label` would NOT at
+  4.29, which is why the word is not simply the muted label enlarged. A dark
+  panel was not available — `#proof` is deliberately the page's only dark
+  surface — so the climax comes from scale, ink and warmth instead.
+
+  The standfirst was rewritten too: it used to list "the advertising, the
+  campaign, the site, the time your team spent", which is exactly what the
+  ledger then itemises. It was spending the band's own content before the
+  reader reached it.
+
+  The three cards went **square** with `.card-title`, matching `#friction`.
+  They were 1.87 letterboxes — the shape that band had just moved away from,
+  so two adjacent bands were disagreeing about what a card is.
+
+- **`#payoff` DELETED, and it was repeating the page.** It asserted "no
+  redirect, no account, search and apply happen on your page" — and
+  `#candidates`, immediately below it, DEMONSTRATES all of that: step 01 is the
+  search, step 02 is *"the form is on the page, not behind a redirect"* with
+  chips reading **No ATS redirect** and **No account to create**, step 03 is
+  registration. Its two remaining chips, anonymous apply and field-level
+  encryption, are both made properly in `#security`.
+
+  So the page said "no redirect, no account" three times: as a problem in
+  `#friction`, as a claim in `#payoff`, then as a demonstrated step in
+  `#candidates`. The claim was the one with no evidence attached.
+
+  Worth recording the wrong turn: the band was first rebuilt as a hover-driven
+  column accordion (sprung, adapted from a reference Stephen supplied) because
+  it "felt plonked and weak". That made the repetition WORSE, because the
+  accordion was deliberately built to mirror `#friction`'s eight cuts. Stephen
+  spotted the real problem — the band had no job of its own — and it was cut
+  instead. The accordion is deleted, not parked.
+
+  **Three knock-ons, all handled:**
+  - **The map band's bleed moved.** `MapBand` bleeds into whatever follows and
+    that section must be `relative` + white, or the artwork paints OVER the next
+    band instead of being cut by it. The receiver is `#candidates` now; it has
+    been `#problem`, then `#payoff`, now this. Recorded on the component.
+  - **"Easy Apply" in the nav and the footer** both pointed at `#payoff` and now
+    point at `#candidates`.
+  - **The alternation re-solved.** 17 bands running `TWTWTWTTWTWTTWTWT`, with
+    two tint pairs (`job-search`/`brand`, `google`/`how-it-works`) and all three
+    hard white requirements intact.
+
+- **Three bands cut.** The platform bento — every claim on it was already made
+  by the six stages or the AI guardrail, checked line by line first. The
+  testimonials wall. The roadmap, entirely.
+
+- **The three quotes split up.** §5 says each proves a different thing and the
+  page was running all three as one grid, with Ben Hopwell nine bands from the
+  dashboard he describes. Louise and Sammi now sit under the 85%→30% figure;
+  Ben sits beside the dashboard. Picked BY NAME, so reordering the approved
+  array cannot silently swap them.
+
+- **Google for Jobs shipped, and V2_HANDOVER was wrong about it.** §1 listed it
+  under "Roadmap — not yet available". Stephen confirmed it is live with JSON-LD
+  on every published job, so §1 was amended and dated, and the band shows our
+  own output — the job as a person reads it beside the schema a machine reads —
+  rather than mocking up Google's results page, which §6.4 forbids. The copy
+  says the job *carries the structured data Google reads*, never that it will
+  rank.
+
+- **The brand kit lost its three cards.** They were claims standing next to a
+  demonstration. The phone and the slider carry it alone now, and the band is
+  197px shorter. The cards were also STRUCTURAL — the phone is `lg:absolute` so
+  their height was what cropped it — so the crop now comes from an aspect ratio,
+  per ADR-0027.
+
+- **Two writing rules, both Stephen's.** No em dashes in prose, anywhere: they
+  read as machine-written. This directly supersedes V2_HANDOVER §10's *"em
+  dashes are used freely and are part of the voice"*. And "career site or
+  campaign landing page" is relaxed from thirteen uses to three.
+
+- **A jargon sweep.** Out: *surface*, *system of record*, *ingest*,
+  *configuration not development*, *normalised*, and *PII* in a marketing chip.
+  Kept: EVP, syndicate, workflow, pre-qualification, API in a spec chip — those
+  are recruitment's and IT's own words.
+
+- **Two contrast traps caught in review, both invisible to the DOM.** The three
+  cards under `#google` were `card-quiet` on the tinted ground: ΔE 0.35, so they
+  rendered as floating text with no card at all. And white ink at /80 measures
+  **3.97 on bg-09 (Forest)**, which fails AA for small text — Forest has the
+  lowest ceiling of the three deep grounds in use. Body ink on the deep friction
+  cells went /80 → /90 for the same reason: /80 cleared 4.5 by 0.02 on bg-08,
+  which is not a margin. All measured by MODELLING the gradients, never by
+  reading `backgroundColor`.
+
+- **Known, pre-existing, not introduced today:** the big faded numerals measure
+  **1.73–1.75** against their cards. Identical treatment in `#how-it-works` and
+  `#candidates`, both of which predate this work. Needs a decision, not a patch.
 
 ## 2026-08-24
 

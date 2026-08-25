@@ -2,7 +2,7 @@
 
 import { Reveal } from "@/components/ui/reveal";
 import { SectionIntro } from "@/components/ui/section-intro";
-import { payoff, story } from "@/data/content/site";
+import { story } from "@/data/content/site";
 
 /**
  * The problem, shown rather than described.
@@ -19,7 +19,7 @@ import { payoff, story } from "@/data/content/site";
  * inverts: the image sits on top of the white instead of under it.
  */
 export const Story = () => (
-  <section id="problem" className="relative band-white py-26">
+  <section id="data" className="py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={story.eyebrow}
@@ -71,32 +71,6 @@ export const Story = () => (
           </div>
         </div>
       </Reveal>
-    </div>
-  </section>
-);
-
-/**
- * The payoff. Deliberately spare — a heading, a line, and the guarantees as
- * chips rather than a bulleted list, because five short absolutes read faster
- * as marks than as sentences.
- */
-export const Payoff = () => (
-  <section id="payoff" className="py-26">
-    <div className="shell">
-      <SectionIntro
-        eyebrow={payoff.eyebrow}
-        lines={payoff.lines}
-        linesSm={payoff.linesSm}
-        standfirst={payoff.standfirst}
-      >
-        <div className="flex flex-wrap justify-center gap-2">
-          {payoff.chips.map((chip) => (
-            <span key={chip} className="chip">
-              {chip}
-            </span>
-          ))}
-        </div>
-      </SectionIntro>
     </div>
   </section>
 );

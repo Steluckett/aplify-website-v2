@@ -12,17 +12,26 @@ export interface RewriteJob {
   afterMeta: string;
 }
 
+/* `eyebrow`, `headline` and `standfirst` were DELETED here on 2026-08-25.
+   None of the three was rendered: the section furniture comes from
+   `demos.aiEnrichment` in `site.ts`, and these were a stale second copy of it
+   still carrying the old headline ("Written for candidates, not for the file")
+   long after the section had moved on.
+
+   Same reasoning as the `ats` block deleted from `dashboard-data.ts` the same
+   day: a dead duplicate of live copy is a drift risk, not a convenience, and
+   the dead one is the more likely to be picked up later and quietly reinstate
+   a claim the page has stopped making.
+
+   CANONICAL SOURCE for this section's furniture: `demos.aiEnrichment` in
+   `src/data/content/site.ts`. */
 export const aiRewriteContent = {
-  eyebrow: "AI enrichment",
-  headline: "Written for candidates, not for the file",
-  standfirst:
-    "ATS descriptions were written to satisfy a process. Aplify rewrites every one to your tone of voice on import — try it.",
   beforeLabel: "Straight from the ATS",
   afterLabel: "Published by Aplify",
   actionLabel: "Rewrite with Aplify",
   resetLabel: "Show the originals",
   caption:
-    "Illustrative adverts. Every fact in the rewritten version is traceable to the original — nothing is added.",
+    "Illustrative adverts. Every fact in the rewritten version is traceable to the original. Nothing is added.",
   jobs: [
     {
       before:
@@ -44,7 +53,7 @@ export const aiRewriteContent = {
   guardrail: {
     heading: "Works on adverts, not on people",
     lines: [
-      "Screening, ranking and selection stay entirely with your team — the AI never touches a candidate decision.",
+      "Screening, ranking and selection stay entirely with your team. The AI never touches a candidate decision.",
       "It rewrites what's there. It doesn't invent responsibilities, benefits or requirements your feed didn't contain.",
     ],
   },

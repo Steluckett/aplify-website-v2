@@ -31,6 +31,11 @@ It has two halves, and the split is the product's central idea:
 - Sorts every role into a consistent job family, with manual override and bulk reclassify.
 - Pushes the cleaned feed back out to job boards — custom outbound mapping per destination, XML
   syndication behind an API key, errors stripped before anything leaves.
+- **Google for Jobs structured data (JSON-LD) written on every published job**, carrying title, location,
+  salary, contract type and closing date from the already-cleaned data. *Added 2026-08-25 on Stephen's
+  confirmation; this was previously recorded under "Roadmap — not yet available" and it is not.* Note the
+  claim the site may make: the job **carries the structured data Google reads**. Nobody can promise Google
+  will surface a job, and a ranking promise is the one claim on that page a technical buyer could falsify.
 
 **The candidate side — everything a candidate ever sees.**
 - Search by keyword, category, region, salary and contract type.
@@ -56,8 +61,15 @@ Both halves run off the same cleaned data. That sentence does a lot of work in t
 ### Deployment
 
 - **WordPress plugin** — install it and the pages build themselves: apply flow, dashboard pages, search,
-  map, job detail, events and GDPR forms. Colours, imagery and fonts are set inside the plugin.
-  Shortcodes remain available for bespoke pages.
+  map, job detail, events and GDPR forms. Shortcodes remain available for bespoke pages.
+
+  **What the client can theme, confirmed by Stephen 2026-08-24.** This paragraph used to read *"colours,
+  imagery and fonts are set inside the plugin"*, which understated it, and the brand-kit band on the site
+  claims the wider list. The full set is **colours, type, type scale, corner radii, shadows, spacing,
+  photography and the logo** — applied to the Easy Apply flow **and** the recruiter dashboard. **Layout
+  alone is fixed**, meaning arrangement: widths and structure hold, while heights move, because type scale
+  and spacing are themselves configurable. Do not let that drift into "nothing changes size", which is
+  false and measurable.
 - **Or the APIs** — a Jobs API (search, filter, categories, locations, regions, roles) and an Applications
   API (submit, read form structure, update status, export), keys scoped per integration with granular
   permissions, for a headless career site or a partner integration.
@@ -82,11 +94,21 @@ secure rather than plain text."*
 
 ### Roadmap — not yet available
 
-Listed on the site so a buyer knows where the platform is going before committing. **Only these two.**
+> **Amended 2026-08-25, on Stephen's confirmation.** Google for Jobs has SHIPPED and has moved out of this
+> list into the capability list above. Only **one** item remains here, and as of the v3 copy deck the site
+> carries no roadmap section at all, so nothing on the page depends on this list any more. The original
+> wording of both items is preserved below the rule for traceability.
+
 - **Feed-level reporting** — reporting per feed and across multiple feeds, so customers running several can
   compare performance in one view rather than a feed at a time.
-- **Google for Jobs** — structured job data (JSON-LD) so vacancies surface in Google's dedicated jobs
-  search alongside the rest of the career site.
+
+---
+
+*Superseded wording, kept so a later reader can see what changed:* Google for Jobs was recorded here as
+*"structured job data (JSON-LD) so vacancies surface in Google's dedicated jobs search alongside the rest
+of the career site"*, under the heading "not yet available". Stephen confirmed on 2026-08-25 that it is
+live and working, with JSON-LD written on every published job. It is now a shipped capability — see the
+data side of §1 — and the v3 deck gives it its own band.
 
 ---
 
@@ -236,9 +258,12 @@ These were set with the client and several were learned the hard way. They survi
    decision. And it rewrites what is there — *"It doesn't invent responsibilities, benefits or requirements
    your feed didn't contain."* Selling to care providers and the NHS supply chain, this is the difference
    between interest and a compliance conversation.
-9. **Native ATS integration is shipped, not roadmap.** V1 originally had this under "in active development"
+9. **Native ATS integration is shipped, not roadmap.** *(And so is Google for Jobs, as of 2026-08-25 — see
+   §1. This rule now has two instances, and both went the same way: a shipped capability recorded as
+   forthcoming, which is the damaging direction.)* V1 originally had this under "in active development"
    with copy saying only manual transfer existed — wrong in the damaging direction for a capability that
-   closes deals. The roadmap contains exactly the two items in §1.
+   closes deals. The roadmap contains exactly the items in §1 — **one, since 2026-08-25**, and the v3 deck
+   drops the roadmap section from the site entirely, so nothing on the page depends on it.
 10. **Any AI rewrite shown must be traceable fact-for-fact to its source text.** If a before/after is
     displayed, a reader must be able to check every claim in the "after" against the "before".
 

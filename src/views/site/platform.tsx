@@ -7,7 +7,7 @@ import { createRef, Fragment, useEffect, useState } from "react";
 import { Reveal } from "@/components/ui/reveal";
 import { ScreenCard } from "@/components/ui/screen-card";
 import { SectionIntro } from "@/components/ui/section-intro";
-import { capabilities, featureBento } from "@/data/content/site";
+import { capabilities } from "@/data/content/site";
 import { useStackRise } from "@/hooks/use-stack-rise";
 
 /* The stack's feel, in one place so it can be tuned against the real thing
@@ -28,202 +28,33 @@ const NAV_CLEARANCE = 96;
 /* Breathing room below a pinned card before the stack is judged to fit. */
 const FOOT_ROOM = 24;
 
-const ICONS: Record<string, React.ReactNode> = {
-  cursor: (
-    <path
-      d="M6 3l12 8-5 1.2L10.6 17 6 3z"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinejoin="round"
-      fill="none"
-    />
-  ),
-  search: (
-    <>
-      <circle
-        cx="11"
-        cy="11"
-        r="6"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        fill="none"
-      />
-      <path
-        d="M15.5 15.5L20 20"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </>
-  ),
-  chart: (
-    <path
-      d="M5 19V11M12 19V5M19 19v-5"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-    />
-  ),
-  /* Sources: several feeds converging into one. */
-  sources: (
-    <>
-      <path
-        d="M4 6h5a4 4 0 014 4v4a4 4 0 004 4h3M4 12h5M4 18h5"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <circle cx="20" cy="18" r="1.6" fill="currentColor" stroke="none" />
-    </>
-  ),
-  /* Export: the mirror of `feed` — the same tray, the arrow leaving it. */
-  export: (
-    <>
-      <path
-        d="M12 12V3m0 0L8.6 6.4M12 3l3.4 3.4"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4 15v2.5A2.5 2.5 0 006.5 20h11a2.5 2.5 0 002.5-2.5V15"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </>
-  ),
-  /* Rewrite, with the guardrail implied: a nib, not a wand. */
-  rewrite: (
-    <>
-      <path
-        d="M4 20l1-4L15.5 5.5a2.1 2.1 0 013 3L8 19l-4 1z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <path
-        d="M14 7l3 3"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </>
-  ),
-  /* Import: something arriving and being caught. */
-  feed: (
-    <>
-      <path
-        d="M12 3v9m0 0l3.4-3.4M12 12L8.6 8.6"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4 15v2.5A2.5 2.5 0 006.5 20h11a2.5 2.5 0 002.5-2.5V15"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </>
-  ),
-};
-
-const Icon = ({ name }: { name: string }) => (
-  <span className="icon-chip" aria-hidden>
-    {/* fill="none" is load bearing: without it any CLOSED path in the set
-        fills solid black. The line-only icons looked fine and hid it. */}
-    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
-      {ICONS[name]}
-    </svg>
-  </span>
-);
+/* The ICONS map and its `Icon` chip used to live here. They were drawn for the
+   feature bento, and when that band was cut on 2026-08-25 they were left
+   behind with zero call sites. Moved to `src/components/ui/icon-chip.tsx`,
+   where the friction band's eight new marks joined them — see the drawing
+   rules in that file before adding a ninth. */
 
 /**
- * The bento, inside a white mega-panel.
+ * `FeatureBento` USED TO LIVE HERE and was cut on 2026-08-25.
  *
- * The reference's move, and the reason its cards have any weight: the panel is
- * white, so the cards inside it must go GREY rather than white or they vanish
- * into their own container. The lead card keeps a wash — it is the one with
- * the screen in it, and the grid should say which idea is load bearing rather
- * than treating four things as equals.
+ * Not because it was bad — it was the page's only white mega-panel and the
+ * only place the reference's card-inside-panel move appeared. It was cut
+ * because every claim on it was already made better somewhere else, checked
+ * one by one before it went:
+ *
+ *   "Feeds cleaned on every import"  → six stages, 02 Clean
+ *   "Pulled from any ATS"            → six stages, 01 Collect
+ *   "Sent back out clean"            → six stages, 06 Syndicate
+ *   "Rewritten, never invented"      → the AI band's §6.8 guardrail, verbatim
+ *
+ * In the reordered page the data act must not lead (the strategy doc is
+ * explicit: "do not present Feed Intelligence as the hero"), and three data
+ * bands after the emotional peak is where a long page sags. The panel
+ * composition is recorded in LAYOUT-INVENTORY.md §1.5 if it is ever wanted for
+ * something else — including the two constraints that travel with it, that the
+ * section must stay on the tinted ground and that cards inside it must be
+ * `card-quiet` rather than white.
  */
-export const FeatureBento = () => (
-  <section id="platform" className="py-26">
-    <div className="shell">
-      <Reveal variant="fade">
-        <div className="band-white rounded-panel px-6 py-16 shadow-group sm:px-12 lg:px-16 lg:py-20">
-          <SectionIntro
-            eyebrow={featureBento.eyebrow}
-            lines={[...featureBento.lines]}
-            linesSm={[...featureBento.linesSm]}
-            standfirst={featureBento.standfirst}
-          />
-
-          <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-            {/* Left column mirrors the right: the shot gets its own card on a
-                deep ground, and the copy sits UNDER it as a quiet card of the
-                same family. The picture card is then surrounded by grey ones
-                rather than swallowing the copy, which is the reference's
-                arrangement. */}
-            <div className="grid content-start gap-10">
-              <Reveal variant="rise">
-                <div className="grain bg-09 rounded-panel p-8 lg:p-10">
-                  <ScreenCard
-                    ground="none"
-                    chrome={false}
-                    src={featureBento.lead.shot.src}
-                    alt={featureBento.lead.shot.alt}
-                    /* The artwork's own 1662x1307, so nothing is cropped. */
-                    ratio="1662 / 1307"
-                  />
-                </div>
-              </Reveal>
-
-              <Reveal variant="up" delay={90}>
-                <article className="card-quiet rounded-panel p-8 lg:p-10">
-                  <div className="flex items-start gap-6">
-                    <Icon name={featureBento.lead.icon} />
-                    <div>
-                      <h3 className="display text-h4">
-                        {featureBento.lead.title}
-                      </h3>
-                      <p className="mt-4 text-body leading-[1.6] text-ink-body">
-                        {featureBento.lead.body}
-                      </p>
-                    </div>
-                  </div>
-                </article>
-              </Reveal>
-            </div>
-
-            <div className="grid grid-cols-1 gap-10">
-              {featureBento.items.map((item, i) => (
-                <Reveal key={item.title} variant="up" delay={i * 90}>
-                  <article className="flex h-full flex-col justify-center card-quiet rounded-panel p-8 lg:p-10">
-                    <div className="flex items-start gap-6">
-                      <Icon name={item.icon} />
-                      <div>
-                        <h3 className="display text-h4">{item.title}</h3>
-                        <p className="mt-4 text-body leading-[1.6] text-ink-body">
-                          {item.body}
-                        </p>
-                      </div>
-                    </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Reveal>
-    </div>
-  </section>
-);
 
 /**
  * One step: the shot on the left, the copy on the right, every time.
@@ -267,7 +98,7 @@ const StepCard = ({
         }`}
       >
         <p className="figure text-h2 text-ink/25">{step.n}</p>
-        <h3 className="display mt-6 text-h3">{step.title}</h3>
+        <h3 className="display card-title mt-6 text-h3">{step.title}</h3>
         <p className="mt-5 text-body leading-[1.6] text-ink-body">
           {step.body}
         </p>
@@ -365,6 +196,23 @@ const StepCard = ({
  * middle card sits in the middle of the viewport, with a floor so it never
  * pins under the floating nav.
  */
+/**
+ * `relative` AND `band-white` ON THIS SECTION ARE LOAD BEARING as of
+ * 2026-08-25, and not for anything to do with the card stack.
+ *
+ * `MapBand` directly above bleeds its artwork down past its own foot, and in
+ * normal painting order a later sibling's BACKGROUND goes down before an
+ * earlier sibling's in-flow CONTENT — so without a positioned, painted
+ * background here the map's picture sits on top of this band instead of being
+ * cut by it. This band inherited that job when `#payoff` was deleted; before
+ * that it was `#payoff`'s, and before that `#problem`'s.
+ *
+ * If this section is ever moved, the `relative band-white` goes to whatever
+ * ends up directly beneath `MapBand`.
+ *
+ * White also suits the stack on its own terms: the cards are white with a
+ * lift, and the shadow alone draws each card's edge against the next.
+ */
 export const Capabilities = () => {
   const steps = capabilities.steps;
   const count = steps.length;
@@ -429,7 +277,7 @@ export const Capabilities = () => {
   );
 
   return (
-    <section id="candidates" className="band-white py-26">
+    <section id="candidates" className="relative band-white py-26">
       <div className="shell">
         <SectionIntro
           eyebrow={capabilities.eyebrow}

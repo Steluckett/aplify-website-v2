@@ -206,51 +206,57 @@ export const BrandKitDemo = ({ className }: BrandKitDemoProps) => {
 
   return (
     <div className={className}>
-      {/* The same column split and gutter as `FeatureBento` up the page, so the
-          two bentos on one page read as one device rather than two. */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
-        {/* --- THE PHONE, on a ground built from its own brand colours.
-                `overflow-hidden` is what crops it; the phone is simply taller
-                than the space it is given. --- */}
-        {/* `overflow-hidden` is the crop. The phone is simply taller than the
-            space it is given, and THIS CARD'S BOTTOM EDGE cuts it — the phone
-            does not hang outside the box (tried, and Stephen's call: it should
-            be cropped by the box, not break out of it). No bottom padding, so
-            the cut lands on the card's own edge rather than inside a margin. */}
+      {/* SLIMMED 2026-08-25. This was a two-column bento: the phone on the
+          left, three cards down the right asserting the apply flow, the
+          dashboard and mobile-first.
+
+          The cards went because they were CLAIMS standing next to a
+          DEMONSTRATION, which undercuts the demonstration — the whole reason
+          this band exists (§11) is that the reader uses the product rather
+          than reading about it. The apply flow and the dashboard are named in
+          the standfirst instead, and "built for the phone first" is better
+          proved by the demo simply BEING a phone than by a card saying so.
+
+          THE CARDS WERE ALSO STRUCTURAL, which is the part to be careful
+          about. The phone is `lg:absolute`, so it contributes no height at
+          all, and the column's height used to come from those three cards —
+          the brand card's bottom edge is what crops the phone. Delete them
+          naively and the card collapses to its own padding and the crop
+          disappears with it.
+
+          The height now comes from an ASPECT RATIO, which is what ADR-0027
+          requires for anything sized against fixed artwork: a ratio cannot
+          drift, because both sides scale from the same width. Do NOT replace
+          this with a rem or px height. */}
+      <div className="mx-auto max-w-[64rem]">
         <div
           style={{ ...vars, background: ground }}
-          className="grain relative overflow-hidden rounded-panel border border-white/15 px-6 pt-6 sm:px-10 sm:pt-12"
+          className="grain relative overflow-hidden rounded-panel border border-white/15 px-6 pt-6 sm:px-10 sm:pt-12 lg:aspect-[16/10]"
         >
-          {/* The device. Same translucent white edge as the card holding it, so
-              the two read as one object rather than a picture inside a box.
+          {/* The device. Same translucent white edge as the card holding it,
+              so the two read as one object rather than a picture in a box.
 
-              28rem, not 24: at 24 the phone sat 384px wide inside a 951px card
-              and read as lost in the gradient rather than held by it. */}
-          {/* `lg:absolute` is the load-bearing bit, and it is not a positioning
-              preference — it is what makes the crop possible at all.
-
-              In flow, this phone is a grid item's content, so the row grows to
-              fit it: the card ends up TALLER than the phone and nothing is ever
-              cut, however much content you add. Taking it out of flow hands the
-              row height back to the three cards beside it, and the card's
-              `overflow-hidden` then cuts whatever the phone does not fit into.
+              `lg:absolute` is load bearing and is not a positioning
+              preference: in flow the row grows to fit the phone, the card ends
+              up taller than its contents, and nothing is ever cropped. Out of
+              flow, the card keeps the height its ratio gives it and
+              `overflow-hidden` cuts whatever the phone does not fit into.
 
               Four job tiles exist for the same reason — with three, the list
-              ended just above the cut and read as STOPPING rather than
-              continuing past the edge.
+              ended just above the cut and read as STOPPING rather than running
+              on past the edge.
 
               Below `lg` it stays IN flow: absolute would collapse the card to
               nothing, and there only the first tile renders anyway, so the
-              phone is short by design and the slider card beneath it still fits
-              on the same screen. A tall mockup on a phone is a scroll tax.
+              phone is short by design. A tall mockup on a phone is a scroll
+              tax.
 
-              `overflow-hidden` is not decoration. The last job tile's 12px
-              bottom margin was COLLAPSING out through this element and the
-              screen inside it, landing on the card instead — which is why the
-              card sat 13px lower than the phone on mobile and looked like a
-              stray gap. Establishing a block formatting context here keeps the
-              margin where it belongs. */}
-          <div className="mx-auto w-full max-w-[30rem] overflow-hidden rounded-t-[3rem] border border-b-0 border-white/25 bg-white/10 p-3.5 pb-0 backdrop-blur-sm lg:absolute lg:left-1/2 lg:top-12 lg:-translate-x-1/2">
+              `overflow-hidden` on the phone is not decoration either. The last
+              job tile's 12px bottom margin was collapsing out through this
+              element and landing on the card, which is why the card once sat
+              13px lower than the phone on mobile and looked like a stray gap.
+              A block formatting context keeps it where it belongs. */}
+          <div className="mx-auto w-full max-w-[30rem] overflow-hidden rounded-t-[3rem] border border-b-0 border-white/25 bg-white/10 p-3.5 pb-0 backdrop-blur-sm lg:absolute lg:left-1/2 lg:top-14 lg:-translate-x-1/2">
             <div
               className="rounded-t-[2.25rem] px-4 pt-4 sm:pt-5"
               style={{ background: SCREEN, fontFamily: "var(--b-font)" }}
@@ -264,93 +270,40 @@ export const BrandKitDemo = ({ className }: BrandKitDemoProps) => {
           </div>
         </div>
 
-        {/* --- THE THREE CARDS. Ours, not the brand's — they keep the page's
-                own design system and hold still while the phone changes. --- */}
-        <div className="flex flex-col gap-6 lg:gap-10">
-          <Card>
-            <h3 className="display text-h4">
-              {brandKit.cards.control.heading}
-            </h3>
-            <p className="mt-4 text-body leading-[1.6] text-ink-body">
-              {brandKit.cards.control.body}
-            </p>
-            {/* Styled with arbitrary variants rather than a class in globals:
-                a range input needs four vendor pseudo-elements, and they would
-                be four more rules in a file every other section also reads. The
-                filled portion is an inline gradient because it has to know
-                `pos`, and the thumb takes the brand accent so the control
-                travels with the thing it changes. */}
-            <input
-              type="range"
-              min={0}
-              max={1000}
-              step={1}
-              value={pos}
-              aria-label={brandKit.sliderLabel}
-              aria-valuetext={nearer.name}
-              onChange={(event) => setPos(Number(event.target.value))}
-              style={{
-                ...vars,
-                background: `linear-gradient(to right, var(--b-main) ${t * 100}%, var(--color-track, #e2e6ee) ${t * 100}%)`,
-              }}
-              className="mt-7 h-3.5 w-full cursor-grab appearance-none rounded-pill focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid focus-visible:ring-offset-4 active:cursor-grabbing [&::-moz-range-thumb]:h-9 [&::-moz-range-thumb]:w-9 [&::-moz-range-thumb]:cursor-grab [&::-moz-range-thumb]:rounded-pill [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[var(--b-main)] [&::-moz-range-thumb]:shadow-lift [&::-webkit-slider-thumb]:h-9 [&::-webkit-slider-thumb]:w-9 [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-pill [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[var(--b-main)] [&::-webkit-slider-thumb]:shadow-lift"
-            />
-          </Card>
+        {/* THE CONTROL, bare. It used to sit inside a white card under a
+            heading and a paragraph; with the cards gone there is nothing left
+            to explain it, and nothing needs to be — a slider under a phone
+            that changes as you drag it is self-describing.
 
-          <Card>
-            <h3 className="display text-h4">
-              {brandKit.cards.apply.heading}
-            </h3>
-            <p className="mt-4 text-body leading-[1.6] text-ink-body">
-              {brandKit.cards.apply.body}
-            </p>
-          </Card>
+            Still NO VISIBLE LABEL (Stephen, 2026-08-24). `aria-label` and
+            `aria-valuetext` stay: they are the only route a screen reader has
+            to this control and they cost the design nothing.
 
-          {/* Dawn — the softest of the light grounds and the one with the
-              most headroom for body copy. It breaks up a column of three
-              identical white tiles, and it quietly makes the section's own
-              point: the page around the product takes colour too. */}
-          <Card ground="bg-01">
-            <h3 className="display text-h4">
-              {brandKit.cards.responsive.heading}
-            </h3>
-            <p className="mt-4 text-body leading-[1.6] text-ink-body">
-              {brandKit.cards.responsive.body}
-            </p>
-          </Card>
-        </div>
+            Styled with arbitrary variants rather than a class in globals,
+            because a range input needs four vendor pseudo-elements and those
+            would be four more rules in a file every other section also reads.
+            The filled portion is an inline gradient because it has to know
+            `pos`, and the thumb takes the brand's own accent, so the control
+            travels with the thing it changes. */}
+        <input
+          type="range"
+          min={0}
+          max={1000}
+          step={1}
+          value={pos}
+          aria-label={brandKit.sliderLabel}
+          aria-valuetext={nearer.name}
+          onChange={(event) => setPos(Number(event.target.value))}
+          style={{
+            ...vars,
+            background: `linear-gradient(to right, var(--b-main) ${t * 100}%, var(--color-track, #e2e6ee) ${t * 100}%)`,
+          }}
+          className="mx-auto mt-12 block h-3.5 w-full max-w-[34rem] cursor-grab appearance-none rounded-pill focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid focus-visible:ring-offset-4 active:cursor-grabbing [&::-moz-range-thumb]:h-9 [&::-moz-range-thumb]:w-9 [&::-moz-range-thumb]:cursor-grab [&::-moz-range-thumb]:rounded-pill [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[var(--b-main)] [&::-moz-range-thumb]:shadow-lift [&::-webkit-slider-thumb]:h-9 [&::-webkit-slider-thumb]:w-9 [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-pill [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[var(--b-main)] [&::-webkit-slider-thumb]:shadow-lift"
+        />
       </div>
     </div>
   );
 };
-
-const Card = ({
-  children,
-  ground,
-}: {
-  children: ReactNode;
-  /** A blob ground instead of the white fill. SOFT BAND ONLY — see below. */
-  ground?: string;
-}) => (
-  /* `.tile` (white) by default, NOT `.card-quiet`. The other bento can use
-     card-quiet because it sits inside a white panel; this band sits on the
-     TINTED page ground, where card-quiet is #eef0f5 against #eff1f6 — measured
-     at one unit per channel, 1.009:1. Mathematically invisible, which is the
-     exact failure ADR-0027 documents.
-
-     A `ground` swaps that white for one of the numbered blob grounds, and it
-     must come from the SOFT band (01-03): those are the only three cleared for
-     body copy sitting directly on them. 04-06 are card-only — headings clear,
-     body ink fails — and 07-15 take white ink only. Pair it with `.grain`, as
-     every other ground on the page is. */
-  <div
-    className={`flex-1 rounded-panel p-6 shadow-sm sm:p-8 lg:p-10 ${
-      ground ? `${ground} grain` : "tile"
-    }`}
-  >
-    {children}
-  </div>
-);
 
 /* --- Phone internals -------------------------------------------------------
    Every themed value here is `var(--b-…)`; every frozen one is a constant from

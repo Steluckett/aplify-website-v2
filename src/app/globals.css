@@ -587,6 +587,31 @@ body {
     color: var(--ink-heading);
   }
 
+  /* CARD TITLES CARRY A LITTLE MORE WEIGHT THAN THE PAGE'S DISPLAY TYPE.
+     Used alongside `.display`, never instead of it.
+
+     Why it exists. The friction band was given `font-bold` on its own while
+     every other card on the page stayed at 550, and Stephen caught it
+     immediately: "The font weight in the card headlines in this section now
+     feels heavier than everywhere else." He was right, and the fix is one
+     definition rather than a weight decision per band — that is how a page
+     ends up with four of them.
+
+     Why 600 and not 700. The reference sets its card headings at 700, but in
+     Proxima Nova at NORMAL tracking. Ours is Inter at -0.035em, and tight
+     tracking makes a given weight read denser, so a straight 700 lands heavier
+     here than 700 does there. 600 is the judgement call that gets the presence
+     without the density — and unlike the ratios in this file it is a judgement,
+     not a measurement, so it is a fair thing to argue with. One value, one
+     place, easy to move.
+
+     A SECTION HEADING IS NOT A CARD TITLE and must not take this. The ladder
+     already separates them by size; separating them by weight as well would
+     flatten the difference between the two. */
+  .card-title {
+    font-weight: 600;
+  }
+
   /* A heading's ink DISSOLVES into blue across its last word — a blend, not
      a two-colour split. Wrap only the final word. Page and section headings
      only: a record's name is data and takes no tip. */
@@ -935,8 +960,33 @@ body {
     width: 44px;
     height: 44px;
     border-radius: var(--radius-pill);
-    background: var(--surface-chip);
-    color: var(--accent-mid);
+    /* NO FILL. Stephen, 2026-08-25: "they should just be ink outline and ink
+       icon - no fill."
+
+       This reverses the reasoning in the note below, and the reversal holds:
+       the fill existed because the chip needed to carry its own edge, and an
+       INK ring carries one far better than a #eef0f5 disc ever did. The disc
+       measured ΔL* 0.00 against a quiet grey card — the same colour, not merely
+       low contrast — which is why the hairline had to be there at all. An
+       outline at ink is self-sufficient on every light ground on the page.
+
+       WHAT IT IS NOT SAFE ON is a deep ground, where ink ring and ink glyph
+       both vanish. Nothing currently puts a bare chip on one, and
+       `.bg-07`-`.bg-15` are handled explicitly below so that stays true. */
+    background: transparent;
+    /* INK, NOT ACCENT. Changed 2026-08-25 on Stephen's call — "I dont like the
+       icons in blue - they should be ink" — and it fixes a measured failure at
+       the same time.
+
+       The accent blue is #3c78eb, and on this chip's own #eef0f5 fill that
+       measures **3.63:1**. Every icon-chip on the page is small: the marks are
+       20px and the quote monograms are 13px, so all of them need 4.5 and none
+       of them had it. Three monograms in `#proof` and `#dashboard` had been
+       sitting at 3.63 since they were written. Ink takes them to 15.9:1.
+
+       The AI mark keeps its own treatment below — white on the accent gradient
+       — because there the accent IS the meaning, and it is measured separately. */
+    color: var(--ink);
     /* A hairline INSIDE the circle, so the chip carries its own edge and does
        not depend on what it happens to be sitting on. The fill alone measures
        ΔL* 0.00 against a quiet grey card — not low contrast, the same colour —
@@ -944,11 +994,38 @@ body {
        surface also catch chips nested in white cards inside that wash, which
        made five more disappear. One self-sufficient recipe beats five rules
        about grounds. */
-    box-shadow: inset 0 0 0 1px rgb(16 19 26 / 0.1);
+    box-shadow: inset 0 0 0 1px rgb(16 19 24 / 0.25);
+  }
+
+  /* On a deep ground the ring and the glyph both have to flip, or the chip
+     disappears entirely. This is the same rule the `.chip` system already
+     applies at these grounds — see the four-case table in the design-system
+     note — so a bare icon chip behaves the way a bare pill does. */
+  .bg-07 .icon-chip:not([data-ai]),
+  .bg-08 .icon-chip:not([data-ai]),
+  .bg-09 .icon-chip:not([data-ai]),
+  .bg-10 .icon-chip:not([data-ai]),
+  .bg-11 .icon-chip:not([data-ai]),
+  .bg-12 .icon-chip:not([data-ai]),
+  .bg-13 .icon-chip:not([data-ai]),
+  .bg-14 .icon-chip:not([data-ai]),
+  .bg-15 .icon-chip:not([data-ai]) {
+    color: var(--ink-on-dark);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.4);
   }
 
   /* The one chip that carries the sweep. It means "a model wrote this" and
      nothing else — promoting it to decoration would dilute the signal. */
+  /* The PRODUCT register keeps the accent. Inside `.screen` an icon chip is a
+     product affordance rather than a marketing mark, and Aurora uses the accent
+     for exactly that. The two registers are a documented boundary, so this is
+     the existing seam rather than a new exception — see the `.screen` note at
+     the top of this file. Currently reached by the job-search and easy-apply
+     demos, whose chips only render in certain states. */
+  .screen .icon-chip:not([data-ai]) {
+    color: var(--accent-mid);
+  }
+
   .icon-chip[data-ai] {
     background: var(--accent-grad);
     color: #fff;

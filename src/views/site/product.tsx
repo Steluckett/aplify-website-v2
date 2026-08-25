@@ -1,7 +1,8 @@
 "use client";
 
+import { Reveal } from "@/components/ui/reveal";
 import { SectionIntro } from "@/components/ui/section-intro";
-import { demos } from "@/data/content/site";
+import { dashboardQuote, demos } from "@/data/content/site";
 
 import { AiRewriteDemo } from "./demos/ai-rewrite";
 import { DashboardDemo } from "./demos/dashboard";
@@ -66,7 +67,7 @@ export const AiEnrichmentSection = () => (
 );
 
 export const DashboardSection = () => (
-  <section id="dashboard" className="py-26">
+  <section id="dashboard" className="band-white py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={demos.dashboard.eyebrow}
@@ -80,6 +81,42 @@ export const DashboardSection = () => (
       <div className="mt-16">
         <DashboardDemo />
       </div>
+
+      {/* Ben Hopwell, beside the thing he is actually talking about.
+          §5 gives each of the three approved quotes a different job — his
+          proves the dashboard is USABLE — and until 2026-08-25 all three sat
+          together in one grid nine bands away from here, where that
+          distinction was worth nothing. Louise and Sammi are under the proof
+          figure for the same reason: each quote sits with what it proves.
+
+          Picked by name in `site.ts`, so reordering the approved array cannot
+          silently swap him for somebody making a different claim.
+
+          THIS IS WHY THE SECTION IS `band-white`. The card is `wash-soft`, a
+          10%-alpha gradient, and it needs white underneath to read. */}
+      <Reveal variant="up" className="mt-10">
+        <figure className="wash-soft mx-auto flex max-w-[46rem] flex-col rounded-panel p-8 lg:p-10">
+          <blockquote className="text-lead leading-[1.5] text-ink-heading">
+            “{dashboardQuote.quote}”
+          </blockquote>
+          <figcaption className="mt-auto flex items-center gap-3 border-t border-hairline pt-6">
+            <span
+              className="icon-chip h-10 w-10 text-ui-sm font-medium"
+              aria-hidden
+            >
+              {dashboardQuote.org.slice(0, 1)}
+            </span>
+            <span>
+              <span className="block text-ui-base font-medium text-ink">
+                {dashboardQuote.name}
+              </span>
+              <span className="block text-ui-sm text-ink-label">
+                {dashboardQuote.org}
+              </span>
+            </span>
+          </figcaption>
+        </figure>
+      </Reveal>
     </div>
   </section>
 );

@@ -48,7 +48,7 @@ export const JOBS: Job[] = [
     lat: 50.3755,
     lon: -4.1427,
     summary:
-      "Support adults with learning disabilities through daily routines, activities and appointments. No previous care experience is required — the full induction and Care Certificate are provided.",
+      "Support adults with learning disabilities through daily routines, activities and appointments. No previous care experience is required. The full induction and Care Certificate are provided.",
   },
   {
     title: "Ward Manager",

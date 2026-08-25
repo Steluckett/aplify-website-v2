@@ -31,7 +31,7 @@ export const HowItWorks = () => (
           <Reveal key={stage.n} variant="up" delay={(i % 3) * 80}>
             <article className="tile flex h-full flex-col rounded-panel p-8 lg:p-10">
               <p className="figure text-h2 text-ink/25">{stage.n}</p>
-              <h3 className="display mt-8 text-h3">{stage.title}</h3>
+              <h3 className="display card-title mt-8 text-h3">{stage.title}</h3>
               <p className="mt-3 text-body font-medium text-ink-accent">
                 {stage.sub}
               </p>

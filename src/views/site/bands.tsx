@@ -2,11 +2,15 @@ import Image from "next/image";
 
 import { Reveal } from "@/components/ui/reveal";
 import { SectionIntro } from "@/components/ui/section-intro";
-import { dropOff, siteMap } from "@/data/content/site";
+import { siteMap } from "@/data/content/site";
 
 /**
- * Two statement bands. Both exist because the page was arguing without having
- * stated what it was arguing about.
+ * One statement band.
+ *
+ * This file used to hold two. `DropOffBand` was the second, and it has been
+ * replaced by `Friction` in `problem.tsx` — a single centred line could not
+ * carry an idea about accumulation, which is what "death by a thousand cuts"
+ * is. See the note on that component.
  */
 
 /**
@@ -58,27 +62,6 @@ export const MapBand = () => (
           priority={false}
         />
       </Reveal>
-    </div>
-  </section>
-);
-
-/**
- * The second problem.
- *
- * The page named the feed problem and then answered a drop-off problem it had
- * never stated, so Easy Apply arrived as the answer to an unasked question.
- * This band asks it. It carries no statistic on purpose — see the note on
- * `dropOff` in the content module.
- */
-export const DropOffBand = () => (
-  <section id="drop-off" className="band-white py-26">
-    <div className="shell">
-      <SectionIntro
-        eyebrow={dropOff.eyebrow}
-        lines={[...dropOff.lines]}
-        linesSm={[...dropOff.linesSm]}
-        standfirst={dropOff.standfirst}
-      />
     </div>
   </section>
 );

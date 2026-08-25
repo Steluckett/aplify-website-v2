@@ -10,6 +10,146 @@ consequences. Use [[templates/adr-note]] for new entries. Newest first.
 
 ---
 
+## ADR-0031 — The page argues completion-first, and the Brand Playbook is the source of truth for language
+
+- **Status:** Accepted — supersedes V2_HANDOVER §4's argument order and §10's em-dash rule
+- **Date:** 2026-08-25
+
+**Context.** Three client documents arrived: *The Aplify Brand Playbook v3*, an
+*Homepage Strategy & Rationale v2*, and an addendum, *What Makes People Stop
+Scrolling*. Together they set the voice (commercially smart, recruitment-native,
+warm, honest enough to challenge bad habits), twenty pre-written "recruitment
+truths", and a structural argument.
+
+The strategy doc conflicts head-on with V2_HANDOVER §4. §4 runs feed broken →
+we clean it → candidates finish → 85%→30% → your team keeps working, and says
+steps 1-3 *"should never be separated"*. The strategy doc says the opposite:
+friction and completion first, Easy Apply as the payoff, and Feed Intelligence
+explicitly demoted — *"do not present Feed Intelligence as the hero."*
+
+**The conflict was already latent in the handover.** §3 names the talent
+acquisition lead as the PRIMARY audience, whose question is *"will more people
+finish?"*, and §7's primary claim is completion. Feed hygiene is the SECONDARY
+buyer's concern. So the page was opening on the secondary buyer's problem and
+making the primary buyer wait six bands for their own. §4's ordering and
+§3/§7's audience analysis had disagreed all along; the strategy doc resolves it
+the other way.
+
+**Decision.** Restructure to five acts and rewrite every string to the playbook.
+
+- **RECOGNITION** — three bands before Aplify is named at all, because the
+  addendum's first rule is that a SaaS site's biggest mistake is introducing
+  itself too quickly.
+- **THE ANSWER** — what Aplify is, the payoff, the demo, then the proof.
+- **ATTRACT** — what decides who arrives and what they make of you.
+- **IMPROVE** — where the work lands.
+- **RISK** — the objections in §9's order, then the ask.
+
+**§5 and §6 are untouched and still bind absolutely.** One statistic, three
+quotes, nothing invented. The direction changed; the facts did not.
+
+**Four bands are new.**
+
+- `#friction` — eight cuts. A weighted bento rather than eight equal cards,
+  because "death by a thousand cuts" is an idea about ACCUMULATION and a grid
+  of equals makes each cut feel separate and survivable. It began as six, all
+  post-Apply; Stephen caught that the journey starts before the form, so *the
+  search* and *the advert* became 01 and 02. That earns something structural:
+  the ATTRACT act now answers a cut the reader already recognised.
+- `#cost` — the spend itemised like a statement. **No figures, and that is not
+  an oversight:** §6.1 permits none and §5's only number is Brandon Trust's.
+- `#origin` — the playbook's One Sentence alone on ground 03, Blush, the only
+  warm ground in the set and one whose own reference note says it is *"useful
+  to break a run of cool sections"*. Nothing had ever broken one.
+- `#google` — see below.
+
+**Three bands are cut.** The platform bento (every claim already made by the six
+stages or the AI guardrail — checked line by line before it went; the panel
+composition is recorded in `LAYOUT-INVENTORY.md` §1.5). The testimonials wall.
+The roadmap, entirely.
+
+**The three quotes split up.** §5 is explicit that they are not
+interchangeable — Louise proves completion, Sammi proves the candidate
+experience, Ben proves the dashboard is usable — and the page was running all
+three as one grid with Ben nine bands from the dashboard he describes. Each now
+sits with what it proves, picked BY NAME so reordering the approved array
+cannot silently swap them.
+
+**Consequences.**
+
+- **Google for Jobs is shipped, and the handover was wrong.** §1 had it under
+  *"Roadmap — not yet available"*. Stephen confirmed it live with JSON-LD on
+  every published job; §1 is amended and dated, with the superseded wording
+  preserved. This is the SECOND capability filed as forthcoming when it had
+  shipped (native ATS integration was the first, §6.9) — both errors went the
+  damaging direction, and §6.9 now records the pattern.
+- **The band shows our own output**, not Google's page: §6.4 forbids depicting
+  another company's product, and a mock of somebody else's results proves
+  nothing about what we emit. The copy says the job *carries the structured
+  data Google reads* and must never drift into a ranking promise, which is the
+  one claim on that page a technical buyer could falsify in a minute.
+- **`#dashboard` gained a hard white requirement**, which it did not have
+  before: Ben's quote card is `wash-soft`, a 10%-alpha gradient. Three bands
+  now pin to white — `#proof`, `#dashboard`, `#security` — and `#platform`'s
+  old must-stay-tinted requirement died with the bento. The alternation runs
+  clean with one tint pair, at `#google`/`#how-it-works`.
+- **Two contrast traps, both invisible to `getComputedStyle`.** The three cards
+  under `#google` were `card-quiet` on tint (ΔE 0.35) and rendered as floating
+  text with no card. And white at /80 measures **3.97 on bg-09 (Forest)**,
+  failing AA for small text — Forest has the lowest white ceiling of the deep
+  grounds in use (5.26 at full white against bg-07's 6.53). Body ink on the deep
+  friction cells moved /80 → /90 for the same reason: /80 cleared 4.5 by 0.02
+  on bg-08. All figures from MODELLING the gradients, never from the DOM.
+- **A pre-existing failure surfaced and was deliberately not patched.** The
+  large faded numerals measure 1.73–1.75 against their cards, in `#friction`,
+  `#how-it-works` and `#candidates` alike. It is a house-wide treatment that
+  predates this work and changing it in one band only would be worse than
+  leaving it. Flagged for a decision.
+
+---
+
+## ADR-0032 — No em dashes in prose, and "career site or campaign landing page" is relaxed
+
+- **Status:** Accepted — supersedes V2_HANDOVER §10's em-dash line and relaxes §6.2
+- **Date:** 2026-08-25
+
+**Context.** Two of Stephen's calls while reviewing the v3 copy deck.
+
+**Decision one: no em dashes in prose.** *"never use double length dashes - they
+give us away as AI - single dash is fine."* Single hyphen, comma or full stop
+instead.
+
+This **directly contradicts V2_HANDOVER §10**, which reads *"Em dashes are used
+freely and are part of the voice."* That line is superseded. The scope is
+PROSE only, confirmed explicitly:
+
+- En dashes survive in numeric ranges (£24,000–£26,000) — typographic, not a tic.
+- The em dashes inside `story.rows` survive, because that is sample data
+  imitating a real ATS export on both sides of the table, not our voice.
+- Code comments and vault documents are unaffected; this is a rule about
+  user-facing copy.
+
+**Decision two: §6.2 is relaxed.** The rule required *"career site or campaign
+landing page"* every time, never the first alone, and `site.ts` carried it in
+thirteen places. Stephen: *"we need to reduce the need to mention careers site
+or landing page - that should be obvious - we are going to be problem solving
+here and it is less about where it lives but why it should be used."*
+
+It now appears three times, where deployment is genuinely the point. **Campaign
+landing pages are still a separately-sold use case** and the recruitment-ops
+buyer owns that budget, so the remaining three are not candidates for trimming.
+
+**Consequences.** Two §5-approved strings had punctuation changed and no words
+moved: the AI guardrail's connecting sentence and the Eploy line. Both are
+flagged inline where they live. The quoted phrases §6.8 protects verbatim —
+*"Works on adverts, not on people"* and the *"It rewrites what's there"*
+sentence — are untouched.
+
+**How to check.** `grep -c '—' src/data/content/*.ts`. The only legitimate hits
+are inside `story.rows`.
+
+---
+
 ## ADR-0030 — The brand kit band, and theming as a demonstration rather than a claim
 
 - **Status:** Accepted — **amended the same day**, see *Revision* below
