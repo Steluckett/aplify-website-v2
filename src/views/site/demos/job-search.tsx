@@ -646,7 +646,12 @@ const GridView = ({ jobs, route, origin, onApply }: ViewProps) => {
           {/* On the deep ground now, so --ink-label (2.04:1 there) will not do.
               The buttons beside it carry their own white grounds and are fine
               as they are. */}
-          <p className="text-ui-sm text-ink-on-dark/80" aria-live="polite">
+          {/* Pure white, NOT `/80`. Measured on the LIGHTEST pixel of `bg-08` — which
+                 is the point that matters, and the one `getComputedStyle` hides,
+                 because it reports a gradient's base colour and the base is the
+                 flattering end. Faded to 80% it lands at 4.15:1 and fails; pure
+                 it is 5.57:1. Pre-existing, found 2026-08-24. */}
+          <p className="text-ui-sm text-ink-on-dark" aria-live="polite">
             {jobSearchContent.pagination.showing
               .replace("{from}", String(current * PER_PAGE + 1))
               .replace(

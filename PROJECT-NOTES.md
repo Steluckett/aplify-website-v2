@@ -163,7 +163,18 @@ negative margin instead.
   `getBoundingClientRect` rather than trusting a capture.
 - **`getComputedStyle` cannot see gradients.** It reports a blob ground's base
   colour, so a contrast audit built on it is blind to exactly the surfaces
-  this page leans on.
+  this page leans on — AND THE BASE IS THE FLATTERING END. On a deep ground the
+  worst case for white ink is the LIGHTEST pixel, where the blobs peak, not the
+  base where none reach. A canvas audit reading `backgroundColor` reported the
+  dashboard's count row at 7.00:1; sampling the real gradient geometry put the
+  same ink at 4.15:1. Three faded whites (`text-ink-on-dark/80`) had been
+  failing on `bg-08` since they were written, and were only caught on
+  2026-08-24 by modelling the gradient rather than asking the DOM.
+
+  To do it properly: each blob's alpha falls linearly from its own value at the
+  centre to zero at 62% of the ray, and the ellipse radii are the `W% H%` in
+  the declaration. Sample a grid over the element, composite in source order,
+  take the extremes. `/backgrounds` publishes figures measured that way.
 - **Opacity tuned on a solid colour breaks on a gradient.** `white/45`
   measured 4.49:1 on flat navy and 2.78:1 on Midnight.
 

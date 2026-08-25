@@ -60,6 +60,14 @@ export const Hero = () => (
       />
 
       <Reveal variant="up" delay={260}>
+        {/* NOT `--measure-lead`, and measured rather than assumed. The section
+            standfirsts widened to 46rem on 2026-08-24 to lift their line lengths
+            off 43 characters; this one is a deliberate exception, because at
+            every width from 38rem to 46rem it sets to exactly THREE LINES — so
+            widening it buys no height at all, and at 46rem the last line is
+            "ATS." alone, 7% of the widest. 40rem lands it at 44%. Where width
+            cannot change the line count, the only thing left to optimise is the
+            rag. Re-measure before keeping this exception if the copy changes. */}
         <p className="mx-auto mt-8 max-w-[40rem] text-lead leading-[1.6] text-ink-body">
           {hero.standfirst}
         </p>

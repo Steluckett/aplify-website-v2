@@ -83,7 +83,7 @@ export const SectionIntro = ({
       {standfirst ? (
         <Reveal variant="up" delay={220}>
           <p
-            className={`mt-6 text-lead leading-[1.6] text-ink-body ${centred ? "mx-auto max-w-[36rem]" : ""}`}
+            className={`mt-6 text-lead leading-[1.6] text-ink-body ${centred ? "mx-auto max-w-[var(--measure-lead)]" : ""}`}
           >
             {standfirst}
           </p>

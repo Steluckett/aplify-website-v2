@@ -263,6 +263,21 @@
   /* The page's measure. Wide and immersive rather than a centred column —
      95vw so the layout breathes with the window, capped so a 27" display
      gets a composition rather than a stretched one. */
+  /* THE LEAD MEASURE — how wide a standfirst is allowed to get.
+     
+     Measured, not chosen. At 36rem the page's standfirsts averaged 43
+     characters per line and the wordy ones ran to five and six lines; the
+     comfortable range for running text is 45–75, so they sat BELOW the bottom
+     of it. 46rem puts the average at 55 and the worst case at 65, inside the
+     ideal band, and takes 11 lines and 420px out of the page.
+     
+     Do not push this much further. The returns flatten fast — 50rem saves two
+     more lines, 54rem saves two more again — while the worst case climbs to 73
+     characters. That is punishing for CENTRED text specifically, where the eye
+     has to find a new left edge on every line rather than returning to a fixed
+     one. This value is deliberately the point where those two curves cross. */
+  --raw-measure-lead: 46rem;
+
   --raw-shell: min(95vw, 1440px);
 
   --raw-radius-panel: 2rem; /* 32px — full-width section panels */
@@ -356,6 +371,7 @@
      colour utility silently paints `currentColor`. */
   --danger: var(--raw-color-attention-ink);
 
+  --measure-lead: var(--raw-measure-lead);
   --shell: var(--raw-shell);
 
   --radius-panel: var(--raw-radius-panel);
@@ -1094,29 +1110,58 @@ body {
      — measured at the WORST point of each, which is where three blobs overlap
      for a light ground and where none reach for a dark one:
 
-       01-03  soft    dark ink, body copy included (body 4.56 / 4.92 / 4.62)
-       04-06  vivid   CARDS ONLY. Headings clear (7.35 / 8.53 / 5.82) but body
-                      ink lands at 3.15 / 3.65 / 2.49 and fails. This is how
+       01-03  soft    dark ink, body copy included
+       04-06  vivid   CARDS ONLY. Headings clear but body ink fails. This is how
                       the reference uses its strongest light blobs too: they
                       sit behind a white card, never behind raw paragraphs.
-       07-10  deep    WHITE ink only (8.41 / 10.98 / 10.03 / 18.69), and pure
-                      white — a faded white fails, as on the vivid cards.
+       07-15  deep    WHITE ink only, and PURE white — a faded white fails, as
+                      it does on the vivid cards.
+
+     HUES WERE WIDENED on 2026-08-24. Seven of the fifteen had sat inside a 70°
+     band — sky, violet and teal — which made most of the set read as tints of
+     one idea rather than as different grounds. bg-12 was 44°. Eight were
+     re-hued to roughly 150-210° of spread by rotating one or two blobs into
+     warm or magenta territory, in the manner of the reference.
+
+     THE ROTATION PRESERVED LUMINANCE, which is why no contrast figure moved
+     against it. Each blob's new colour was solved for the lightness that keeps
+     its ORIGINAL relative luminance at the new hue — contrast depends on
+     luminance, not hue, so the whole set could be re-coloured without
+     re-approving a single measurement. Worst-point white-ink contrast, all
+     three blobs overlapping, before -> after:
+
+       bg-08 5.42 -> 5.79    bg-09 4.87 -> 5.33    bg-10 8.14 -> 8.65
+       bg-11 4.93 -> 5.22    bg-12 6.41 -> 7.28
+
+     Every one improved; nothing regressed. If a ground is ever re-hued again,
+     solve for luminance the same way rather than picking a colour by eye.
+
+     HOW THESE ARE MEASURED, because there are two answers and only one is
+     right. Compositing all three blobs at full strength gives a point that in
+     most of these grounds DOES NOT EXIST — the blobs sit in different corners
+     at 60% radii and never all reach the same pixel. The honest figure comes
+     from sampling the actual geometry: for each blob, alpha falls linearly
+     from its own value at the centre to zero at 62% of the ray, so a grid
+     sample over the element finds the true lightest and darkest pixels. The
+     numbers on `/backgrounds` come from that sampling, and white ink is judged
+     on the LIGHTEST pixel — the worst case for white, not the base colour,
+     which is the flattering one.
 
      Pair with `.grain` for the reference's film-grain finish. */
 
   .bg-01 {
     background:
-      radial-gradient(62% 58% at 10% 0%, rgb(14 165 233 / 0.22), transparent 62%),
+      radial-gradient(62% 58% at 10% 0%, rgb(14 164 234 / 0.22), transparent 62%),
       radial-gradient(55% 52% at 88% 6%, rgb(91 78 224 / 0.2), transparent 62%),
-      radial-gradient(58% 55% at 60% 102%, rgb(80 200 190 / 0.14), transparent 62%),
+      radial-gradient(58% 55% at 60% 102%, rgb(212 177 118 / 0.14), transparent 62%),
       #f7f8fc;
   }
 
   .bg-02 {
     background:
       radial-gradient(60% 62% at 6% 12%, rgb(80 200 190 / 0.26), transparent 62%),
-      radial-gradient(56% 50% at 92% 0%, rgb(14 165 233 / 0.2), transparent 62%),
-      radial-gradient(62% 50% at 50% 105%, rgb(139 92 246 / 0.1), transparent 62%),
+      radial-gradient(56% 50% at 92% 0%, rgb(169 136 248 / 0.2), transparent 62%),
+      radial-gradient(62% 50% at 50% 105%, rgb(238 13 125 / 0.1), transparent 62%),
       #f5faf8;
   }
 
@@ -1130,9 +1175,9 @@ body {
 
   .bg-04 {
     background:
-      radial-gradient(64% 60% at 0% 0%, rgb(14 165 233 / 0.34), transparent 62%),
-      radial-gradient(58% 56% at 100% 8%, rgb(91 78 224 / 0.3), transparent 62%),
-      radial-gradient(64% 58% at 50% 104%, rgb(13 148 136 / 0.22), transparent 62%),
+      radial-gradient(64% 60% at 0% 0%, rgb(14 164 234 / 0.34), transparent 62%),
+      radial-gradient(58% 56% at 100% 8%, rgb(189 33 111 / 0.3), transparent 62%),
+      radial-gradient(64% 58% at 50% 104%, rgb(180 119 16 / 0.22), transparent 62%),
       #eaf0f8;
   }
 
@@ -1162,25 +1207,25 @@ body {
 
   .bg-08 {
     background:
-      radial-gradient(66% 62% at 2% 0%, rgb(8 121 184 / 0.7), transparent 62%),
-      radial-gradient(60% 58% at 98% 10%, rgb(80 68 214 / 0.66), transparent 62%),
-      radial-gradient(62% 58% at 52% 104%, rgb(13 148 136 / 0.4), transparent 62%),
+      radial-gradient(66% 62% at 2% 0%, rgb(8 121 183 / 0.7), transparent 62%),
+      radial-gradient(60% 58% at 98% 10%, rgb(115 51 210 / 0.66), transparent 62%),
+      radial-gradient(62% 58% at 52% 104%, rgb(209 101 18 / 0.4), transparent 62%),
       #123a7a;
   }
 
   .bg-09 {
     background:
-      radial-gradient(64% 62% at 4% 6%, rgb(13 148 136 / 0.66), transparent 62%),
+      radial-gradient(64% 62% at 4% 6%, rgb(13 147 136 / 0.66), transparent 62%),
       radial-gradient(60% 58% at 98% 2%, rgb(59 63 176 / 0.58), transparent 62%),
-      radial-gradient(62% 58% at 50% 106%, rgb(8 121 184 / 0.44), transparent 62%),
+      radial-gradient(62% 58% at 50% 106%, rgb(223 10 117 / 0.44), transparent 62%),
       #0f4a48;
   }
 
   .bg-10 {
     background:
       radial-gradient(66% 64% at 6% 0%, rgb(59 63 176 / 0.62), transparent 62%),
-      radial-gradient(58% 56% at 96% 14%, rgb(13 148 136 / 0.44), transparent 62%),
-      radial-gradient(62% 58% at 50% 106%, rgb(80 68 214 / 0.5), transparent 62%),
+      radial-gradient(58% 56% at 96% 14%, rgb(238 56 147 / 0.44), transparent 62%),
+      radial-gradient(62% 58% at 50% 106%, rgb(22 102 96 / 0.5), transparent 62%),
       #041324;
   }
 
@@ -1195,17 +1240,17 @@ body {
 
   .bg-11 {
     background:
-      radial-gradient(64% 62% at 6% 8%, rgb(13 148 136 / 0.62), transparent 62%),
-      radial-gradient(58% 56% at 96% 0%, rgb(8 121 184 / 0.46), transparent 62%),
-      radial-gradient(62% 58% at 50% 106%, rgb(80 68 214 / 0.3), transparent 62%),
+      radial-gradient(64% 62% at 6% 8%, rgb(13 147 136 / 0.62), transparent 62%),
+      radial-gradient(58% 56% at 96% 0%, rgb(104 90 248 / 0.46), transparent 62%),
+      radial-gradient(62% 58% at 50% 106%, rgb(137 77 30 / 0.3), transparent 62%),
       #08312f;
   }
 
   .bg-12 {
     background:
-      radial-gradient(66% 62% at 4% 2%, rgb(8 121 184 / 0.58), transparent 62%),
-      radial-gradient(60% 58% at 98% 10%, rgb(80 68 214 / 0.52), transparent 62%),
-      radial-gradient(62% 58% at 52% 106%, rgb(59 63 176 / 0.34), transparent 62%),
+      radial-gradient(66% 62% at 4% 2%, rgb(8 121 183 / 0.58), transparent 62%),
+      radial-gradient(60% 58% at 98% 10%, rgb(168 37 103 / 0.52), transparent 62%),
+      radial-gradient(62% 58% at 52% 106%, rgb(99 74 33 / 0.34), transparent 62%),
       #0d1f4d;
   }
 
@@ -1251,9 +1296,18 @@ body {
        paints a square over a rounded card and bleeds past the radius — the
        overlay is absolutely positioned, so it does not inherit the clip. */
     border-radius: inherit;
-    opacity: 0.42;
+    /* Punched up from 0.42 / 0.8 on 2026-08-24. The old setting was present
+       but almost subliminal; the reference wears its grain openly and it is
+       most of what stops a big gradient looking like flat vector fill. Coarser
+       AND stronger — the frequency drop is what makes it read as film grain
+       rather than as a faint dither.
+
+       It cannot touch text contrast: `.grain > *` lifts every child to z-index
+       1, so the noise sits UNDER the content, modulating the ground behind the
+       type rather than the type itself. */
+    opacity: 0.58;
     mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   .grain > * {

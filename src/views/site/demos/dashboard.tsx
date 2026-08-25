@@ -784,7 +784,7 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                       inherits its parent's ink on both states. */}
                   <span
                     className={
-                      tab === value ? "text-ink-body" : "text-ink-on-dark/80"
+                      tab === value ? "text-ink-body" : "text-ink-on-dark"
                     }
                   >
                     {count}
@@ -797,7 +797,9 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
             <p
               id={countId}
               aria-live="polite"
-              className="text-ui-sm text-ink-on-dark/80"
+              /* Pure white, not `/80`: on bg-08's lightest pixel a faded
+                 white measures 4.15:1 and fails. See job-search.tsx. */
+              className="text-ui-sm text-ink-on-dark"
             >
               {showing}
             </p>
