@@ -1,53 +1,62 @@
 "use client";
 
-import { useMemo, useState, type CSSProperties } from "react";
+import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
 
-import {
-  BRAND_STOPS,
-  brandKit,
-  type BrandStop,
-  type MarkKind,
-} from "@/data/content/brand-kit";
+import { BRAND_STOPS, brandKit, type BrandStop } from "@/data/content/brand-kit";
 
 /**
- * The brand kit — one slider, and the product restyling itself under it.
+ * The brand kit — a bento, with a phone doing the arguing.
  *
  * WHAT IT IS ARGUING. §3 names employer brand consistency as a concern of the
  * primary buyer and the page never answered it. A screenshot cannot: "it can
  * look like your site" is exactly the claim a reader discounts until they move
  * something themselves. §11 — demonstrable, not described.
  *
- * ONE CONTROL. An earlier cut had four brand cards to pick between. Choosing
- * from a list is a menu; dragging a slider is a transformation, and the claim
- * is about transformation. It also lets the corner journey be the headline:
- * square at Northbank, fully rounded at Halden, monotonic all the way.
+ * TWO COLOURS PER BRAND, because one is not how brands work. `main` is the
+ * loud one — the search button and the location pin. `highlight` is its
+ * complement and carries the job title. Each pill takes a TINT of one of them
+ * (92% toward white) with that same colour at full strength for its wording, so
+ * the pair appears four times across the screen and reads as a kit rather than
+ * a stripe.
  *
- * HOW IT WORKS, AND WHY THAT MATTERS. Everything is CSS custom properties on
- * ONE wrapper. Nothing below reads a stop directly; everything reads
- * `var(--b-…)`. That is not a convenience, it is the claim: the plugin themes a
- * scope by swapping variables and leaves the markup alone.
+ * 92%, measured: at 88% the worst pill ink came out at 4.65:1 and at 11px that
+ * is too close to the line. 92% puts the worst of the eight at 4.92:1.
  *
- * BE PRECISE ABOUT "LAYOUT DOES NOT MOVE". The ARRANGEMENT is fixed — same
- * elements, same order, same grid, same width at every slider position. Heights
- * are not, and should not be: type scale and spacing are themselves
- * configurable, so the card breathes as the type grows. A card that grows
- * because its type grew has not changed layout. Do not let this drift into
- * "nothing changes size"; the standfirst says structure, not pixels.
+ * WHAT THE SLIDER TOUCHES, and deliberately nothing else: those two colours
+ * wherever they land, every corner radius, and the typeface. The grey screen,
+ * the body greys, the salary, the View button and every piece of running text
+ * all HOLD STILL.
  *
- * THE FIDELITY TRICK. The page AROUND the block is schematic — a logo bar, a
- * heading, a line of copy. The Aplify block is fully drawn. Nobody is told
- * which part is ours, because on a real site you should not be able to tell,
- * and a label would contradict the claim.
+ * That restraint is doing the work. A demo where everything changes proves
+ * nothing, because a reader cannot separate what is themeable from what is
+ * merely different. Freezing the greys is what makes the themed parts legible
+ * as a SET — you can see the boundary of the brand kit because you can see
+ * where it stops.
  *
- * §6.5 — the employers are invented. See the note in `brand-kit.ts`.
+ * HOW IT WORKS. Every themed value is a CSS custom property on one wrapper.
+ * Nothing below reads a stop directly; everything reads `var(--b-…)`. That is
+ * the claim rather than a convenience: the plugin themes a scope by swapping
+ * variables and leaves the markup alone.
+ *
+ * ONE RADIUS DRIVES EVERY CORNER. CSS clamps a border-radius to half the box,
+ * so a single 0→34px value is a square field and a square card at one end, and
+ * a true pill on a 48px field and a 34px corner on a tall card at the other,
+ * with no per-element maths. Do not "fix" this by giving each element its own
+ * radius — the shared value is why the whole screen rounds as one gesture.
+ *
+ * THE PHONE IS CROPPED ON PURPOSE. Its bottom two thirds run out of the card,
+ * which is what makes the second job card read as "there is more of this" and
+ * stops the mockup looking like a small complete thing floating in a big box.
+ *
+ * §6.5 — the four employers are invented and now appear ONLY in
+ * `aria-valuetext`. Nothing on screen names them.
  */
 
 /* --- Oklab interpolation ---------------------------------------------------
    sRGB is the wrong space to cross a hue in: blue → terracotta through sRGB
-   sags into a dead grey at the midpoint, and the midpoint is a resting
-   position on a slider. Oklab keeps perceived lightness steady across the
-   blend, which is what stops the middle of the journey looking like a mistake.
-   Local rather than a shared util because nothing else needs it yet. */
+   sags into a dead grey at the midpoint, and on a slider the midpoint is a
+   resting position somebody will look at. Oklab holds perceived lightness
+   across the blend. Local rather than shared because nothing else needs it. */
 
 const srgbToLinear = (c: number) =>
   c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
@@ -55,11 +64,30 @@ const srgbToLinear = (c: number) =>
 const linearToSrgb = (c: number) =>
   c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
 
-const hexToOklab = (hex: string): [number, number, number] => {
-  const n = parseInt(hex.slice(1), 16);
-  const r = srgbToLinear(((n >> 16) & 255) / 255);
-  const g = srgbToLinear(((n >> 8) & 255) / 255);
-  const b = srgbToLinear((n & 255) / 255);
+/**
+ * Accepts `#rrggbb` OR `rgb(r, g, b)`, and that is not politeness — it is a
+ * bug fix. `mix()` RETURNS an `rgb()` string, so any derived colour fed back in
+ * (the pill tints are mixes of an already-mixed brand colour) arrived in a form
+ * the old hex-only parser could not read. It did not throw: `parseInt` gave
+ * `NaN`, and `NaN >> 16` coerces to 0, so every tint was silently computed from
+ * BLACK. Both pills came out the same dead grey at every slider position and
+ * nothing anywhere reported an error.
+ */
+const parseColour = (c: string): [number, number, number] => {
+  if (c.startsWith("#")) {
+    const n = parseInt(c.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  const m = c.match(/-?\d+(\.\d+)?/g);
+  if (!m || m.length < 3) throw new Error(`brand-kit: unparseable colour ${c}`);
+  return [Number(m[0]), Number(m[1]), Number(m[2])];
+};
+
+const toOklab = (input: string): [number, number, number] => {
+  const [R, G, B] = parseColour(input);
+  const r = srgbToLinear(R / 255);
+  const g = srgbToLinear(G / 255);
+  const b = srgbToLinear(B / 255);
   const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
   const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
   const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
@@ -70,25 +98,31 @@ const hexToOklab = (hex: string): [number, number, number] => {
   ];
 };
 
-const oklabToRgb = ([L, A, B]: [number, number, number]) => {
+const fromOklab = ([L, A, B]: [number, number, number]) => {
   const l = (L + 0.3963377774 * A + 0.2158037573 * B) ** 3;
   const m = (L - 0.1055613458 * A - 0.0638541728 * B) ** 3;
   const s = (L - 0.0894841775 * A - 1.291485548 * B) ** 3;
-  const to255 = (v: number) =>
+  const c = (v: number) =>
     Math.max(0, Math.min(255, Math.round(linearToSrgb(v) * 255)));
-  return `rgb(${to255(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s)}, ${to255(
+  return `rgb(${c(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s)}, ${c(
     -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
-  )}, ${to255(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s)})`;
+  )}, ${c(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s)})`;
 };
 
-const mixHex = (a: string, b: string, u: number) => {
-  const x = hexToOklab(a);
-  const y = hexToOklab(b);
-  return oklabToRgb([
+const mix = (a: string, b: string, u: number) => {
+  const x = toOklab(a);
+  const y = toOklab(b);
+  return fromOklab([
     x[0] + (y[0] - x[0]) * u,
     x[1] + (y[1] - x[1]) * u,
     x[2] + (y[2] - x[2]) * u,
   ]);
+};
+
+/** `rgb(r g b / a)` from any colour `parseColour` understands. */
+const withAlpha = (colour: string, a: number) => {
+  const [r, g, b] = parseColour(colour);
+  return `rgb(${r} ${g} ${b} / ${a})`;
 };
 
 const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
@@ -104,42 +138,21 @@ const segmentAt = (t: number) => {
   return { from, to, u };
 };
 
-/* --- Marks -----------------------------------------------------------------
-   A logo is a real configurable — it appears in the apply flow and the
-   dashboard — so it has to change with everything else. All four are built
-   from `currentColor` so they take the brand ink for free. */
-
-const Mark = ({ kind }: { kind: MarkKind }) => {
-  const common = { viewBox: "0 0 24 24", className: "h-full w-full" } as const;
-  if (kind === "bars")
-    return (
-      <svg {...common} fill="currentColor" aria-hidden>
-        <rect x="3" y="4" width="4.4" height="16" rx="0.6" />
-        <rect x="9.8" y="4" width="4.4" height="10.5" rx="0.6" />
-        <rect x="16.6" y="4" width="4.4" height="16" rx="0.6" />
-      </svg>
-    );
-  if (kind === "leaf")
-    return (
-      <svg {...common} fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-        <path d="M20 4C11 4 5 8.6 5 15a5 5 0 005 5c6.4 0 10-6 10-16z" />
-        <path d="M16 8L7.5 19" strokeLinecap="round" />
-      </svg>
-    );
-  if (kind === "arch")
-    return (
-      <svg {...common} fill="none" stroke="currentColor" strokeWidth="2.1" aria-hidden>
-        <path d="M4 20V12a8 8 0 0116 0v8" strokeLinecap="round" />
-        <path d="M10 20v-7.5h4V20" strokeLinecap="round" />
-      </svg>
-    );
-  return (
-    <svg {...common} fill="currentColor" aria-hidden>
-      <circle cx="12" cy="12" r="8.6" />
-      <circle cx="12" cy="12" r="3.4" fill="var(--b-accent-ink)" />
-    </svg>
-  );
-};
+/* --- Fixed screen values --------------------------------------------------
+   These are the phone's own furniture and they do NOT theme. Named here so it
+   is obvious at a glance which half of the screen is frozen. The search panel
+   is a step darker than the screen behind it: on the reference both were near
+   white, so the white fields had nothing to lift off and the radius change was
+   invisible on them. */
+const SCREEN = "#eef0f4";
+const PANEL = "#e2e6ee";
+const CARD = "#ffffff";
+const INK = "#101318";
+const INK_SOFT = "#656b72";
+/** The View button stays neutral — it is a secondary action, and leaving it
+    grey is what lets the two brand colours read as deliberate rather than as
+    "everything is coloured now". */
+const NEUTRAL_PILL = "#eef0f5";
 
 /* --- The demo -------------------------------------------------------------- */
 
@@ -151,380 +164,329 @@ export const BrandKitDemo = ({ className }: BrandKitDemoProps) => {
   /** 0–1000 rather than 0–1: a range input steps in integers. */
   const [pos, setPos] = useState(0);
   const t = pos / 1000;
-
   const { from, to, u } = useMemo(() => segmentAt(t), [t]);
 
-  /** Font, shadow and the employer's name cannot be blended, so they take the
-   *  nearer stop and all snap together at the same halfway point. */
+  /** A typeface cannot be blended, so it snaps at the halfway point. */
   const nearer: BrandStop = u < 0.5 ? from : to;
-  /** 0 below u=0.4, 1 above u=0.6 — a short cross-fade for the mark only. */
-  const blend = Math.min(1, Math.max(0, (u - 0.4) / 0.2));
+  const main = mix(from.main, to.main, u);
+  const highlight = mix(from.highlight, to.highlight, u);
   const radius = lerp(from.radius, to.radius, u);
 
+  /* THE SECTION GROUND IS THEMED TOO, and this is the part that makes the
+     point land: it says the page a candidate arrives on is yours as well, not
+     just the widget sitting on it. It is abstract enough to carry that without
+     pretending to be anyone's actual page.
+
+     Built from the brand's own two colours rather than picked from the numbered
+     grounds, for one practical reason: a slider needs to INTERPOLATE. Four
+     fixed backgrounds would have to cross-fade as two stacked layers, and every
+     resting position between stops would be a blend of two unrelated gradients.
+     Derived, it moves continuously and every position is coherent by
+     construction. The recipe is `.bg-07`'s — three radial blobs over a deep
+     base — so it belongs to the same family as the page's other grounds. */
+  const ground = [
+    `radial-gradient(66% 62% at 6% 4%, ${withAlpha(main, 0.62)}, transparent 62%)`,
+    `radial-gradient(58% 58% at 96% 12%, ${withAlpha(highlight, 0.55)}, transparent 62%)`,
+    `radial-gradient(64% 60% at 48% 104%, ${withAlpha(mix(main, highlight, 0.5), 0.45)}, transparent 62%)`,
+    mix(main, "#0a0f1c", 0.52),
+  ].join(", ");
+
   const vars = {
-    "--b-ground": mixHex(from.ground, to.ground, u),
-    "--b-surface": mixHex(from.surface, to.surface, u),
-    "--b-surface-muted": mixHex(from.surfaceMuted, to.surfaceMuted, u),
-    "--b-ink": mixHex(from.ink, to.ink, u),
-    "--b-ink-soft": mixHex(from.inkSoft, to.inkSoft, u),
-    "--b-accent": mixHex(from.accent, to.accent, u),
-    "--b-accent-ink": mixHex(from.accentInk, to.accentInk, u),
+    "--b-main": main,
+    "--b-highlight": highlight,
+    "--b-main-ink": mix(from.mainInk, to.mainInk, u),
+    /* Both tints are DERIVED, not authored: each colour taken 92% of the way to
+       white in Oklab. Authoring a tint per stop invites one that drifts off its
+       own colour, and deriving it means a new stop cannot get it wrong. */
+    "--b-tint-main": mix(main, "#ffffff", 0.92),
+    "--b-tint-highlight": mix(highlight, "#ffffff", 0.92),
     "--b-font": nearer.font,
-    "--b-shadow": nearer.shadow,
-    "--b-scale": String(lerp(from.scale, to.scale, u)),
-    "--b-tracking": `${lerp(from.tracking, to.tracking, u)}em`,
-    "--b-gap": String(lerp(from.gap, to.gap, u)),
-    /* Inner radii derive from the outer one and bottom out at zero — the
-       product spec's rule that an outer radius exceeds its inner, written as
-       arithmetic so the slider cannot break it. */
     "--b-r": `${radius}px`,
-    "--b-r-in": `${Math.max(0, radius - 8)}px`,
-    "--b-r-sm": `${Math.max(0, radius * 0.34)}px`,
   } as CSSProperties;
 
   return (
-    <div className={className} style={vars}>
-      {/* --- THE CONTROL. One slider, centred, and completely unlabelled.
-              The employer names that used to sit at each end are gone
-              (Stephen, 2026-08-24) — cleaner without, and the example already
-              names whichever brand the slider is on. Nothing here should ever
-              itemise what the slider changes: the point is that it changes
-              everything at once.
-
-              `aria-label` and `aria-valuetext` stay. They are the only route a
-              screen reader has to what this control is and where it currently
-              sits, and they cost the visual design nothing. --- */}
-      <div className="mx-auto w-full max-w-[42rem]">
-        {/* Styled with arbitrary variants rather than a class in globals.css,
-            on purpose: a range input needs four vendor pseudo-elements and
-            they would be four more rules in a file that every other section
-            also reads. The filled portion is an inline gradient because it has
-            to know `pos`, and the thumb takes the brand accent so the control
-            itself travels with the thing it is changing. */}
-        <input
-          type="range"
-          min={0}
-          max={1000}
-          step={1}
-          value={pos}
-          aria-label={brandKit.slider.label}
-          aria-valuetext={nearer.name}
-          onChange={(event) => setPos(Number(event.target.value))}
-          style={{
-            background: `linear-gradient(to right, var(--b-accent) ${t * 100}%, var(--color-track, #e2e6ee) ${t * 100}%)`,
-          }}
-          className="h-4 w-full cursor-grab appearance-none rounded-pill focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid focus-visible:ring-offset-4 active:cursor-grabbing [&::-moz-range-thumb]:h-11 [&::-moz-range-thumb]:w-11 [&::-moz-range-thumb]:cursor-grab [&::-moz-range-thumb]:rounded-pill [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[var(--b-accent)] [&::-moz-range-thumb]:shadow-lift [&::-webkit-slider-thumb]:h-11 [&::-webkit-slider-thumb]:w-11 [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-pill [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[var(--b-accent)] [&::-webkit-slider-thumb]:shadow-lift"
-        />
-      </div>
-
-      {/* --- THE EXAMPLE. Centred under the control, and it runs off the foot
-              of the section — see `brand.tsx` for the bleed. --- */}
-      <div
-        className="mx-auto mt-14 w-full max-w-[62rem] overflow-hidden rounded-panel shadow-lift"
-        style={{ borderRadius: "var(--b-r)" }}
-      >
+    <div className={className}>
+      {/* The same column split and gutter as `FeatureBento` up the page, so the
+          two bentos on one page read as one device rather than two. */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
+        {/* --- THE PHONE, on a ground built from its own brand colours.
+                `overflow-hidden` is what crops it; the phone is simply taller
+                than the space it is given. --- */}
+        {/* `overflow-hidden` is the crop. The phone is simply taller than the
+            space it is given, and THIS CARD'S BOTTOM EDGE cuts it — the phone
+            does not hang outside the box (tried, and Stephen's call: it should
+            be cropped by the box, not break out of it). No bottom padding, so
+            the cut lands on the card's own edge rather than inside a margin. */}
         <div
-          className="flex h-full flex-col p-6 sm:p-10"
-          style={{
-            background: "var(--b-ground)",
-            color: "var(--b-ink)",
-            fontFamily: "var(--b-font)",
-            letterSpacing: "var(--b-tracking)",
-          }}
+          style={{ ...vars, background: ground }}
+          className="grain relative overflow-hidden rounded-panel border border-white/15 px-6 pt-6 sm:px-10 sm:pt-12"
         >
-          {/* The employer's own page furniture — schematic on purpose. */}
-          <div className="flex items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              {/* The mark cross-fades, but only across a NARROW window either
-                  side of the halfway point. A full-segment cross-fade puts both
-                  marks at 50% for most of the drag, which does not read as a
-                  blend, it reads as a double exposure. */}
-              <span
-                className="relative grid h-10 w-10 flex-none place-items-center p-2.5"
-                style={{
-                  background: "var(--b-accent)",
-                  color: "var(--b-accent-ink)",
-                  borderRadius: "var(--b-r-in)",
-                }}
-              >
-                <span
-                  className="absolute inset-0 grid place-items-center p-2.5"
-                  style={{ opacity: 1 - blend }}
-                >
-                  <Mark kind={from.mark} />
-                </span>
-                <span
-                  className="absolute inset-0 grid place-items-center p-2.5"
-                  style={{ opacity: blend }}
-                >
-                  <Mark kind={to.mark} />
-                </span>
-              </span>
-              {/* The NAME does not cross-fade at all — it snaps, with the font
-                  and the shadow, at the same halfway point. Two names at 50%
-                  over each other are not a transition, they are two words of
-                  mush: "Northbank Health" under "Meridian Care" rendered as
-                  `Meridlan Cafealth`. A label swapping as you drag past the
-                  midpoint is ordinary; an unreadable one is a bug. */}
-              <span
-                className="font-medium"
-                style={{ fontSize: "calc(1rem * var(--b-scale))" }}
-              >
-                {nearer.name}
-              </span>
-            </div>
-            <nav className="hidden items-center gap-6 sm:flex">
-              {brandKit.page.nav.map((item, index) => (
-                <span
-                  key={item}
-                  style={{
-                    color:
-                      index === brandKit.page.nav.length - 1
-                        ? "var(--b-accent)"
-                        : "var(--b-ink-soft)",
-                    fontSize: "calc(0.8125rem * var(--b-scale))",
-                  }}
-                >
-                  {item}
-                </span>
-              ))}
-            </nav>
-          </div>
+          {/* The device. Same translucent white edge as the card holding it, so
+              the two read as one object rather than a picture inside a box.
 
-          <div style={{ marginTop: "calc(2.25rem * var(--b-gap))" }}>
-            <h4
-              className="font-medium leading-tight"
-              style={{ fontSize: "calc(2.25rem * var(--b-scale))" }}
+              28rem, not 24: at 24 the phone sat 384px wide inside a 951px card
+              and read as lost in the gradient rather than held by it. */}
+          {/* `lg:absolute` is the load-bearing bit, and it is not a positioning
+              preference — it is what makes the crop possible at all.
+
+              In flow, this phone is a grid item's content, so the row grows to
+              fit it: the card ends up TALLER than the phone and nothing is ever
+              cut, however much content you add. Taking it out of flow hands the
+              row height back to the three cards beside it, and the card's
+              `overflow-hidden` then cuts whatever the phone does not fit into.
+
+              Four job tiles exist for the same reason — with three, the list
+              ended just above the cut and read as STOPPING rather than
+              continuing past the edge.
+
+              Below `lg` it stays IN flow: absolute would collapse the card to
+              nothing, and there only the first tile renders anyway, so the
+              phone is short by design and the slider card beneath it still fits
+              on the same screen. A tall mockup on a phone is a scroll tax.
+
+              `overflow-hidden` is not decoration. The last job tile's 12px
+              bottom margin was COLLAPSING out through this element and the
+              screen inside it, landing on the card instead — which is why the
+              card sat 13px lower than the phone on mobile and looked like a
+              stray gap. Establishing a block formatting context here keeps the
+              margin where it belongs. */}
+          <div className="mx-auto w-full max-w-[30rem] overflow-hidden rounded-t-[3rem] border border-b-0 border-white/25 bg-white/10 p-3.5 pb-0 backdrop-blur-sm lg:absolute lg:left-1/2 lg:top-12 lg:-translate-x-1/2">
+            <div
+              className="rounded-t-[2.25rem] px-4 pt-4 sm:pt-5"
+              style={{ background: SCREEN, fontFamily: "var(--b-font)" }}
             >
-              {brandKit.page.heading}
-            </h4>
-            <p
-              className="mt-2"
-              style={{
-                color: "var(--b-ink-soft)",
-                fontSize: "calc(0.875rem * var(--b-scale))",
-              }}
-            >
-              {brandKit.page.meta}
-            </p>
-            <p
-              className="mt-4 max-w-[36rem] leading-relaxed"
-              style={{
-                color: "var(--b-ink-soft)",
-                fontSize: "calc(0.9375rem * var(--b-scale))",
-              }}
-            >
-              {brandKit.page.intro}
-            </p>
-          </div>
-
-          {/* --- THE APLIFY BLOCK. Fully drawn, deliberately unlabelled. --- */}
-          <div
-            className="flex flex-col"
-            style={{
-              marginTop: "calc(2rem * var(--b-gap))",
-              background: "var(--b-surface)",
-              borderRadius: "var(--b-r)",
-              boxShadow: "var(--b-shadow)",
-              padding: "calc(1.75rem * var(--b-gap))",
-              gap: "calc(1.1rem * var(--b-gap))",
-            }}
-          >
-            <p
-              className="font-medium"
-              style={{ fontSize: "calc(1.25rem * var(--b-scale))" }}
-            >
-              {brandKit.block.heading}
-            </p>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field
-                label={brandKit.block.nameLabel}
-                placeholder={brandKit.block.namePlaceholder}
-              />
-              <Field
-                label={brandKit.block.emailLabel}
-                placeholder={brandKit.block.emailPlaceholder}
-                type="email"
-              />
-            </div>
-
-            {/* The CV row carries the muted fill, an inner radius and a
-                secondary button in one object — the fastest way to see a brand
-                land on more than a colour. */}
-            <div>
-              <span
-                className="block"
-                style={{
-                  color: "var(--b-ink-soft)",
-                  fontSize: "calc(0.75rem * var(--b-scale))",
-                }}
-              >
-                {brandKit.block.cvLabel}
-              </span>
-              <div
-                className="mt-1.5 flex flex-wrap items-center justify-between gap-3"
-                style={{
-                  background: "var(--b-surface-muted)",
-                  borderRadius: "var(--b-r-in)",
-                  padding: "calc(0.8rem * var(--b-gap))",
-                }}
-              >
-                <span
-                  style={{
-                    color: "var(--b-ink-soft)",
-                    fontSize: "calc(0.8125rem * var(--b-scale))",
-                  }}
-                >
-                  {brandKit.block.cvHint}
-                </span>
-                <span
-                  className="font-medium"
-                  style={{
-                    background: "var(--b-surface)",
-                    color: "var(--b-ink)",
-                    borderRadius: "var(--b-r-sm)",
-                    padding: "0.5em 1.1em",
-                    fontSize: "calc(0.8125rem * var(--b-scale))",
-                    boxShadow: "var(--b-shadow)",
-                  }}
-                >
-                  {brandKit.block.cvButton}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <span
-                aria-hidden
-                className="mt-0.5 grid h-4 w-4 flex-none place-items-center"
-                style={{
-                  background: "var(--b-accent)",
-                  color: "var(--b-accent-ink)",
-                  borderRadius: "var(--b-r-sm)",
-                }}
-              >
-                <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none">
-                  <path
-                    d="M5 12.5l4.5 4.5L19 7.5"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-              <span
-                className="leading-relaxed"
-                style={{
-                  color: "var(--b-ink-soft)",
-                  fontSize: "calc(0.8125rem * var(--b-scale))",
-                }}
-              >
-                {brandKit.block.consent.replace("{brand}", nearer.name)}
-              </span>
-            </div>
-
-            <span
-              className="self-start font-medium"
-              style={{
-                background: "var(--b-accent)",
-                color: "var(--b-accent-ink)",
-                borderRadius: "var(--b-r-in)",
-                padding: "0.9em 1.8em",
-                fontSize: "calc(0.9375rem * var(--b-scale))",
-              }}
-            >
-              {brandKit.block.submit}
-            </span>
-          </div>
-
-          {/* The employer's page footer, schematic like the header — and it
-              earns its place twice. A careers page has one, so the example
-              reads as a page rather than a card; and it gives the BLEED
-              something expendable to cut through. Without it the crop landed
-              across the submit button, which reads as an accident rather than
-              a decision. */}
-          <div
-            className="flex flex-wrap items-center justify-between gap-4"
-            style={{
-              marginTop: "calc(2.25rem * var(--b-gap))",
-              paddingTop: "calc(1.5rem * var(--b-gap))",
-              borderTop: "1px solid var(--b-surface-muted)",
-            }}
-          >
-            <div className="flex flex-wrap items-center gap-5">
-              {brandKit.page.footer.map((item) => (
-                <span
-                  key={item}
-                  style={{
-                    color: "var(--b-ink-soft)",
-                    fontSize: "calc(0.8125rem * var(--b-scale))",
-                  }}
-                >
-                  {item}
-                </span>
+              <SearchPanel />
+              <CountRow />
+              {brandKit.phone.jobs.map((job, index) => (
+                <JobCard key={job.title} job={job} index={index} />
               ))}
             </div>
-            <span
-              style={{
-                color: "var(--b-ink-soft)",
-                fontSize: "calc(0.75rem * var(--b-scale))",
-              }}
-            >
-              {brandKit.page.legal.replace("{brand}", nearer.name)}
-            </span>
           </div>
+        </div>
+
+        {/* --- THE THREE CARDS. Ours, not the brand's — they keep the page's
+                own design system and hold still while the phone changes. --- */}
+        <div className="flex flex-col gap-6 lg:gap-10">
+          <Card>
+            <h3 className="display text-h4">
+              {brandKit.cards.control.heading}
+            </h3>
+            <p className="mt-4 text-body leading-[1.6] text-ink-body">
+              {brandKit.cards.control.body}
+            </p>
+            {/* Styled with arbitrary variants rather than a class in globals:
+                a range input needs four vendor pseudo-elements, and they would
+                be four more rules in a file every other section also reads. The
+                filled portion is an inline gradient because it has to know
+                `pos`, and the thumb takes the brand accent so the control
+                travels with the thing it changes. */}
+            <input
+              type="range"
+              min={0}
+              max={1000}
+              step={1}
+              value={pos}
+              aria-label={brandKit.sliderLabel}
+              aria-valuetext={nearer.name}
+              onChange={(event) => setPos(Number(event.target.value))}
+              style={{
+                ...vars,
+                background: `linear-gradient(to right, var(--b-main) ${t * 100}%, var(--color-track, #e2e6ee) ${t * 100}%)`,
+              }}
+              className="mt-7 h-3.5 w-full cursor-grab appearance-none rounded-pill focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid focus-visible:ring-offset-4 active:cursor-grabbing [&::-moz-range-thumb]:h-9 [&::-moz-range-thumb]:w-9 [&::-moz-range-thumb]:cursor-grab [&::-moz-range-thumb]:rounded-pill [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-[var(--b-main)] [&::-moz-range-thumb]:shadow-lift [&::-webkit-slider-thumb]:h-9 [&::-webkit-slider-thumb]:w-9 [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-pill [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-[var(--b-main)] [&::-webkit-slider-thumb]:shadow-lift"
+            />
+          </Card>
+
+          <Card>
+            <h3 className="display text-h4">
+              {brandKit.cards.apply.heading}
+            </h3>
+            <p className="mt-4 text-body leading-[1.6] text-ink-body">
+              {brandKit.cards.apply.body}
+            </p>
+          </Card>
+
+          {/* Dawn — the softest of the light grounds and the one with the
+              most headroom for body copy. It breaks up a column of three
+              identical white tiles, and it quietly makes the section's own
+              point: the page around the product takes colour too. */}
+          <Card ground="bg-01">
+            <h3 className="display text-h4">
+              {brandKit.cards.responsive.heading}
+            </h3>
+            <p className="mt-4 text-body leading-[1.6] text-ink-body">
+              {brandKit.cards.responsive.body}
+            </p>
+          </Card>
         </div>
       </div>
     </div>
   );
 };
 
-/**
- * One field. Inert by design — the whole block is a rendering, and §6.7's
- * "nothing is sent, stored or read" is easiest to honour by there being
- * nothing to submit.
- */
-const Field = ({
-  label,
-  placeholder,
-  type = "text",
+const Card = ({
+  children,
+  ground,
 }: {
-  label: string;
-  placeholder: string;
-  type?: string;
+  children: ReactNode;
+  /** A blob ground instead of the white fill. SOFT BAND ONLY — see below. */
+  ground?: string;
 }) => (
-  <label className="block">
-    <span
-      className="block"
+  /* `.tile` (white) by default, NOT `.card-quiet`. The other bento can use
+     card-quiet because it sits inside a white panel; this band sits on the
+     TINTED page ground, where card-quiet is #eef0f5 against #eff1f6 — measured
+     at one unit per channel, 1.009:1. Mathematically invisible, which is the
+     exact failure ADR-0027 documents.
+
+     A `ground` swaps that white for one of the numbered blob grounds, and it
+     must come from the SOFT band (01-03): those are the only three cleared for
+     body copy sitting directly on them. 04-06 are card-only — headings clear,
+     body ink fails — and 07-15 take white ink only. Pair it with `.grain`, as
+     every other ground on the page is. */
+  <div
+    className={`flex-1 rounded-panel p-6 shadow-sm sm:p-8 lg:p-10 ${
+      ground ? `${ground} grain` : "tile"
+    }`}
+  >
+    {children}
+  </div>
+);
+
+/* --- Phone internals -------------------------------------------------------
+   Every themed value here is `var(--b-…)`; every frozen one is a constant from
+   the block above. Nothing in between. */
+
+const SearchPanel = () => (
+  <div
+    className="p-3"
+    style={{ background: PANEL, borderRadius: "var(--b-r)" }}
+  >
+    <div
+      className="flex h-12 items-center px-5 text-ui-base"
+      style={{ background: CARD, color: INK_SOFT, borderRadius: "var(--b-r)" }}
+    >
+      {brandKit.phone.keywordPlaceholder}
+    </div>
+    <div
+      className="mt-2.5 flex h-12 items-center gap-2.5 px-5 text-ui-base"
+      style={{ background: CARD, color: INK, borderRadius: "var(--b-r)" }}
+    >
+      {/* The pin takes the accent. It is the only glyph on the screen carrying
+          brand colour on the reference, and leaving it blue while the rest of
+          the screen turned terracotta read as a bug rather than a constant. */}
+      <svg
+        viewBox="0 0 24 24"
+        className="h-4 w-4 flex-none"
+        fill="none"
+        style={{ color: "var(--b-main)" }}
+        aria-hidden
+      >
+        <path
+          d="M12 21s7-6.1 7-11a7 7 0 10-14 0c0 4.9 7 11 7 11z"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinejoin="round"
+        />
+        <circle cx="12" cy="10" r="2.4" stroke="currentColor" strokeWidth="1.7" />
+      </svg>
+      {brandKit.phone.location}
+    </div>
+    <div
+      className="mt-2.5 flex h-12 items-center justify-center text-ui-base font-medium"
       style={{
-        color: "var(--b-ink-soft)",
-        fontSize: "calc(0.75rem * var(--b-scale))",
+        /* Solid, not the reference's gradient: that gradient was Aplify's own
+           brand. A client sets ONE primary, and a flat fill also shows the
+           corner change more plainly than a gradient does. */
+        background: "var(--b-main)",
+        color: "var(--b-main-ink)",
+        borderRadius: "var(--b-r)",
       }}
     >
-      {label}
+      {brandKit.phone.search}
+    </div>
+  </div>
+);
+
+const CountRow = () => (
+  <div className="flex items-end justify-between px-1 py-4">
+    <span className="text-ui-base" style={{ color: INK_SOFT }}>
+      {brandKit.phone.sortedBy}
     </span>
-    <input
-      type={type}
-      placeholder={placeholder}
-      readOnly
-      tabIndex={-1}
-      /* The placeholder needs saying out loud. Left alone the UA derives it
-         from `color` at 50% alpha, which fails wherever the ink is near its
-         ground — and no contrast sweep that walks text nodes will catch it,
-         because a placeholder is not one. `opacity-100` is for Firefox, which
-         dims it again on top. It cannot be inline: `::placeholder` is a
-         pseudo-element. */
-      className="mt-1.5 w-full border-0 outline-none [&::placeholder]:text-[var(--b-ink-soft)] [&::placeholder]:opacity-100"
-      style={{
-        background: "var(--b-surface-muted)",
-        color: "var(--b-ink)",
-        borderRadius: "var(--b-r-in)",
-        padding: "calc(0.75rem * var(--b-gap)) 1rem",
-        fontSize: "calc(0.875rem * var(--b-scale))",
-        fontFamily: "var(--b-font)",
-      }}
-    />
-  </label>
+    <span className="flex items-baseline gap-1">
+      {/* Weight 200 at size, per the product spec: a big number in semibold
+          reads as a heading, at 200 it reads as a quantity. */}
+      <span
+        className="text-[2rem] leading-none font-extralight"
+        style={{ color: INK }}
+      >
+        {brandKit.phone.count}
+      </span>
+      <span className="text-ui-sm" style={{ color: INK_SOFT }}>
+        {brandKit.phone.countUnit}
+      </span>
+    </span>
+  </div>
+);
+
+const JobCard = ({
+  job,
+  index,
+}: {
+  job: (typeof brandKit.phone.jobs)[number];
+  index: number;
+}) => (
+  <div
+    /* Everything past the first tile is hidden below `sm`. The point of the
+       mockup on a phone is that you can see the control and the thing it
+       controls at once; three tiles pushes the slider off the screen. */
+    className={`mb-3 p-4 ${index > 0 ? "hidden sm:block" : ""}`}
+    style={{ background: CARD, borderRadius: "var(--b-r)" }}
+  >
+    <p
+      className="text-ui-lg font-medium tracking-tight"
+      style={{ color: "var(--b-highlight)" }}
+    >
+      {job.title}
+    </p>
+    <p className="mt-1 text-ui-sm" style={{ color: INK_SOFT }}>
+      {job.place} · {job.distance}
+    </p>
+    <div className="mt-3 flex flex-wrap items-center gap-2">
+      <span
+        className="px-3 py-1.5 text-ui-2xs font-medium"
+        style={{
+          background: "var(--b-tint-main)",
+          color: "var(--b-main)",
+          borderRadius: "var(--b-r)",
+        }}
+      >
+        {job.category}
+      </span>
+      <span
+        className="px-3 py-1.5 text-ui-2xs font-medium"
+        style={{
+          background: "var(--b-tint-highlight)",
+          color: "var(--b-highlight)",
+          borderRadius: "var(--b-r)",
+        }}
+      >
+        {job.contract}
+      </span>
+    </div>
+    <div className="mt-4 flex items-center justify-between">
+      <span className="text-ui-lg" style={{ color: INK }}>
+        {job.salary}
+      </span>
+      <span
+        className="px-5 py-2 text-ui-sm font-medium"
+        style={{
+          background: NEUTRAL_PILL,
+          color: INK,
+          borderRadius: "var(--b-r)",
+        }}
+      >
+        {brandKit.phone.view}
+      </span>
+    </div>
+  </div>
 );

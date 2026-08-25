@@ -15,6 +15,37 @@ consequences. Use [[templates/adr-note]] for new entries. Newest first.
 - **Status:** Accepted — **amended the same day**, see *Revision* below
 - **Date:** 2026-08-24
 
+> [!note] Revision 2, 2026-08-24 — a bento, and a phone
+> The schematic careers page is gone. The band is now a BENTO matching
+> `FeatureBento`'s columns (`1.15fr / 0.85fr`, `gap-10`, `text-h4` headings):
+> a phone mockup on `bg-07` — the one deep ground the system still had unused —
+> beside three cards. The phone is cropped by its own card, so the section-level
+> bleed went with the layout that needed it and `#proof` lost its `relative`.
+>
+> **The themed set is now deliberately small**: two brand colours, every corner
+> radius, and the typeface. The grey screen, the body greys, the salary and the
+> View button hold still. A demo where everything changes proves nothing,
+> because a reader cannot separate what is themeable from what is merely
+> different — freezing the greys is what makes the themed parts legible as a set.
+>
+> **Two colours per brand, not one.** `main` carries the search button and the
+> pin; `highlight` carries the job title; each pill takes a 92% tint of one of
+> them with that colour at full strength for its wording. 92% is measured — at
+> 88% the worst pill ink was 4.65:1 at 11px, too close to the line; 92% puts the
+> worst of the eight at 4.92:1.
+>
+> Two bugs worth recording. The three right-hand cards were `card-quiet`, copied
+> from the other bento — but that bento sits inside a WHITE panel and this band
+> is on the tinted ground, where card-quiet measured **one unit per channel,
+> 1.009:1**. Invisible, exactly as ADR-0027 warns. And `mix()` returns an
+> `rgb()` string, so feeding a derived colour back in hit a hex-only parser that
+> produced `NaN` — and `NaN >> 16` coerces to **0**, so every pill tint was
+> silently computed from BLACK and both pills came out the same dead grey with
+> no error anywhere. The parser now takes both forms.
+>
+> Verified: 21 slider positions, 378 checks, zero contrast failures, phone 448px
+> wide at every position.
+
 > [!note] Revision, 2026-08-24 — one slider, not four cards
 > The decision below stands in full: the band, its placement, and theming shown
 > rather than described. Only the MECHANIC changed, and the reason is worth

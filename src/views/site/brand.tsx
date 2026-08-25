@@ -14,28 +14,20 @@ import { BrandKitDemo } from "./demos/brand-kit";
  * the hero speaks to — and until now the page answered the other two concerns
  * in that sentence and ignored this one.
  *
- * THE BLEED. The example runs on past the foot of this band and is cut by the
- * white of `#proof` below. Mechanically it is the same trick `MapBand` uses:
- * this section drops its bottom padding, the demo carries a negative bottom
- * margin so the next section starts before the picture ends, and `#proof` is
- * `relative` so its white background paints OVER the overflow. That last part
- * is the whole thing — in normal painting order a later sibling's background
- * goes down before an earlier sibling's in-flow content, so without the
- * positioning the example would sit on top of the white instead of under it.
+ * A BENTO, not a full-bleed set piece. An earlier cut ran a wide example off
+ * the foot of the band and let `#proof` crop it. That bleed is gone with the
+ * layout that needed it: the phone is now cropped by its OWN card, so the band
+ * has no reason to break the page's section rhythm. If you are reading a stale
+ * note about `-mb` here, or wondering why `#proof` is `relative`, this is why —
+ * nothing depends on either any more.
  *
- * FULL HEIGHT on `lg:` only, and `min-h` rather than `h`: the example grows
- * with its own type scale, so a hard height would either clip a brand or
- * strand it. On a phone it is as tall as it needs to be — a forced viewport
- * height there is a scroll trap, not immersion.
+ * The one card on the left spans two of three columns and holds the phone; the
+ * three down the right are the control, the apply flow and the dashboard. That
+ * split is the argument in miniature: one surface shown, two more asserted, and
+ * the same brand kit behind all three.
  */
 export const BrandSection = () => (
-  /* NO `overflow-hidden` here, ever. It would clip the exact overflow the
-     bleed depends on, and the failure looks like the negative margin simply
-     not working. */
-  <section
-    id="brand"
-    className="flex flex-col justify-center pt-26 pb-0 lg:min-h-svh"
-  >
+  <section id="brand" className="py-26">
     <div className="shell">
       <SectionIntro
         eyebrow={brandKit.eyebrow}
@@ -43,11 +35,7 @@ export const BrandSection = () => (
         linesSm={[...brandKit.linesSm]}
         standfirst={brandKit.standfirst}
       />
-      {/* The negative margin is what bleeds. Nothing may follow the demo in
-          this section — a sibling after it gets dragged up over the example,
-          which is why the §6.7 disclosure lives INSIDE the demo, under the
-          slider, rather than here. */}
-      <BrandKitDemo className="mt-14 -mb-16 lg:-mb-24" />
+      <BrandKitDemo className="mt-16" />
     </div>
   </section>
 );
