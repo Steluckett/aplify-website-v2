@@ -730,7 +730,11 @@ export const howItWorks = {
       n: "05",
       title: "Manage",
       sub: "The stage that needs you",
-      body: "Your recruiters triage through a status workflow they control, with source tracking on every submission so paid social, job boards and QR codes can be compared honestly.",
+      /* The second sentence is the ATS option, Stephen's ask (2026-08-29):
+         this stage is only Aplify's dashboard when there is no native
+         integration. Same claim the dashboard band makes, shortened; the
+         integration is SHIPPED (§6.9), so it is stated as fact. */
+      body: "Your recruiters triage through a status workflow they control, with source tracking on every submission so paid social, job boards and QR codes can be compared honestly. Or, with native ATS integration, applications land straight in the system your team already uses and this stage never changes hands.",
       points: [
         "Submitted to accepted",
         "Source tracking",

@@ -1,12 +1,48 @@
 ---
 tags: [meta, changelog]
-updated: 2026-08-28
+updated: 2026-08-29
 ---
 
 # Changelog
 
 Chronological log of notable changes to the project. Newest first.
 This is a human-curated log — not a mirror of `git log`.
+
+## 2026-08-29
+
+- **The six stages became a carousel.** Stephen wanted a section showing the
+  end-to-end setup story and suspected the page already said it — correct:
+  Collect through Syndicate IS that story, so `#how-it-works` was rebuilt in
+  place rather than a band added (a new one would have remade `#payoff`'s
+  repetition mistake). Same anchor, same copy, same tinted band; the old 3×2
+  grid is recorded as LAYOUT-INVENTORY §1.6.
+
+  The composition, guided by a 21st.dev reference (feature-carousel) and
+  rebuilt on `@react-spring/web` per rule 1: a white mega-panel reaching for
+  viewport height; the stages on a vertical WHEEL down the left — pills at
+  heading size, each centred in the rail, the active one holding the centre
+  in the accent gradient while the list slides through and DISSOLVES into
+  masks at the panel's edges (96px pitch, deliberately taller than the panel:
+  a wheel you can see all of is a list); and one SQUARE card per stage on the
+  right — the band vocabulary's own card shape — each on its own deep blob
+  ground (six stages, six of the deep card-ground set, worst-point white
+  5.79–8.22 from the /backgrounds figures), neighbours peeking tilted and
+  dimmed from the wings.
+
+  Autoplay walks the sequence every 6s — watching it run is the pitch —
+  pauses under the pointer and stops for good when the reader clicks. Arrow
+  keys walk the rail (it is a real tablist). On phones the wheel becomes a
+  wrapped pill row.
+
+  **One trap caught in review:** the reference's fixed-ratio card frame
+  CLIPPED the longer stages on phones. The active card now sits in normal
+  flow and sizes the frame, with the square as a preferred ratio content can
+  push past — no stage can be cut off, whatever its copy grows to.
+
+- **Stage 05 gained the ATS option** (Stephen's ask): "Or, with native ATS
+  integration, applications land straight in the system your team already
+  uses and this stage never changes hands." The dashboard band's claim,
+  shortened; stated as fact because the integration is shipped (§6.9).
 
 ## 2026-08-28
 
