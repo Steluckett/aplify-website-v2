@@ -113,9 +113,14 @@ export const EasyApplyDemo = ({
      *
      * The internals below are unchanged and still solved against white, which
      * is why the card is white rather than the flow being re-inked.
+     *
+     * Harbour (bg-04) since 2026-08-28, with the search — the two are one
+     * instrument and must share a ground. The min-height matches the search
+     * panel's floor so entering and leaving the flow does not bounce the
+     * section's height (the confirmation step is short).
      */
     <div
-      className={`screen grain bg-08 rounded-panel p-5 sm:p-7 lg:p-10 ${className ?? ""}`}
+      className={`screen grain bg-04 min-h-[44rem] rounded-panel p-5 sm:p-7 lg:p-10 ${className ?? ""}`}
     >
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-5 rounded-panel bg-surface-raised p-6 shadow-lift sm:p-8 lg:p-10">
         {/* The role being applied for, and the way back. */}

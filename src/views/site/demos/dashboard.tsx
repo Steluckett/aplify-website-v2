@@ -37,10 +37,13 @@ import {
  *   - The controls are a white card STRADDLING the panel's top edge, the same
  *     device and the same `lg:`-only bleed, so the filters read as the head of
  *     the instrument rather than as one more row inside it.
- *   - The panel is the deep ground with `.screen` on it: Aurora's 11-24px UI
- *     scale, white pill fields, white tiles, glass for grouping.
- *   - Tabs are the glass pill group, count on the right — job search's own
- *     "18 jobs found" row.
+ *   - The panel is a LIGHT aurora ground with `.screen` on it: Aurora's
+ *     11-24px UI scale, white pill fields, white tiles. (Both demos were the
+ *     deep bg-08 until 2026-08-28 — Stephen: the blue was "too obnoxious"
+ *     against the shipped product, which is white tiles on a tinted
+ *     near-white ground. The job search moved with it, same day.)
+ *   - Tabs are an ink-pill group on a quiet track — Aurora's own sidebar
+ *     recipe — count on the right, job search's own "18 jobs found" row.
  *
  * WHAT WENT. The three summary tiles are gone (Stephen's call). They were the
  * only part of this surface not present in the shipped product, and a figure
@@ -280,20 +283,21 @@ const DateField = ({
 const HEAD_CELL =
   "bg-surface-raised py-2.5 text-left text-ui-sm font-normal text-ink-label";
 
-/* The rows are a TINT ON THE GRADIENT — `white/0.08`, the fill the glass tab
-   group carries — not cards sitting on it. A dense glass was tried first (0.92)
-   and read as white bricks, which is the thing this was meant to stop.
+/* The rows are WHITE TILES on the light ground — Aurora's own layering (tinted
+   ground beneath, white tiles above, the product's --aurora-surface-tile), with
+   the border-spacing air letting the ground breathe between them. This replaced
+   the deep build's `row-glass` on 2026-08-28 with the ground change: a white
+   tint on a light ground is invisible, and the shipped product's rows are
+   white.
 
-   THE COST, because it will look like an oversight otherwise: on this ground a
-   transparent row admits exactly ONE legal ink, and that is FULL WHITE at
-   4.75:1. Nothing dimmer clears AA at any row alpha — not a faded white (even
-   0.9 alpha fails), not a near-white tint (#e2e8f4 is 4.21:1). So the email
-   under a candidate's name is the same colour as the name, and the hierarchy in
-   a row is carried by SIZE AND WEIGHT alone. That is the trade for a see-through
-   row; it cannot be softened by choosing a nicer grey.
+   The white row also lifts the old one-legal-ink constraint: the deep ground
+   admitted only full white, so a row's hierarchy ran on size and weight alone.
+   On white, body and label inks are legal again — the email under a candidate's
+   name steps down in colour as well as size, as it does in the product.
 
-   Chips recess rather than lighten — see `.row-glass .chip` in globals.css. */
-const CELL = "h-16 row-glass align-middle text-ui-base text-ink-on-dark";
+   Status chips take their normal light classification colours here —
+   `.row-glass .chip` no longer applies, and nothing replaces it. */
+const CELL = "h-16 bg-surface-raised align-middle text-ui-base text-ink";
 
 const TableShell = ({
   minWidth,
@@ -752,15 +756,31 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
       </div>
 
       {/* THE PANEL — rides UP under the controls card so the card straddles its
-          edge, and clips the slide-overs to itself. */}
-      <div className="screen grain bg-08 relative overflow-hidden rounded-panel px-5 pb-7 pt-12 sm:px-7 lg:-mt-9 lg:px-10 lg:pb-10 lg:pt-20">
+          edge, and clips the slide-overs to itself.
+
+          LIGHT GROUND, 2026-08-28, Stephen's call: the deep bg-08 wash read as
+          "too obnoxious" against the shipped product, which is white tiles on
+          Aurora's tinted near-white ground (--helion-bg #f0f2f7). Harbour
+          (bg-04) keeps the aurora hues at light strength. It is a VIVID ground:
+          body ink measures 4.34:1 at its darkest point (modelled, not read from
+          the DOM), so anything sitting DIRECTLY on the panel takes full ink
+          (10.08:1 worst) — body and label inks are legal only on the white
+          surfaces above it. */}
+      <div
+        /* The min-height is the SLIDE-OVERS' floor, not decoration: they are
+           contained in this panel, so a search filtered to one row used to
+           shrink the panel to ~300px and the record opened nearly unreadable.
+           44rem leaves the overlay ~570px on desktop after the top-24/bottom-10
+           insets, and only binds when filtering shrinks the table. */
+        className="screen grain bg-04 relative min-h-[44rem] overflow-hidden rounded-panel px-5 pb-7 pt-12 sm:px-7 lg:-mt-9 lg:px-10 lg:pb-10 lg:pt-20"
+      >
         <div className="flex flex-col gap-6">
           {/* Tabs left, count right — job search's own row. */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div
               role="tablist"
               aria-label="Dashboard views"
-              className="inline-flex gap-1 rounded-pill bg-white/10 p-1 backdrop-blur-md"
+              className="inline-flex gap-1 rounded-pill bg-ink/5 p-1"
             >
               {tabs.map(([value, label, count]) => (
                 <button
@@ -774,17 +794,19 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                   }}
                   className={`inline-flex items-center gap-2 rounded-pill px-4 py-2 text-ui-sm font-medium transition-colors duration-[var(--duration-fast)] ease-entrance ${
                     tab === value
-                      ? "bg-surface-raised text-ink"
-                      : "text-ink-on-dark hover:text-white"
+                      ? "bg-ink text-ink-on-dark"
+                      : "text-ink hover:bg-ink/10"
                   }`}
                 >
                   {label}
-                  {/* The count sat at --ink-label on the track and measured
-                      4.31:1 — the one text on the page that failed AA. It now
-                      inherits its parent's ink on both states. */}
+                  {/* Full ink / full white per state, nothing faded: the
+                      inactive label sits on the vivid ground where body ink is
+                      4.34:1, and the active pill is Aurora's own sidebar
+                      recipe — ink pill, white label (the product's
+                      --helion-nav-pill). */}
                   <span
                     className={
-                      tab === value ? "text-ink-body" : "text-ink-on-dark"
+                      tab === value ? "text-ink-on-dark" : "text-ink"
                     }
                   >
                     {count}
@@ -793,13 +815,13 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
               ))}
             </div>
 
-            {/* On the deep ground, so --ink-label (2.04:1 there) will not do. */}
+            {/* Directly on the vivid ground, so full ink — --ink-label
+               measures 2.92:1 at Harbour's darkest point and --ink-body 4.34,
+               both under AA for small text. */}
             <p
               id={countId}
               aria-live="polite"
-              /* Pure white, not `/80`: on bg-08's lightest pixel a faded
-                 white measures 4.15:1 and fails. See job-search.tsx. */
-              className="text-ui-sm text-ink-on-dark"
+              className="text-ui-sm text-ink"
             >
               {showing}
             </p>
@@ -892,7 +914,7 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                                 event.currentTarget,
                               );
                             }}
-                            className="text-left text-ui-sm font-medium transition-opacity duration-[var(--duration-fast)] ease-entrance group-hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                            className="text-left text-ui-sm font-medium transition-opacity duration-[var(--duration-fast)] ease-entrance group-hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
                           >
                             {application.id}
                           </button>
@@ -901,9 +923,11 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                           <p className="text-ui-sm font-medium">
                             {application.name}
                           </p>
-                          {/* Same white as the name — see the CELL note. The
-                              step down is 13px medium to 11px regular. */}
-                          <p className="text-ui-2xs">{application.email}</p>
+                          {/* Steps down in size AND colour now the row is
+                              white — 13px medium ink to 11px regular body. */}
+                          <p className="text-ui-2xs text-ink-body">
+                            {application.email}
+                          </p>
                         </td>
                         <td className={`${CELL} px-4`}>
                           <p className="text-ui-sm">
@@ -943,10 +967,10 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                                 ? `${content.notes.heading} for ${application.name} (${noteCount})`
                                 : `${content.notes.add} for ${application.name}`
                             }
-                            className={`relative inline-grid h-9 w-9 place-items-center rounded-pill transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 ${
+                            className={`relative inline-grid h-9 w-9 place-items-center rounded-pill transition-opacity duration-[var(--duration-fast)] ease-entrance hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid ${
                               noteCount > 0
                                 ? "bg-accent-mid text-ink-on-dark"
-                                : "bg-black/20 text-ink-on-dark"
+                                : "bg-surface-chip text-ink"
                             }`}
                           >
                             <NoteIcon />
@@ -1003,7 +1027,9 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                       <p className="text-ui-sm font-medium">
                         {registration.name}
                       </p>
-                      <p className="text-ui-2xs">{registration.email}</p>
+                      <p className="text-ui-2xs text-ink-body">
+                        {registration.email}
+                      </p>
                     </th>
                     <td className={`${CELL} px-4`}>
                       <span className="chip" data-tint="info">

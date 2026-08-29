@@ -296,7 +296,7 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
             onChange={(event) => setKeyword(event.target.value)}
             placeholder={content.filters.keywordPlaceholder}
             aria-label={content.filters.keyword}
-            className="h-14 flex-[1.4] rounded-pill bg-surface-chip px-6 text-ui-base text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+            className="h-14 flex-[1.4] rounded-pill bg-surface-chip px-6 text-ui-base text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
           />
 
           <div className="relative flex-1">
@@ -307,7 +307,7 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
               onChange={(event) => setPlace(event.target.value)}
               placeholder={content.filters.locationPlaceholder}
               aria-label={content.filters.location}
-              className="h-14 w-full rounded-pill bg-surface-chip pl-6 pr-16 text-ui-base text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+              className="h-14 w-full rounded-pill bg-surface-chip pl-6 pr-16 text-ui-base text-ink placeholder:text-ink-label focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
             />
             <datalist id="job-search-places">
               {LOCATIONS.map((l) => (
@@ -358,8 +358,19 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
       {/* THE RESULTS — only what a candidate would actually see. */}
       <div /* Rides UP under the search card so the card straddles its edge. The
            card is ~72px tall, so half of it is the overlap; the panel's top
-           padding carries the rest so nothing lands under the fields. */
-        className="screen grain bg-08 rounded-panel px-5 pb-7 pt-12 sm:px-7 lg:-mt-9 lg:px-10 lg:pb-10 lg:pt-20"
+           padding carries the rest so nothing lands under the fields.
+
+           LIGHT GROUND, 2026-08-28, matching the dashboard (Stephen's call —
+           the deep blue read as "too obnoxious" against the shipped product).
+           Harbour is VIVID: full ink only for anything directly on it (10.08:1
+           at its darkest point, body ink 4.34 fails); body/label inks live on
+           the white surfaces above.
+
+           The min-height stops the panel collapsing under a narrow search: one
+           result used to shrink the whole instrument (and the section below
+           jumped up under the reader's cursor). 44rem matches the dashboard's
+           floor so the two demos hold the same ground when filtered. */
+        className="screen grain bg-04 min-h-[44rem] rounded-panel px-5 pb-7 pt-12 sm:px-7 lg:-mt-9 lg:px-10 lg:pb-10 lg:pt-20"
       >
         <div className="flex flex-col gap-6">
           {/* Views left, count right — the row that says what you are looking
@@ -368,7 +379,7 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
             <div
               role="tablist"
               aria-label="Result views"
-              className="inline-flex gap-1 rounded-pill bg-white/10 p-1 backdrop-blur-md"
+              className="inline-flex gap-1 rounded-pill bg-ink/5 p-1"
             >
               {content.views.map((name) => {
                 const on = view === name;
@@ -379,10 +390,13 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
                     role="tab"
                     aria-selected={on}
                     onClick={() => setView(name)}
+                    /* Ink pill active, full ink inactive — the dashboard's tab
+                       recipe (Aurora's own sidebar pill), and full ink because
+                       the track sits on the vivid ground. */
                     className={`rounded-pill px-5 py-2 text-ui-sm font-medium transition-colors duration-[var(--duration-fast)] ease-entrance ${
                       on
-                        ? "bg-surface-raised text-ink"
-                        : "text-ink-on-dark hover:bg-white/10"
+                        ? "bg-ink text-ink-on-dark"
+                        : "text-ink hover:bg-ink/10"
                     }`}
                   >
                     {name}
@@ -395,7 +409,7 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
               ref={resultsRef}
               tabIndex={-1}
               aria-live="polite"
-              className="text-ui-lg font-medium text-ink-on-dark focus:outline-none"
+              className="text-ui-lg font-medium text-ink focus:outline-none"
             >
               {content.filters.found.replace("{n}", String(jobs.length))}
             </p>
@@ -436,7 +450,7 @@ const RowSelect = ({
     aria-label={label}
     value={value}
     onChange={(event) => onChange(event.target.value)}
-    className="h-14 flex-1 rounded-pill bg-surface-chip px-6 text-ui-base text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+    className="h-14 flex-1 rounded-pill bg-surface-chip px-6 text-ui-base text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-mid"
   >
     <option value="">{allLabel}</option>
     {options.map((option) => (
@@ -643,15 +657,11 @@ const GridView = ({ jobs, route, origin, onApply }: ViewProps) => {
           aria-label={jobSearchContent.pagination.label}
           className="flex items-center justify-between gap-3"
         >
-          {/* On the deep ground now, so --ink-label (2.04:1 there) will not do.
-              The buttons beside it carry their own white grounds and are fine
-              as they are. */}
-          {/* Pure white, NOT `/80`. Measured on the LIGHTEST pixel of `bg-08` — which
-                 is the point that matters, and the one `getComputedStyle` hides,
-                 because it reports a gradient's base colour and the base is the
-                 flattering end. Faded to 80% it lands at 4.15:1 and fails; pure
-                 it is 5.57:1. Pre-existing, found 2026-08-24. */}
-          <p className="text-ui-sm text-ink-on-dark" aria-live="polite">
+          {/* Directly on the vivid ground, so full ink — label ink is 2.92:1
+              at Harbour's darkest point and body ink 4.34, both under AA. The
+              buttons beside it carry their own grounds and are fine as they
+              are. */}
+          <p className="text-ui-sm text-ink" aria-live="polite">
             {jobSearchContent.pagination.showing
               .replace("{from}", String(current * PER_PAGE + 1))
               .replace(
@@ -808,7 +818,13 @@ const MapView = ({ jobs, route, origin, onApply }: ViewProps) => {
             while the pointer is over it. */}
         <ul
           data-lenis-prevent
-          className="flex max-h-[26rem] flex-col gap-3 overflow-y-auto overscroll-contain pr-1 sm:max-h-[34rem]"
+          /* `-m-2 p-2` widens the PAINT box without moving the content: the
+             scroll container clips at its padding edge, so the selected
+             card's 2px ring (and the hover shadow) was being shaved off at
+             the top and sides. Padding keeps the ring inside the clip;
+             the negative margin gives the padding back so the cards stay
+             aligned with the grid. */
+          className="-m-2 flex max-h-[26rem] flex-col gap-3 overflow-y-auto overscroll-contain p-2 sm:max-h-[34rem]"
         >
           {jobs.map((job) => {
             const key = jobKey(job);

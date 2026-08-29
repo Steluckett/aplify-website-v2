@@ -92,19 +92,22 @@ export const JobMap = ({ jobs, selectedKey, onSelect }: JobMapProps) => {
   const r = selected ? 1 / ZOOM : 1;
 
   return (
-    /* GLASS, not a white tile.
+    /* A TINT, not a white tile.
      *
      * The map was `.tile`, the same solid white as the job cards beside it, so
      * the two read as the same kind of object — a card containing a picture,
-     * next to cards containing jobs. A map is not a card. On glass the
-     * gradient becomes the sea, the land floats on it, and the panel belongs
-     * to the ground rather than sitting on it.
+     * next to cards containing jobs. A map is not a card: the ground becomes
+     * the sea, the land floats on it, and the panel belongs to the ground
+     * rather than sitting on it.
      *
-     * Every colour below is therefore solved against the GLASS composite, not
-     * against white. */
+     * On the deep ground that was a white glass (white/10). On the light
+     * ground it inverts, 2026-08-28: the sea RECESSES with an ink tint — the
+     * same ink/5 the tab tracks carry — and the land is solid white, because
+     * a translucent white land over a light ground was nearly invisible
+     * (Stephen: "the map is a little light against the bg"). */
     <div
       ref={box}
-      className="relative h-[26rem] overflow-hidden rounded-card bg-white/10 p-2 backdrop-blur-md sm:h-[34rem]"
+      className="relative h-[26rem] overflow-hidden rounded-card bg-ink/5 p-2 sm:h-[34rem]"
     >
       <animated.svg
         viewBox={to(
@@ -116,12 +119,12 @@ export const JobMap = ({ jobs, selectedKey, onSelect }: JobMapProps) => {
         aria-label="Map of sample roles across the UK"
         className="h-full w-full"
       >
-        {/* Land is a light translucent fill so it reads against the gradient
-            showing through as sea — the same relationship a real map has, and
-            the reason the outline is legible without a solid card behind it. */}
+        {/* Land is solid white on the recessed sea — the light-map recipe
+            every map product uses — with a whisper of ink stroke so the
+            coastline holds where sea and land run close in value. */}
         <path
           d={UK_PATH}
-          className="fill-white/55 stroke-white/40"
+          className="fill-white stroke-ink/15"
           strokeWidth={2}
         />
         {jobs.map((job) => {

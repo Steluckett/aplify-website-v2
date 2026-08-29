@@ -23,9 +23,12 @@ import { JobSearchDemo } from "./demos/job-search";
  * composition directly.
  *
  * What each demo does instead is ground ITSELF: the job search and the
- * dashboard both sit on the deep blob ground with their controls on a white
+ * dashboard both sit on a blob-ground panel with their controls on a white
  * card straddling the panel's top edge, and their tiles and pill fields read
- * against that rather than against a fake window.
+ * against that rather than against a fake window. (Both panels moved from the
+ * deep bg-08 to the light Harbour ground on 2026-08-28 — Stephen's call, to
+ * match the shipped product's white-on-tint — and both carry a 44rem floor so
+ * a filtered-down result set cannot collapse the instrument.)
  *
  * `.screen` is what drops everything inside to Aurora's UI scale, and it is
  * still what stops a live demo reading as more marketing page — it is now set
@@ -43,7 +46,7 @@ export const JobSearchSection = () => (
       {/* No frame. The demo used to sit inside browser chrome on a wash,
             which said "this is a page on somebody's site" — true, and it also
             made the search read as a screenshot of a website rather than as
-            the thing itself. On its own deep ground it is just the product,
+            the thing itself. On its own ground it is just the product,
             working, in the middle of the page. */}
       <div className="mt-16">
         <JobSearchDemo />
