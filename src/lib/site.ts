@@ -9,14 +9,15 @@ import { publicEnv } from "@/env";
 export const siteConfig = {
   name: "Aplify",
   /**
-   * The page's own promise, in one sentence — the headline and the lead copy
-   * of the hero, joined. It is deliberately the same claim the visitor reads
-   * first and the same one `app/opengraph-image.tsx` paints on the share card:
-   * a description that says something the page does not is the fastest way to
+   * The page's own promise, in one sentence — the hero's claim as the visitor
+   * reads it. Applied from COPY-DECK-V3's Metadata block on 2026-08-28; the
+   * share card (`app/opengraph-image.tsx`) paints the same hero copy from
+   * `content/site.ts`, so the description and the card make one claim. A
+   * description that says something the page does not is the fastest way to
    * a high bounce rate.
    */
   description:
-    "The recruitment experience candidates actually finish. Aplify powers search, application and event registration directly on your own career site or campaign landing page, so candidates never get handed off to an ATS.",
+    "You don't have a traffic problem, you have a completion problem. Aplify puts search, application and event registration on your own career site, so candidates never get handed off to an ATS.",
   /**
    * Public origin, no trailing slash. Drives canonical URLs, OG tags, the
    * sitemap, and JSON-LD. **Set `NEXT_PUBLIC_SITE_URL` per environment** — the

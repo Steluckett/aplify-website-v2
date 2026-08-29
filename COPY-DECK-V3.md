@@ -1,9 +1,17 @@
 # Aplify - copy deck v3
 
-**APPLIED TO THE SITE, 2026-08-25.** This deck was written, reviewed, rewritten
-and then built. It is now a record of what is live on 3100 rather than a
-proposal — but it drifts from `src/data/content/` the moment either changes, and
-**the modules are the source of truth**.
+**APPLIED AND DEPLOYED, 2026-08-25** (commit `f83f6ee`). This deck was written,
+reviewed, rewritten and then built. It is a record of what shipped, not a
+proposal.
+
+⚠️ **IT DRIFTS IN ONE PLACE, flagged inline:**
+- **Section 6, "The payoff", is NOT on the site.** The band was deleted after
+  this deck was written. Sections are not renumbered; 6 is kept for the record.
+- ~~The Metadata block below was never applied.~~ **Applied 2026-08-28**,
+  including the hyphen title separator, on Stephen's ruling. See the note on it.
+
+`src/data/content/` is the source of truth. Where this document and a module
+disagree, the module wins.
 
 Every user-facing string, in the new page order, against the module each one
 lives in. Written to the Brand Playbook v3, the Homepage Strategy Rationale v2
@@ -80,9 +88,17 @@ anything on the page. Feed-level reporting is off the site entirely.
 | Title | Aplify - The recruitment experience candidates actually finish |
 | Description | You don't have a traffic problem, you have a completion problem. Aplify puts search, application and event registration on your own career site, so candidates never get handed off to an ATS. |
 
-> **The share card is painted from this description**, so a change here carries
-> through to the OG image. The title separator is now a hyphen; say if you'd
-> rather a site-name separator was exempt from rule 1.
+> **APPLIED 2026-08-28.** The description above is live in `src/lib/site.ts`
+> and the title separator is a hyphen in `src/app/page.tsx` — **Stephen ruled
+> on 2026-08-28 that a site-name separator is NOT exempt from the no-em-dash
+> rule.** Verified served on 3100: `<title>`, `description` and
+> `og:description` all carry the new strings.
+>
+> One clarification found while applying it: the share card image
+> (`app/opengraph-image.tsx`) paints the HERO's lines and standfirst from
+> `content/site.ts`, not this description, so the card had already updated with
+> the 2026-08-25 rewrite. The description feeds the meta/OG description text
+> that sits alongside the card, and the two now make the same claim.
 
 ---
 
@@ -97,7 +113,7 @@ CTA: **Book a demo**
 | Label | Goes to |
 |---|---|
 | Why they leave | `#friction` |
-| Easy Apply | `#payoff` |
+| Easy Apply | `#candidates` |
 | Better data | `#data` |
 | Dashboard | `#dashboard` |
 | Security | `#security` |

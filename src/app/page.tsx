@@ -15,7 +15,9 @@ import { SiteView } from "@/views/site";
 const headline = "The recruitment experience candidates actually finish";
 
 export const metadata: Metadata = buildMetadata({
-  title: `${siteConfig.name} — ${headline}`,
+  /* Hyphen separator, Stephen's call 2026-08-28: a site-name separator is not
+   * exempt from the no-em-dash rule (ADR-0032). */
+  title: `${siteConfig.name} - ${headline}`,
 });
 
 export default function Home() {
