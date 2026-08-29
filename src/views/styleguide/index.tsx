@@ -4,8 +4,12 @@
  * dashboard's own styleguide at /helion/styleguide; where the two differ, the
  * difference is deliberate and noted in the copy beside it.
  *
- * Server component on purpose — nothing here is interactive.
+ * Server component on purpose — the interactive pieces (the CTA specimen and
+ * the book-a-demo flow it opens) are client components imported at the leaves.
  */
+
+import { CtaButton } from "@/components/ui/cta-button";
+import { BookDemoOverlay } from "@/views/site/book-demo";
 
 const STATE_CHIPS = [
   { state: "success", label: "Live" },
@@ -167,6 +171,20 @@ export function StyleguideView() {
           </div>
         </div>
       </Section>
+
+      {/* --- The CTA ------------------------------------------------------- */}
+      <Section
+        eyebrow="Actions"
+        title="The main action, and its hover"
+        note="The MagicUI dot-grow treatment, rebuilt transform-only on the house timing (--duration-hover). The white dot beside the label IS the flood: it grows until the button inverts, and the label returns dead-centre in the deep blue ink with the arrow. Decided from three colourways on 2026-08-28."
+      >
+        <div id="cta-options">
+          {/* Live specimen — it opens the real book-a-demo flow, which is
+              mounted below so the whole experience is testable from here. */}
+          <CtaButton label="Book a demo" />
+        </div>
+      </Section>
+      <BookDemoOverlay />
 
       {/* --- The dark moment ----------------------------------------------- */}
       <Section

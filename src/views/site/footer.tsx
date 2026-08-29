@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { CtaButton } from "@/components/ui/cta-button";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionIntro } from "@/components/ui/section-intro";
 import { footer } from "@/data/content/site";
@@ -26,9 +27,7 @@ export const SiteFooter = () => (
           linesSm={[...footer.cta.linesSm]}
           standfirst={footer.cta.standfirst}
         >
-          <Link href={footer.cta.primary.href} className="btn btn-primary">
-            {footer.cta.primary.label}
-          </Link>
+          <CtaButton label={footer.cta.primary.label} />
         </SectionIntro>
       </div>
     </section>

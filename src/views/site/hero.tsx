@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { CtaButton } from "@/components/ui/cta-button";
 
 import { Reveal } from "@/components/ui/reveal";
 import { ScreenCard } from "@/components/ui/screen-card";
@@ -75,9 +75,7 @@ export const Hero = () => (
 
       <Reveal variant="up" delay={380}>
         <div className="mt-10 flex justify-center">
-          <Link href={hero.cta.href} className="btn btn-primary btn-lg">
-            {hero.cta.label}
-          </Link>
+          <CtaButton label={hero.cta.label} size="lg" />
         </div>
       </Reveal>
     </div>

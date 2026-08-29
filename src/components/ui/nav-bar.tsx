@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Spring } from "@/components/animation/springs/spring";
+import { CtaButton } from "@/components/ui/cta-button";
+import { useContactModal } from "@/hooks/use-contact-modal";
 
 export interface NavItem {
   label: string;
@@ -14,7 +16,6 @@ export interface NavItem {
 export interface NavBarProps {
   items: NavItem[];
   ctaLabel: string;
-  ctaHref: string;
 }
 
 /**
@@ -29,8 +30,9 @@ export interface NavBarProps {
  * solid bar reads as a lid laid over the imagery, and a transparent one loses
  * the links against the grass.
  */
-export const NavBar = ({ items, ctaLabel, ctaHref }: NavBarProps) => {
+export const NavBar = ({ items, ctaLabel }: NavBarProps) => {
   const [open, setOpen] = useState(false);
+  const openBookDemo = useContactModal((s) => s.open);
 
   // A menu that survives a resize into desktop leaves the page scroll-locked
   // with no visible way to release it.
@@ -76,9 +78,7 @@ export const NavBar = ({ items, ctaLabel, ctaHref }: NavBarProps) => {
         </ul>
 
         <div className="flex flex-1 items-center justify-end gap-2 lg:flex-none">
-          <Link href={ctaHref} className="btn btn-primary hidden sm:inline-flex">
-            {ctaLabel}
-          </Link>
+          <CtaButton label={ctaLabel} className="hidden sm:inline-flex" />
 
           <button
             type="button"
@@ -130,13 +130,18 @@ export const NavBar = ({ items, ctaLabel, ctaHref }: NavBarProps) => {
                 </li>
               ))}
             </ul>
-            <Link
-              href={ctaHref}
-              onClick={() => setOpen(false)}
+            {/* A real button, like the desktop CTA — it opens the book-a-demo
+                dialog, and the drawer gets out of its way first. */}
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                openBookDemo();
+              }}
               className="btn btn-primary mt-2 w-full"
             >
               {ctaLabel}
-            </Link>
+            </button>
           </div>
         </Spring>
       ) : null}

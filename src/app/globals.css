@@ -292,6 +292,13 @@
   --raw-ease-entrance: cubic-bezier(0.2, 0, 0, 1);
   --raw-dur-fast: 160ms;
   --raw-dur-base: 240ms;
+  /* The CTA hover treatment's step. The reference (MagicUI
+     interactive-hover-button) declares 300ms, but on Tailwind's default
+     ease, whose tail is long; our entrance curve decelerates hard and
+     early, so the same nominal duration reads much quicker. 500ms on our
+     curve is what matched the reference's feel — Stephen called 300ms
+     "far too fast" (2026-08-28). */
+  --raw-dur-hover: 500ms;
   --raw-dur-slow: 420ms;
   --raw-dur-reveal: 900ms;
 
@@ -482,6 +489,7 @@
   --ease-entrance: var(--raw-ease-entrance);
   --duration-fast: var(--raw-dur-fast);
   --duration-base: var(--raw-dur-base);
+  --duration-hover: var(--raw-dur-hover);
   --duration-slow: var(--raw-dur-slow);
   --duration-reveal: var(--raw-dur-reveal);
 }

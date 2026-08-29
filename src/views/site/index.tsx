@@ -2,6 +2,7 @@ import { NavBar } from "@/components/ui/nav-bar";
 import { nav } from "@/data/content/site";
 
 import { MapBand } from "./bands";
+import { BookDemoOverlay } from "./book-demo";
 import { BrandSection } from "./brand";
 import { SiteFooter } from "./footer";
 import { GoogleSection } from "./google";
@@ -70,7 +71,10 @@ import { Integrations, Proof, Security } from "./trust";
  */
 export const SiteView = () => (
   <>
-    <NavBar items={nav.items} ctaLabel={nav.ctaLabel} ctaHref={nav.ctaHref} />
+    <NavBar items={nav.items} ctaLabel={nav.ctaLabel} />
+    {/* Every "Book a demo" button on the page summons this one dialog via
+        `useContactModal`. */}
+    <BookDemoOverlay />
     <main className="relative w-full overflow-x-clip">
       <Hero />
 
