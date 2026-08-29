@@ -10,14 +10,16 @@ export const siteConfig = {
   name: "Aplify",
   /**
    * The page's own promise, in one sentence — the hero's claim as the visitor
-   * reads it. Applied from COPY-DECK-V3's Metadata block on 2026-08-28; the
-   * share card (`app/opengraph-image.tsx`) paints the same hero copy from
+   * reads it. Recut 2026-08-29 to echo the rewritten hero (truth #24), on
+   * Stephen's call that the two must match; the deck's Metadata block records
+   * the superseded traffic/completion line. The share card
+   * (`app/opengraph-image.tsx`) paints the same hero copy from
    * `content/site.ts`, so the description and the card make one claim. A
    * description that says something the page does not is the fastest way to
    * a high bounce rate.
    */
   description:
-    "You don't have a traffic problem, you have a completion problem. Aplify puts search, application and event registration on your own career site, so candidates never get handed off to an ATS.",
+    "You got candidates to Apply. Don't lose them there. Aplify puts search, application and event registration on your own career site, so candidates never get handed off to an ATS.",
   /**
    * Public origin, no trailing slash. Drives canonical URLs, OG tags, the
    * sitemap, and JSON-LD. **Set `NEXT_PUBLIC_SITE_URL` per environment** — the

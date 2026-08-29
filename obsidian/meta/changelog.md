@@ -44,6 +44,22 @@ This is a human-curated log — not a mirror of `git log`.
   uses and this stage never changes hands." The dashboard band's claim,
   shortened; stated as fact because the integration is shipped (§6.9).
 
+- **The hero was rewritten to name candidates** (Stephen: it "needs to
+  reference recruitment or candidates"). Now *"You got candidates to Apply.
+  Don't lose them there."*, adapted from playbook truth #24, over a new
+  standfirst that names the exact loss point and closes on the playbook's
+  own "this is the point candidates quietly disappear". The old
+  traffic/completion pair had to borrow context from its standfirst before
+  it read as recruitment at all. Re-measured: desktop two lines at 1710 and
+  the 1024 clamp, mobile recut to four explicit lines (three wrapped), the
+  standfirst still sets to exactly three lines in the 40rem box so the
+  documented measure exception holds, and the share card repainted itself
+  from the same source. The meta description was recut to echo the new
+  hero, superseding the deck Metadata block's traffic/completion line.
+
+- **The six-stages headline gained its "Only"** — *"Six stages. Only one of
+  them needs you."* (Stephen's line). Sets clean at both breakpoints.
+
 ## 2026-08-28
 
 - **The copy deck's Metadata block is applied — the last unshipped piece of

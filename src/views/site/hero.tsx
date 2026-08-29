@@ -54,7 +54,7 @@ export const Hero = () => (
         lines={hero.linesSm}
         className="display lines-tight text-center text-display sm:hidden"
         lineClassName="justify-center"
-        lineClassNames={["", "", "grad-tip"]}
+        lineClassNames={["", "", "", "grad-tip"]}
         stagger={130}
         duration={1100}
       />

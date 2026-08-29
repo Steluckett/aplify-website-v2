@@ -78,14 +78,19 @@ export const nav = {
  * lands on. Keep the payload on the last line if this is ever re-broken.
  */
 export const hero = {
-  /** Explicit line breaks — the heading engine sets each line `nowrap`. */
-  lines: ["You don't have a", "traffic problem"],
-  linesSm: ["You don't", "have a traffic", "problem"],
-  /* 136 characters, same as the old one. The hero's 40rem measure is a
-     DOCUMENTED EXCEPTION to --measure-lead that only holds while this sets to
-     exactly three lines — see the note in hero.tsx. Re-measure if it changes. */
+  /** Explicit line breaks — the heading engine sets each line `nowrap`.
+      Rewritten 2026-08-29 (Stephen: the hero must reference candidates or
+      recruitment) — adapted from playbook truth #24, "Your careers site
+      works hard to get candidates to Apply. Don't lose them there." */
+  lines: ["You got candidates to Apply.", "Don't lose them there."],
+  linesSm: ["You got", "candidates to", "Apply. Don't", "lose them there."],
+  /* The standfirst lands the headline: names the exact loss point, in the
+     playbook's own phrase ("this is the point candidates quietly
+     disappear"). The hero's 40rem measure is a DOCUMENTED EXCEPTION to
+     --measure-lead that only holds while this sets to exactly three lines —
+     see the note in hero.tsx. Re-measured 2026-08-29 after this rewrite. */
   standfirst:
-    "You have a completion problem. You've already paid to get people as far as Apply. Everything after that is where you lose them for good.",
+    "The advert worked. The careers site did its job. Then the form asked them to create an account, and this is the point candidates quietly disappear.",
   cta: { label: "Book a demo", href: "#demo" },
   secondary: { label: "See it working", href: "#job-search" },
   shot: {
@@ -677,8 +682,8 @@ export const howItWorks = {
      The new head is the wry beat AND the actual claim: five of the six stages
      run without anybody. Stage 05 is the one that needs a person, and it says
      so in its own sub, so the headline is checkable rather than a boast. */
-  lines: ["Six stages.", "One of them needs you."],
-  linesSm: ["Six stages.", "One of them", "needs you."],
+  lines: ["Six stages.", "Only one of them needs you."],
+  linesSm: ["Six stages.", "Only one of them", "needs you."],
   standfirst:
     "Your ATS produces a feed. Aplify does the rest: cleaned, published, applied to and sent back out. The only stage that needs a person is the one where your recruiters decide who to talk to.",
   stages: [
