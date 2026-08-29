@@ -48,6 +48,10 @@ export interface CtaButtonProps {
   label: string;
   /** `lg` is the hero's one action — `.btn-lg`, 20px. */
   size?: "base" | "lg";
+  /** Overrides the default action (opening the book-a-demo dialog) — the
+      dialog's own closing button wears this treatment too, and it must not
+      reopen the thing it closes. */
+  onClick?: () => void;
   className?: string;
 }
 
@@ -76,13 +80,14 @@ const ArrowIcon = () => (
 export const CtaButton = ({
   label,
   size = "base",
+  onClick,
   className,
 }: CtaButtonProps) => {
   const open = useContactModal((s) => s.open);
   return (
     <button
       type="button"
-      onClick={open}
+      onClick={onClick ?? open}
       className={`btn btn-primary group relative overflow-hidden ${
         size === "lg" ? "btn-lg" : ""
       } ${className ?? ""}`}

@@ -8,11 +8,12 @@
  * buttons and sliders, no password, and it says so. The confirmation line
  * deliberately mirrors Easy Apply's own "That's the whole application".
  *
- * Claims audit: "runs on your own jobs, not a sandbox" restates the footer
- * CTA copy (sourced). ⚠️ "within one working day" is a NEW service promise —
- * Stephen must confirm it is true before launch. The unwired note ships until
- * the API route exists (decision 2026-08-28: UI first, wiring later) — a
- * public form that silently goes nowhere is worse than one that says so.
+ * Claims audit: "using your own jobs" restates the footer CTA copy (sourced).
+ * ⚠️ "within one working day" is a NEW service promise — Stephen must confirm
+ * it is true before launch. ⚠️ The confirmation's not-wired-yet footnote was
+ * REMOVED on Stephen's call (2026-08-28) while submission is still unwired —
+ * so until the API route lands, a live submission goes nowhere and says
+ * nothing. Wire before launch, or at least before promoting the page.
  */
 export const bookDemo = {
   ariaLabel: "Book a demo",
@@ -91,12 +92,10 @@ export const bookDemo = {
   },
 
   done: {
-    lines: ["That's the", "whole form"],
+    lines: ["Boom!", "You're done"],
+    lead: "Imagine if every application felt like that.",
     /** {name} is replaced with the first name they gave. */
-    body: "Nice one, {name}. No account, no password, and nothing to come back and finish later. We'll come back to you within one working day to line up a time, and the demo runs on your own jobs rather than a sandbox.",
-    /** ⚠️ Ships until the API route is wired. Delete when submissions send. */
-    unwired:
-      "One honest footnote while we finish plumbing this form in: your answers haven't gone anywhere yet. Email hello@aplify.co.uk and a person will pick it up.",
+    body: "Thanks {name}, we'll be in touch within one working day to book a demo using your own jobs.",
     closeLabel: "Back to the site",
   },
 } as const;

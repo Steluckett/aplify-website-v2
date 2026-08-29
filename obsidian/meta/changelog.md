@@ -79,8 +79,24 @@ This is a human-curated log — not a mirror of `git log`.
 - **A full-screen book-a-demo experience replaced the `#contact` anchor** on
   every Book a demo button. See **ADR-0033** — stepped flow, banded sliders,
   UI-only submission for now, and two launch flags: the "one working day"
-  promise needs confirming, and the honest unwired footnote comes off when
-  the API route lands.
+  promise needs confirming, and **the form must be wired before promotion**
+  (the honest unwired footnote was later removed on Stephen's call, so a live
+  submission currently goes nowhere silently).
+
+- **The form learned to flow** (polish pass, recorded in ADR-0033): sprung
+  overlay dissolve, exit-then-enter step transitions, cascading elements,
+  the pulsing `--accent-glow` focus treatment (accent hues only, no edge
+  ring), and a confirmation that celebrates — three-stage tick in the new
+  semantic `--success` green, "Boom! You're done", the close button in the
+  site's own CTA treatment.
+
+- **A polluted `.next` was diagnosed and cleared on the 29th**: a production
+  `BUILD_ID` sat in the dev server's cache dir (the documented
+  build-while-dev-runs trap), which had the server serving STALE CSS across
+  restarts — token edits landed on disk but never in the browser, and newly
+  added utilities (`fill-success`) never generated. The tell worth keeping:
+  disk newer than the served chunk after a touch and a hard reload means the
+  cache, not the watcher. Fix: stop the server, `rm -rf .next`, restart.
 
 ## 2026-08-25
 

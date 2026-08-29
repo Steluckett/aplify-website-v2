@@ -54,10 +54,11 @@ earned its place, it contradicts the page it sits on.
 **Consequences.**
 
 - **Submission is deliberately NOT wired** (UI first, Stephen's call). The
-  confirmation carries an honest footnote pointing at hello@aplify.co.uk —
-  the site is publicly deployed and a silent black-hole form is worse than
-  an honest one. When the API route lands (rule 9: server-side, zod,
-  `{ data } / { error }`), replace `submit()` and delete the footnote.
+  confirmation carried an honest footnote pointing at hello@aplify.co.uk —
+  **removed the same day on Stephen's call**, which sharpens the launch flag:
+  until the API route lands (rule 9: server-side, zod,
+  `{ data } / { error }`), a live submission goes nowhere and says nothing.
+  Wire before the page is promoted.
 - ⚠️ **"We'll come back to you within one working day" is an unconfirmed
   service promise.** Confirm or change before launch.
 - The overlay stays mounted while closed, so reopening RESETS to the intro
@@ -66,6 +67,23 @@ earned its place, it contradicts the page it sits on.
   read.
 - The reopening path, both sliders, validation, Esc and scroll restore are
   verified on 3100 at desktop and 375.
+
+**Polish pass, same day** (Stephen: "the form should flow"): the overlay
+dissolves in and out instead of banging on; steps flow OUT then IN
+(`useTransition` with `exitBeforeEnter`); elements cascade within a step
+(headline, controls, buttons, each on its own delay). Focused fields wear a
+pulsing conic glow — `--accent-glow`, the accent family only (sky → blue →
+violet; a wider magenta/amber sweep was tried and pulled), peaking around a
+third strength with no edge ring, the pulse a looped spring, never a CSS
+keyframe. The confirmation became a celebration: a tick drawn in three
+sprung stages (halo, popped disc, self-drawing stroke, in the semantic
+`--success` green), "Boom! You're done", and the closing button wears the
+site's own CTA hover treatment (`CtaButton` gained an `onClick` override so
+the button that closes the dialog cannot reopen it). The chrome floats over
+the top with a 24px tally so the step centres in the true viewport — and the
+centring bug this exposed is worth keeping: `min-h-full` cannot resolve
+against a parent with only a min-height, so it silently top-aligns;
+`min-h-dvh` needs no parent.
 
 ---
 
