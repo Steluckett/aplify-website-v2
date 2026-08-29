@@ -1,12 +1,71 @@
 ---
 tags: [meta, decision]
-updated: 2026-08-24
+updated: 2026-08-28
 ---
 
 # Decisions Log (ADRs)
 
 Architecture Decision Records. Each entry captures a choice, its context, and its
 consequences. Use [[templates/adr-note]] for new entries. Newest first.
+
+---
+
+## ADR-0033 — Book a demo is a full-screen experience, and the form practises what the site preaches
+
+- **Status:** Accepted
+- **Date:** 2026-08-28
+
+**Context.** Every "Book a demo" button pointed at `#contact`, which is the
+footer card — there was no way to actually enquire beyond the mailto. Stephen
+asked for a full-screen stepped form, "less like a form and more like an
+experience", sliders where the answer is a range, minimal information per
+step, and playbook tone.
+
+**Decision.** A full-screen overlay (`src/views/site/book-demo.tsx`, copy in
+`src/data/content/book-demo.ts`), summoned by every CTA through
+`use-contact-modal` — the zustand store orphaned when the dark build was
+deleted, kept for exactly this. `CtaButton` became a real `<button>` (rule
+10: an action that opens a dialog is not a link).
+
+**The organising idea: the form IS the argument.** The site's case is "every
+form field needs to earn its place" — so the enquiry form is one question a
+screen, mostly buttons, no password, an opener that says so ("This is the bit
+where most forms lose you"), and a confirmation that mirrors Easy Apply's
+"That's the whole application". If this form ever grows a field that has not
+earned its place, it contradicts the page it sits on.
+
+**The shape** (all four qualifiers Stephen's picks):
+
+- name → work email + organisation → hires/year → team size → agenda chips
+  + optional ATS, then the confirmation. Tally progress, ENDOWED (step one
+  shows a sliver, never an empty bar), spring-keyed step transitions,
+  focus-trapped, Esc closes, Enter advances.
+- **Sliders are BANDED, not numeric** — the thumb snaps between labelled
+  bands ("50 to 250 a year") and the band label is the readout at display
+  size. Nobody knows their exact figure; a slider you can be wrong about
+  stops being effortless.
+- **The ATS question is FREE TEXT** — §6.3 makes Eploy the only third-party
+  product named anywhere, and a vendor dropdown would name a dozen.
+- Ground is 01, the soft light aurora, where body ink is legal (5.69:1
+  worst point). The danger ink used for validation errors clears 4.5 at the
+  form column's actual position but is borderline at the ground's violet
+  corner — keep errors with their fields.
+
+**Consequences.**
+
+- **Submission is deliberately NOT wired** (UI first, Stephen's call). The
+  confirmation carries an honest footnote pointing at hello@aplify.co.uk —
+  the site is publicly deployed and a silent black-hole form is worse than
+  an honest one. When the API route lands (rule 9: server-side, zod,
+  `{ data } / { error }`), replace `submit()` and delete the footnote.
+- ⚠️ **"We'll come back to you within one working day" is an unconfirmed
+  service promise.** Confirm or change before launch.
+- The overlay stays mounted while closed, so reopening RESETS to the intro
+  (it once resumed on the confirmation screen); answers are kept.
+- `nav.ctaHref` and the CTA `href`s in the content module are no longer
+  read.
+- The reopening path, both sliders, validation, Esc and scroll restore are
+  verified on 3100 at desktop and 375.
 
 ---
 
@@ -128,6 +187,8 @@ PROSE only, confirmed explicitly:
   imitating a real ATS export on both sides of the table, not our voice.
 - Code comments and vault documents are unaffected; this is a rule about
   user-facing copy.
+- **A site-name separator is NOT exempt** (ruled 2026-08-28): the `<title>`'s
+  `Aplify — The recruitment…` became `Aplify - The recruitment…`, a hyphen.
 
 **Decision two: §6.2 is relaxed.** The rule required *"career site or campaign
 landing page"* every time, never the first alone, and `site.ts` carried it in

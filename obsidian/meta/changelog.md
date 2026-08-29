@@ -1,12 +1,86 @@
 ---
 tags: [meta, changelog]
-updated: 2026-08-25
+updated: 2026-08-28
 ---
 
 # Changelog
 
 Chronological log of notable changes to the project. Newest first.
 This is a human-curated log — not a mirror of `git log`.
+
+## 2026-08-28
+
+- **The copy deck's Metadata block is applied — the last unshipped piece of
+  the v3 deck.** `src/lib/site.ts` had carried the pre-rewrite description
+  ("The recruitment experience candidates actually finish. Aplify powers
+  search…") since the 2026-08-25 rewrite, so every search result and shared
+  link was showing the old positioning. It now carries the deck's completion
+  line: *"You don't have a traffic problem, you have a completion problem…"*.
+
+  **The title separator is a hyphen, and that is a ruling, not a drift.**
+  Stephen ruled on 2026-08-28 that a site-name separator is NOT exempt from
+  ADR-0032's no-em-dash rule, so `page.tsx` now sets
+  `Aplify - The recruitment experience candidates actually finish`. Recorded
+  in [[decisions-log]] ADR-0032's scope list.
+
+  **One clarification found on the way:** the OG share card image paints the
+  HERO's lines and standfirst from `content/site.ts`, not `siteConfig.
+  description`, so the image had already updated with the rewrite. What was
+  stale was the meta/`og:description` text beside it; the two now make the
+  same claim. Verified served on 3100: `<title>`, `description` and
+  `og:description` all carry the new strings. `tsc` and `lint` clean.
+
+- **Both product demos moved off the deep blue onto Harbour (bg-04).**
+  Stephen, against a screenshot of the shipped product: the bg-08 wash was
+  "too obnoxious", and the product is white tiles on Aurora's tinted
+  near-white ground (`--helion-bg #f0f2f7`). The dashboard went first, the
+  job search and Easy Apply followed the same day so the two demos stay one
+  instrument (ADR-0029's whole point).
+
+  What travelled with the wash, because Harbour is a VIVID ground (body ink
+  4.34:1 at its darkest point, modelled): everything sitting directly on the
+  panel takes full ink (10.08:1); the dashboard's `row-glass` rows became
+  white tiles with ink text, which also restored the name/email colour
+  hierarchy the deep ground had flattened; status and event chips reverted to
+  their light classification colours by cascade; the tab groups became
+  Aurora's own sidebar recipe (ink pill on an ink/5 track); and three white
+  focus rings became accent, since a white ring on a light ground is
+  invisible.
+
+  **The map inverted rather than washed out.** White glass sea + translucent
+  land was nearly invisible on a light ground, so the sea now RECESSES
+  (`bg-ink/5`, the tab tracks' own tint) and the land is solid white with an
+  ink/15 coastline — the standard light-map relationship. And the map-view
+  card list stopped shaving the selected card's ring: a scroll container
+  clips at its padding edge, so the list carries `p-2 -m-2` to widen the
+  paint box without moving the cards.
+
+- **Both demo panels carry a 44rem floor.** A search filtered to one result
+  used to collapse the panel to ~300px — and the dashboard's slide-overs are
+  CONTAINED in that panel, so the record opened nearly unreadable. The floor
+  leaves the overlay ~570px on desktop and only binds when filtering shrinks
+  the content. Easy Apply shares it so entering the flow and reaching the
+  short confirmation step cannot bounce the section height.
+
+- **The main CTAs carry the MagicUI dot-grow hover treatment** — Stephen
+  supplied the reference and the current registry source was pulled rather
+  than trusting the older snippet he'd been given, because the two differ in
+  exactly the ways that decide refinement: the dot is INLINE beside the label
+  (visible at rest, so the grow has an origin), and it grows by TRANSFORM
+  ONLY (`scale(100.8)`), which composites smoothly where the first build's
+  left/top/width/height animation janked. Colourway decided from three
+  options on the styleguide: rest is untouched `.btn-primary`, a white dot
+  floods the button white, the label returns dead-centre in the deep blue
+  ink with the arrow (the reference parks it 20px left of centre, which read
+  as crashing into the edge). New token `--duration-hover: 500ms` — the
+  reference's nominal 300ms runs on a lazy default ease, and on our hard
+  entrance curve 300 read "far too fast" (Stephen).
+
+- **A full-screen book-a-demo experience replaced the `#contact` anchor** on
+  every Book a demo button. See **ADR-0033** — stepped flow, banded sliders,
+  UI-only submission for now, and two launch flags: the "one working day"
+  promise needs confirming, and the honest unwired footnote comes off when
+  the API route lands.
 
 ## 2026-08-25
 
