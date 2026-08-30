@@ -1,12 +1,105 @@
 ---
 tags: [meta, changelog]
-updated: 2026-08-29
+updated: 2026-08-30
 ---
 
 # Changelog
 
 Chronological log of notable changes to the project. Newest first.
 This is a human-curated log — not a mirror of `git log`.
+
+## 2026-08-30
+
+- **`#proof` became three switchable case studies** — Brandon Trust, Cygnet
+  Group and HC-One, selected by clicking their real logos — replacing the
+  single Midnight stat monolith. Chosen from a three-option decision page
+  (gallery / bento / monolith split; Stephen picked the bento, then had the
+  stat cell rebuilt as a CONTINUOUS BAND: the three client-hued gradients
+  stacked in one frame, switching client scrolls the band through the
+  colours between while the stat text rides its direction). The row is
+  pinned above the tallest case per breakpoint (measured: 960/816/768 at
+  1080/1280/1512) or every switch resized it. Headline: *"Same problems.
+  Different postcodes."*
+
+  **All three §5 quotes now live here and nowhere else** (Stephen: "they
+  live here now") — Ben Hopwell left `#dashboard`, releasing that band's
+  must-be-white constraint (it stays white by choice). **A second Brandon
+  figure is authorised**: "55% more applications submitted", Stephen's, now
+  a dated amendment in V2_HANDOVER §5. Cygnet and HC-One run PLACEHOLDER
+  write-ups built only from existing site claims, word heroes instead of
+  numbers, until Stephen supplies real material. Their logos were supplied
+  the same day; HC-One's SVG was recoloured from its white-on-dark variant
+  (orange disc, dark script — worth a fidelity check against the real
+  mark). Midnight (bg-10) no longer appears on the page: the "only dark
+  surface" rule is moot until something else wants one.
+
+- **The six-stages carousel lost its frame, kept its wheel** (Stephen: "more
+  powerful if it wasn't framed... like Apple do it — the layout was
+  fine!"). The white mega-panel and the tinted band are gone: the band is
+  WHITE, the intro is punched to display size, and the wheel + shuffling
+  card stack sit directly on the ground. The stack then grew a FAN,
+  iterated same-day to SYMMETRIC (Stephen: the bleed-right version
+  changed shape past step 4, so the even spread became the rule): the
+  active card centred with two faded stages a side (±14/±23%, tilting
+  2.5/5deg, fading .3/.14 — "tint them down a step"), everything inside
+  the page, the sixth card hidden behind the spread. The depth-2 pair
+  needs column width the lg breakpoint doesn't have (measured clipping),
+  so the five-card fan is `max-xl:hidden`-gated — xl and up; below that
+  the stack keeps just the immediate neighbours. `#dashboard` after
+  it is also white; a hairline and extra margin do the separating. The
+  tint pair at google/how-it-works is dissolved. A full horizontal-STRIP
+  variant was built first on a misread of the brief, liked, and PARKED for
+  the future: [[../frontend/how-it-works-strip-variant]].
+
+- **`#origin` lost its box.** Two treatments died in one day (the Blush
+  panel on a white mat read as plonked; a negative-margin interstitial
+  dissolved the band rhythm into one grey run). Now a pure statement band:
+  the One Sentence directly on white with Blush kept as an EDGELESS
+  ATMOSPHERE behind the words. A scroll-animated ground shift was
+  considered and rejected — contrast is measured against static grounds.
+
+- **`#cost` was rebuilt as the page's scroll set piece.** Stephen: the band
+  "just feels unconsidered... it has to really land". Four working options
+  were built on a temporary decision page (`/cost-options`, since deleted) —
+  a choreographed ledger, a journey-that-stops path, an on-entrance
+  convergence, and a scroll-driven pin — and D won after seven rounds of
+  iteration.
+
+  As shipped: the section pins for ~3.8 screens. The reader arrives on the
+  intro with ELEVEN spend pills laid out around it — four framing the copy
+  from the corners outside its 46rem measure, seven in a scattered
+  overlapping row, all readable at a glance, each popping a green tick over
+  a grey placeholder seat. Their own scroll drags the pills one at a time
+  into the application card peeking over the screen's foot (title centred
+  in the visible strip). The card rises as the intro bows out just ahead of
+  it — a viewport-height safety, verified at 650px tall. The turn stays
+  white: a danger outline draws on, a red cross pops, and the copy becomes
+  a standalone statement ("So much goes into getting a candidate to
+  Apply..."). Then the spends bloom back out as faded ghosts, scattered
+  (not orbiting), every one clear of the card via `max()` exclusion — the
+  finale is the reader's pause. Small screens stack the pills two-up below
+  the standfirst instead.
+
+  Mechanics: `use-scroll-progress` (the hook kept for exactly this pin),
+  smoothed through a spring; reduced motion lands on the finished state; the
+  choreography is aria-hidden with an sr-only spend list carrying the
+  content. §6.1 holds — no figures anywhere. **The ledger and its three
+  follow-on cards are retired**, recoverable at commit `97c6d4e`; the
+  eleven spend labels include Stephen's additions (the EVP, the SEO, the
+  creative agency) alongside the band's own vocabulary and the dashboard
+  band's named sources.
+
+- **The nav hides on scroll down and returns on scroll up** (Stephen's
+  call, with the set piece landing): a permanent bar spends viewport height
+  the choreography needs. Sprung translate, rAF-coalesced direction reads
+  with a 4px deadband, always shown near the top, never hidden while the
+  mobile menu is open.
+
+- **The six-stages carousel lost its autoplay** (Stephen's call): the reader
+  lands on 01 because 01 is where the process starts, and the wheel moves
+  only when they move it. It shipped with a 6s autoplay for a day; walking a
+  reader away from the start of a sequence undercut the sequence. Hover
+  pause and take-over logic went with it.
 
 ## 2026-08-29
 

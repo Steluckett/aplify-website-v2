@@ -1,9 +1,9 @@
 "use client";
 
 import { animated, useSprings } from "@react-spring/web";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useId, useRef, useState } from "react";
 
-import { SectionIntro } from "@/components/ui/section-intro";
+import { StackedLines } from "@/components/ui/stacked-lines";
 import { howItWorks } from "@/data/content/site";
 
 /**
@@ -17,8 +17,15 @@ import { howItWorks } from "@/data/content/site";
  * rebuilt on `@react-spring/web` per rule 1 — no `motion/react`, no icon
  * packs.
  *
- * THE COMPOSITION. A white mega-panel on the tinted band (the FeatureBento
- * pattern — the panel is white, so the band must stay tinted). Inside it:
+ * UNFRAMED, 2026-08-30 (Stephen: "more powerful if it wasn't framed...
+ * like Apple do it — the layout was fine!"). The white mega-panel and the
+ * tinted band are gone: the band itself is WHITE, the intro is punched to
+ * display size, and the wheel + card stack sit directly on the ground. The
+ * stack hugs the viewport's right edge so the faded next card BLEEDS off
+ * the page — the invitation to move. `#dashboard` below is white too; a
+ * hairline and extra margin do the separating. (A full horizontal-strip
+ * variant was built the same day and parked — see
+ * obsidian/frontend/how-it-works-strip-variant.md.)
  *
  *   - THE RAIL, left: the six stages as pills on a vertical wheel. The
  *     active stage holds the centre and the list slides through it,
@@ -34,10 +41,9 @@ import { howItWorks } from "@/data/content/site";
  *     points, from the /backgrounds measurements); body ink is white/90,
  *     the deep-cell standard, and chips take their glass fill by cascade.
  *
- * AUTOPLAY walks the stages every 6s — it is a sequence, so watching it
- * run IS the pitch — pausing while the pointer is over the panel and
- * stopping for good the moment the reader takes control. An autoplay that
- * fights the reader's click reads as broken.
+ * NO AUTOPLAY — Stephen's call (2026-08-30): the reader lands on 01,
+ * because 01 is where the process starts, and the wheel moves only when
+ * they move it.
  */
 
 const STAGE_GROUNDS = [
@@ -49,7 +55,6 @@ const STAGE_GROUNDS = [
   "bg-13",
 ] as const;
 
-const AUTO_MS = 6000;
 /* The wheel's pitch. Generous on purpose (the rail has the room, and big
    pills read as the section's furniture rather than its controls) — at this
    pitch the wheel's far items run off the panel's edge and fade out through
@@ -68,24 +73,11 @@ const wrapped = (index: number, active: number): number => {
 
 export const HowItWorks = () => {
   const [active, setActive] = useState(0);
-  const [hovered, setHovered] = useState(false);
-  const [taken, setTaken] = useState(false); // reader took control
   const baseId = useId();
 
   const select = useCallback((index: number) => {
-    setTaken(true);
     setActive(index);
   }, []);
-
-  /* Autoplay until hovered or taken over. */
-  useEffect(() => {
-    if (hovered || taken) return;
-    const id = window.setInterval(
-      () => setActive((current) => (current + 1) % COUNT),
-      AUTO_MS,
-    );
-    return () => window.clearInterval(id);
-  }, [hovered, taken]);
 
   /* The rail wheel — one spring per pill. */
   const rail = useSprings(
@@ -100,28 +92,34 @@ export const HowItWorks = () => {
     }),
   );
 
-  /* The card stack — active centred, neighbours peeking from the wings. */
+  /* The card stack — a SYMMETRIC fan: the active card centred, two faded
+     stages stepping back on each side, each depth a step fainter than the
+     last, everything inside the page (Stephen, 2026-08-30: the asymmetric
+     bleed-right version switched shape past step 4, so the even 2-a-side
+     spread became the rule and the tints came down a step). The sixth
+     card — directly opposite on the wheel — sits hidden behind the
+     spread. */
+  const FAN: Record<number, { x: number; scale: number; rotate: number; opacity: number }> = {
+    [-2]: { x: -23, scale: 0.8, rotate: -5, opacity: 0.14 },
+    [-1]: { x: -14, scale: 0.9, rotate: -2.5, opacity: 0.3 },
+    0: { x: 0, scale: 1, rotate: 0, opacity: 1 },
+    1: { x: 14, scale: 0.9, rotate: 2.5, opacity: 0.3 },
+    2: { x: 23, scale: 0.8, rotate: 5, opacity: 0.14 },
+  };
   const cards = useSprings(
     COUNT,
     howItWorks.stages.map((_, index) => {
       const d = wrapped(index, active);
-      const status =
-        d === 0 ? "active" : d === -1 ? "prev" : d === 1 ? "next" : "hidden";
-      return {
-        x: status === "prev" ? -14 : status === "next" ? 14 : 0,
-        scale: status === "active" ? 1 : status === "hidden" ? 0.7 : 0.86,
-        rotate: status === "prev" ? -3 : status === "next" ? 3 : 0,
-        opacity: status === "active" ? 1 : status === "hidden" ? 0 : 0.35,
-        config: { tension: 240, friction: 26 },
-      };
+      const f = FAN[d] ?? { x: 0, scale: 0.7, rotate: 0, opacity: 0 };
+      return { ...f, config: { tension: 240, friction: 26 } };
     }),
   );
 
   /* Track z-order and interactivity outside the springs — springs animate,
-     these switch. */
+     these switch. The fan stacks downward with depth on both sides. */
   const zFor = (index: number) => {
-    const d = wrapped(index, active);
-    return d === 0 ? 20 : Math.abs(d) === 1 ? 10 : 0;
+    const d = Math.abs(wrapped(index, active));
+    return d === 0 ? 30 : d === 1 ? 20 : d === 2 ? 10 : 0;
   };
 
   const railBtnRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -143,23 +141,32 @@ export const HowItWorks = () => {
   };
 
   return (
-    <section id="how-it-works" className="py-26">
+    <section id="how-it-works" className="band-white py-26">
       <div className="shell">
-        <SectionIntro
-          eyebrow={howItWorks.eyebrow}
-          lines={howItWorks.lines}
-          linesSm={howItWorks.linesSm}
-          standfirst={howItWorks.standfirst}
-        />
+        {/* Punched up — display headline, h4 standfirst (Stephen). */}
+        <div className="text-center">
+          <p className="eyebrow justify-center">{howItWorks.eyebrow}</p>
+          <StackedLines
+            tag="h2"
+            lines={[...howItWorks.lines]}
+            className="display lines-tight mt-6 hidden text-center text-display text-ink-heading sm:block"
+            lineClassName="justify-center"
+          />
+          <StackedLines
+            tag="h2"
+            lines={[...howItWorks.linesSm]}
+            className="display lines-tight mt-6 text-center text-h1 text-ink-heading sm:hidden"
+            lineClassName="justify-center"
+          />
+          <p className="mx-auto mt-8 max-w-[52rem] text-lead leading-[1.55] text-ink-body lg:text-h4">
+            {howItWorks.standfirst}
+          </p>
+        </div>
 
-        {/* The panel reaches for the viewport (Stephen: "almost full screen
-            height... with the headline") with a floor so a short window
-            cannot crush the cards. */}
-        <div
-          className="band-white mt-16 overflow-hidden rounded-panel shadow-group lg:min-h-[max(38rem,calc(100dvh-27rem))]"
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-        >
+        {/* The composition reaches for the viewport with a floor so a
+            short window cannot crush the cards — unframed: no panel, just
+            the wheel and the stack on the band. */}
+        <div className="mt-16 lg:min-h-[max(38rem,calc(100dvh-27rem))]">
           <div className="flex h-full flex-col lg:min-h-[inherit] lg:flex-row">
             {/* THE RAIL. */}
             <div
@@ -259,11 +266,18 @@ export const HowItWorks = () => {
                 Neighbours stretch to the frame and clip their tails — they
                 are decorative peeks, aria-hidden, and a spilt chip at 35%
                 opacity read as a glitch. */}
-            <div className="relative flex flex-1 items-center justify-center px-6 pb-10 pt-2 lg:p-12">
+            <div className="relative flex flex-1 items-center justify-center px-6 pb-10 pt-2 lg:py-12 lg:pl-12 lg:pr-0">
+              {/* Centred: the whole fan lives inside the column now — no
+                  page-edge bleed. */}
               <div className="relative w-full max-w-[26rem] sm:max-w-[28rem] lg:max-w-[32rem] xl:max-w-[36rem]">
                 {cards.map((style, index) => {
                   const stage = howItWorks.stages[index];
                   const on = index === active;
+                  /* The depth-2 cards need a WIDE column to stay on the
+                     page (measured: at lg widths they clip the viewport
+                     edge), so the five-card fan is xl-and-up; below that
+                     the stack keeps just the immediate neighbours. */
+                  const deepFan = Math.abs(wrapped(index, active)) >= 2;
                   return (
                     <animated.div
                       key={stage.n}
@@ -288,10 +302,10 @@ export const HowItWorks = () => {
                                preferred ratio: content can push past it. */
                             "relative lg:aspect-square"
                           : "absolute inset-0 overflow-hidden"
-                      }`}
+                      } ${deepFan ? "max-xl:hidden" : ""}`}
                     >
                       <p className="figure text-h2 text-white/25">{stage.n}</p>
-                      <h3 className="display card-title mt-auto pt-6 text-h3 text-white">
+                      <h3 className="display card-title mt-auto pt-6 text-h3 text-white lg:text-h1">
                         {stage.title}
                       </h3>
                       <p className="mt-2 text-body font-medium text-white/90">
@@ -314,6 +328,10 @@ export const HowItWorks = () => {
             </div>
           </div>
         </div>
+
+        {/* The hand-off: this band and `#dashboard` below are both white
+            now, so a hairline and air do the separating. */}
+        <div className="mt-24 border-t border-hairline" />
       </div>
     </section>
   );
