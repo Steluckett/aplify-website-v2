@@ -102,7 +102,10 @@ export const GoogleSection = () => (
           <article className="grain bg-09 flex h-full flex-col rounded-panel p-8 lg:p-10">
             <p className="eyebrow !text-white">{google.machineLabel}</p>
 
-            <pre className="mt-8 overflow-x-auto text-ui-sm leading-[1.9] text-ink-on-dark">
+            {/* The mb guarantees air above the foot's divider — `mt-auto` on
+                the foot collapses to zero once the code fills the card, which
+                left the last line of JSON nearly touching the rule. */}
+            <pre className="mb-8 mt-8 overflow-x-auto text-ui-sm leading-[1.9] text-ink-on-dark">
               <code>
                 {google.schema.map((line) => (
                   <span key={line} className="block whitespace-pre">
