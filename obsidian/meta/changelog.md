@@ -36,8 +36,10 @@ This is a human-curated log — not a mirror of `git log`.
 - **The six-stages carousel lost its frame, kept its wheel** (Stephen: "more
   powerful if it wasn't framed... like Apple do it — the layout was
   fine!"). The white mega-panel and the tinted band are gone: the band is
-  WHITE, the intro is punched to display size, and the wheel + shuffling
-  card stack sit directly on the ground. The stack then grew a FAN,
+  WHITE and the wheel + shuffling card stack sit directly on the ground
+  (a display-size intro was tried and pulled — section headlines stay
+  uniform, so the band keeps the standard SectionIntro; the CARD titles
+  take h1 on desktop instead). The stack then grew a FAN,
   iterated same-day to SYMMETRIC (Stephen: the bleed-right version
   changed shape past step 4, so the even spread became the rule): the
   active card centred with two faded stages a side (±14/±23%, tilting
