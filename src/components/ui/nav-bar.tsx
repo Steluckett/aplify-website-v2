@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { animated, useSpring } from "@react-spring/web";
+
 import { Spring } from "@/components/animation/springs/spring";
 import { CtaButton } from "@/components/ui/cta-button";
 import { useContactModal } from "@/hooks/use-contact-modal";
@@ -32,7 +34,44 @@ export interface NavBarProps {
  */
 export const NavBar = ({ items, ctaLabel }: NavBarProps) => {
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const openBookDemo = useContactModal((s) => s.open);
+
+  /* HIDE ON SCROLL DOWN, RETURN ON SCROLL UP (Stephen, 2026-08-30): the page
+     now carries pinned set pieces, and a permanent bar spends viewport
+     height the choreography needs. Direction is read from native scroll
+     events (Lenis emits them — same contract `use-scroll-progress` relies
+     on), coalesced into one rAF per burst, with a small deadband so a
+     trembling trackpad cannot flicker the bar. Near the top it is always
+     shown; while the mobile menu is open it never hides under the reader. */
+  useEffect(() => {
+    let last = window.scrollY;
+    let frame: number | null = null;
+    const measure = () => {
+      frame = null;
+      const y = window.scrollY;
+      const delta = y - last;
+      if (Math.abs(delta) > 4) {
+        if (y < 120) setHidden(false);
+        else setHidden(delta > 0);
+        last = y;
+      }
+    };
+    const schedule = () => {
+      if (frame !== null) return;
+      frame = window.requestAnimationFrame(measure);
+    };
+    window.addEventListener("scroll", schedule, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  const bar = useSpring({
+    y: hidden && !open ? -130 : 0,
+    config: { tension: 210, friction: 26 },
+  });
 
   // A menu that survives a resize into desktop leaves the page scroll-locked
   // with no visible way to release it.
@@ -48,7 +87,10 @@ export const NavBar = ({ items, ctaLabel }: NavBarProps) => {
   }, [open]);
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 pt-4 sm:pt-5">
+    <animated.header
+      style={{ transform: bar.y.to((v) => `translate3d(0,${v}%,0)`) }}
+      className="pointer-events-none fixed inset-x-0 top-0 z-50 pt-4 sm:pt-5"
+    >
       <nav
         aria-label="Primary"
         className="glass shell pointer-events-auto flex h-[4.5rem] items-center gap-2 rounded-pill pr-3 pl-6 shadow-[0_1px_2px_rgba(16,19,26,0.04),0_10px_28px_rgba(16,19,26,0.07)] sm:pl-8"
@@ -145,6 +187,6 @@ export const NavBar = ({ items, ctaLabel }: NavBarProps) => {
           </div>
         </Spring>
       ) : null}
-    </header>
+    </animated.header>
   );
 };
