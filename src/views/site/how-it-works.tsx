@@ -3,7 +3,7 @@
 import { animated, useSprings } from "@react-spring/web";
 import { useCallback, useId, useRef, useState } from "react";
 
-import { StackedLines } from "@/components/ui/stacked-lines";
+import { SectionIntro } from "@/components/ui/section-intro";
 import { howItWorks } from "@/data/content/site";
 
 /**
@@ -19,11 +19,11 @@ import { howItWorks } from "@/data/content/site";
  *
  * UNFRAMED, 2026-08-30 (Stephen: "more powerful if it wasn't framed...
  * like Apple do it — the layout was fine!"). The white mega-panel and the
- * tinted band are gone: the band itself is WHITE, the intro is punched to
- * display size, and the wheel + card stack sit directly on the ground. The
- * stack hugs the viewport's right edge so the faded next card BLEEDS off
- * the page — the invitation to move. `#dashboard` below is white too; a
- * hairline and extra margin do the separating. (A full horizontal-strip
+ * tinted band are gone: the band itself is WHITE and the wheel + card
+ * stack sit directly on the ground. The intro is the standard
+ * SectionIntro — a display-size cut was tried and pulled the same day
+ * (Stephen: section headlines stay uniform). `#dashboard` below is white
+ * too; a hairline and extra margin do the separating. (A full horizontal-strip
  * variant was built the same day and parked — see
  * obsidian/frontend/how-it-works-strip-variant.md.)
  *
@@ -143,25 +143,12 @@ export const HowItWorks = () => {
   return (
     <section id="how-it-works" className="band-white py-26">
       <div className="shell">
-        {/* Punched up — display headline, h4 standfirst (Stephen). */}
-        <div className="text-center">
-          <p className="eyebrow justify-center">{howItWorks.eyebrow}</p>
-          <StackedLines
-            tag="h2"
-            lines={[...howItWorks.lines]}
-            className="display lines-tight mt-6 hidden text-center text-display text-ink-heading sm:block"
-            lineClassName="justify-center"
-          />
-          <StackedLines
-            tag="h2"
-            lines={[...howItWorks.linesSm]}
-            className="display lines-tight mt-6 text-center text-h1 text-ink-heading sm:hidden"
-            lineClassName="justify-center"
-          />
-          <p className="mx-auto mt-8 max-w-[52rem] text-lead leading-[1.55] text-ink-body lg:text-h4">
-            {howItWorks.standfirst}
-          </p>
-        </div>
+        <SectionIntro
+          eyebrow={howItWorks.eyebrow}
+          lines={[...howItWorks.lines]}
+          linesSm={[...howItWorks.linesSm]}
+          standfirst={howItWorks.standfirst}
+        />
 
         {/* The composition reaches for the viewport with a floor so a
             short window cannot crush the cards — unframed: no panel, just
