@@ -2,7 +2,7 @@
 
 import { Reveal } from "@/components/ui/reveal";
 import { SectionIntro } from "@/components/ui/section-intro";
-import { dashboardQuote, demos } from "@/data/content/site";
+import { demos } from "@/data/content/site";
 
 import { AiRewriteDemo } from "./demos/ai-rewrite";
 import { DashboardDemo } from "./demos/dashboard";
@@ -80,46 +80,16 @@ export const DashboardSection = () => (
       />
       {/* No frame, for the same reason the job search has none — and the
           demo now renders its own §6.7 caption at the foot of its panel,
-          which is the disclosure this surface had been missing entirely. */}
+          which is the disclosure this surface had been missing entirely.
+
+          BEN HOPWELL'S QUOTE LEFT THIS BAND on 2026-08-30 — all three §5
+          quotes live in the case-studies band now, each inside the case it
+          proves (Stephen: "they live here now"). That releases this
+          section's old must-be-white constraint (it existed for the quote's
+          `wash-soft` card); it stays white by CHOICE, for the alternation. */}
       <div className="mt-16">
         <DashboardDemo />
       </div>
-
-      {/* Ben Hopwell, beside the thing he is actually talking about.
-          §5 gives each of the three approved quotes a different job — his
-          proves the dashboard is USABLE — and until 2026-08-25 all three sat
-          together in one grid nine bands away from here, where that
-          distinction was worth nothing. Louise and Sammi are under the proof
-          figure for the same reason: each quote sits with what it proves.
-
-          Picked by name in `site.ts`, so reordering the approved array cannot
-          silently swap him for somebody making a different claim.
-
-          THIS IS WHY THE SECTION IS `band-white`. The card is `wash-soft`, a
-          10%-alpha gradient, and it needs white underneath to read. */}
-      <Reveal variant="up" className="mt-10">
-        <figure className="wash-soft mx-auto flex max-w-[46rem] flex-col rounded-panel p-8 lg:p-10">
-          <blockquote className="text-lead leading-[1.5] text-ink-heading">
-            “{dashboardQuote.quote}”
-          </blockquote>
-          <figcaption className="mt-auto flex items-center gap-3 border-t border-hairline pt-6">
-            <span
-              className="icon-chip h-10 w-10 text-ui-sm font-medium"
-              aria-hidden
-            >
-              {dashboardQuote.org.slice(0, 1)}
-            </span>
-            <span>
-              <span className="block text-ui-base font-medium text-ink">
-                {dashboardQuote.name}
-              </span>
-              <span className="block text-ui-sm text-ink-label">
-                {dashboardQuote.org}
-              </span>
-            </span>
-          </figcaption>
-        </figure>
-      </Reveal>
     </div>
   </section>
 );

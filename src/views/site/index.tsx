@@ -9,14 +9,16 @@ import { GoogleSection } from "./google";
 import { Hero } from "./hero";
 import { HowItWorks } from "./how-it-works";
 import { Capabilities } from "./platform";
-import { Cost, Friction, Origin } from "./problem";
+import { Cost } from "./cost";
+import { Friction, Origin } from "./problem";
 import {
   AiEnrichmentSection,
   DashboardSection,
   JobSearchSection,
 } from "./product";
 import { Story } from "./story";
-import { Integrations, Proof, Security } from "./trust";
+import { CaseStudies } from "./case-studies";
+import { Integrations, Security } from "./trust";
 
 /**
  * The Aurora rebuild, restructured on 2026-08-25 to the Brand Playbook v3 and
@@ -119,7 +121,7 @@ export const SiteView = () => (
 
       {/* The only hard number the site has, immediately after the claim it
           proves, with the two quotes that prove the same thing. */}
-      <Proof />
+      <CaseStudies />
 
       {/* ACT THREE — what decides who arrives. Deliberately AFTER the payoff:
           Easy Apply converts the people who get there, and this is what

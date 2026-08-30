@@ -405,50 +405,48 @@ export const cost = {
      instead of pre-empting it. */
   standfirst:
     "Every drop-out was bought and paid for, long before anybody reached the form. Here is what one of them actually costs you.",
-  ledger: {
-    heading: "One candidate, itemised",
-    /**
-     * Four lines that went to plan, then the one that did not.
-     *
-     * NO FIGURES ANYWHERE, and that is not an oversight. §6.1 permits no
-     * invented number and §5's only real one is Brandon Trust's, which has to
-     * stay paired with "application drop-off rate" and lands in band 10. A
-     * receipt with invented pounds on it is the exact shape of thing that rule
-     * exists to stop. The pattern is the point, not the sum.
-     */
-    paid: [
-      "Advertising that put the job in front of them",
-      "The campaign that made them click",
-      "The careers site that held their attention",
-      "Your team's time getting them that far",
-    ],
-    /**
-     * The climax, and it needs to be more than two words.
-     *
-     * This used to be a fifth row with a rose chip on it — the same size as
-     * everything above, differing only in colour, which meant the band's whole
-     * point arrived as a change of pill. It now breaks the pattern properly:
-     * its own panel, its own ground, its own scale.
-     */
-    loss: {
-      title: "The application, abandoned",
-      body: "Everything above it was paid for in full. This is the one line that decides whether any of that was worth spending.",
-    },
-  },
-  cards: [
-    {
-      title: "You paid for them twice",
-      body: "The spend that got somebody to the job is written off the moment they leave, and you spend it again next month getting somebody else to the same form.",
-    },
-    {
-      title: "Your employer brand takes the hit",
-      body: "Every vacancy is a first impression. If applying feels like admin, that's the impression, and it lasts a lot longer than the campaign did.",
-    },
-    {
-      title: "The best ones go first",
-      body: "The people who abandon aren't a random sample. Strong candidates have other options and less patience, so they're the ones you lose soonest.",
-    },
+  /**
+   * REBUILT AS THE SCROLL SET PIECE, 2026-08-30 (Stephen's direction,
+   * iterated on a four-option decision page): eleven spend pills scattered
+   * around the screen are dragged one at a time into a central application
+   * card by the reader's own scroll; the card rises, turns ABANDONED (white
+   * card, danger outline, red cross — no gradient), and the spends bloom
+   * back out as faded ghosts for the reader's pause. The old ledger and its
+   * three follow-on cards are retired — recoverable at commit `97c6d4e`.
+   *
+   * NO FIGURES ANYWHERE, and that is not an oversight. §6.1 permits no
+   * invented number and §5's only real one is Brandon Trust's, which stays
+   * paired with "application drop-off rate" in the proof band. The pattern
+   * is the point, not the sum.
+   *
+   * The eleven spends are recut from the band's own vocabulary plus the
+   * sources the dashboard band already names (paid social, job boards, QR
+   * posters); the EVP, the SEO and the creative agency are Stephen's own
+   * additions. Labels, not claims.
+   */
+  spends: [
+    "The advertising",
+    "The job boards",
+    "The paid social",
+    "The campaign",
+    "The careers site",
+    "The employer brand",
+    "The QR posters",
+    "Your team's time",
+    "The EVP",
+    "The SEO",
+    "The creative agency",
   ],
+  card: {
+    eyebrow: "What all of it was for",
+    title: "The application",
+    lossLabel: "Abandoned",
+    lossTitle: "The application, abandoned",
+    /* A statement that stands on its own — deliberately not pointing at the
+       animation (Stephen: "we just need to make an obvious statement"). */
+    lossBody:
+      "So much goes into getting a candidate to Apply. This is the one line that decides whether any of it was worth spending.",
+  },
 } as const;
 
 /**
@@ -961,13 +959,76 @@ export const google = {
   ],
 } as const;
 
-export const proof = {
-  eyebrow: "Application drop-off rate",
-  before: { value: "85%", label: "Before Easy Apply" },
-  after: { value: "30%", label: "After Easy Apply" },
-  figure: "30",
-  unit: "%",
-  client: "Brandon Trust",
+/**
+ * BAND 10 — the case studies. Graduated 2026-08-30 from a three-option
+ * decision page: the single Brandon stat monolith became three switchable
+ * case studies selected by clicking their logos, and ALL THREE §5 quotes
+ * live here now (Ben Hopwell left the dashboard band the same day, which
+ * released that band's must-be-white constraint).
+ *
+ * CLAIMS AUDIT — read before editing:
+ * - "55% more applications submitted" is Stephen's figure, supplied
+ *   2026-08-30 and recorded as a dated amendment in V2_HANDOVER §5.
+ * - The 85→30 pair keeps its mandatory "application drop-off rate" pairing
+ *   in Brandon's dropLine and body (§5).
+ * - Cygnet and HC-One's write-ups are PLACEHOLDERS built only from claims
+ *   the site already makes elsewhere, with word heroes instead of numbers —
+ *   §6.1 permits no invented figure. Their ATS is never named (§6.3).
+ *   Stephen supplies the real material; replace like for like.
+ * - Logos: Brandon's is cleared in §5; Cygnet's and HC-One's were supplied
+ *   by Stephen 2026-08-30. HC-One's SVG was recoloured from the
+ *   white-on-dark variant to its light-ground palette.
+ */
+export const caseStudies = {
+  eyebrow: "Proof",
+  lines: ["Same problems.", "Different postcodes."],
+  linesSm: ["Same problems.", "Different", "postcodes."],
+  standfirst:
+    "Three organisations who turned up with the exact problems this page has been describing, and what happened when they stopped putting up with them.",
+  cases: [
+    {
+      id: "brandon",
+      name: "Brandon Trust",
+      logo: "/assets/case-studies/brandon-lockup.png",
+      logoRatio: 642 / 311,
+      hero: "55%",
+      heroLabel: "more applications submitted",
+      dropLine: "Application drop-off rate: 85% before Easy Apply, 30% after.",
+      body: [
+        "Brandon Trust's careers site was doing its job. The application form wasn't: 85% of the people who pressed Apply never finished. Easy Apply put the whole application on the page they were already on, with no account, no redirect and no password.",
+        "Drop-off fell to 30%, and completed applications rose by more than half. Same traffic, same jobs, same team.",
+      ],
+      quoteName: "Louise Mitchell",
+    },
+    {
+      id: "cygnet",
+      name: "Cygnet Group",
+      logo: "/assets/case-studies/cygnet.svg",
+      logoRatio: 220 / 88,
+      hero: "Sorted.",
+      heroLabel: "salaries, titles and regions, on every import",
+      dropLine: "Cleaned on the way in, published consistent, every time.",
+      body: [
+        "Cygnet Group's feed arrived the way ATS feeds do: salaries written five different ways, titles carrying internal codes, regions spelled to taste. Aplify cleans all of it on every import, so every advert goes out consistent, on-brand and publishable.",
+        "Nobody edits a spreadsheet, and the feed stays clean however the ATS produces it.",
+      ],
+      quoteName: "Ben Hopwell",
+    },
+    {
+      id: "hc-one",
+      name: "HC-One",
+      logo: "/assets/case-studies/hc-one-mark.svg",
+      logoRatio: 165 / 59,
+      hero: "Found.",
+      heroLabel: "the right job, faster, on every landing page",
+      dropLine: "Postcode and radius search, live filters, and a map.",
+      body: [
+        "HC-One hires across hundreds of locations, and their campaign landing pages needed a search that could keep up: postcode and radius, live filters, and a map for the shift worker who only knows which town they can reach.",
+        "That search now sits on the page itself, and so does applying. Nobody gets handed off to find their own way.",
+      ],
+      quoteName: "Sammi Yates",
+    },
+  ],
 };
 
 export const testimonials = {
@@ -1006,31 +1067,17 @@ export const testimonials = {
 };
 
 /**
- * The three quotes, picked by NAME rather than by index.
+ * The three quotes, picked by NAME rather than by index — a reorder of the
+ * approved array cannot silently swap them.
  *
- * §5 is explicit that they are not interchangeable: Louise proves completion,
- * Sammi proves the candidate experience, Ben proves the dashboard is usable.
- * The page used to run all three as one grid, which is the weakest possible
- * use of them — a wall of praise reads as a wall of praise, whichever three
- * quotes are in it.
- *
- * They now sit with the thing each one proves. Louise and Sammi go under the
- * 85%→30% figure, which is the same claim; Ben goes beside the dashboard he is
- * actually describing, nine bands from where he used to be.
- *
- * Picked by name so a reorder of the array cannot silently swap them.
+ * Since 2026-08-30 ALL THREE live in the case-studies band (`#proof`), each
+ * inside the case study it proves: Louise with Brandon (completion), Ben
+ * with Cygnet (the dashboard), Sammi with HC-One (the candidate
+ * experience). Stephen's call: "remove any other testimonials from the
+ * page - they live here now." Nothing else on the page may quote anybody.
  */
-const byName = (name: string) => {
+export const caseQuote = (name: string) => {
   const quote = testimonials.quotes.find((q) => q.name === name);
   if (!quote) throw new Error(`Missing approved quote: ${name}`);
   return quote;
 };
-
-/** Under the proof figure. Completion, then the candidate experience. */
-export const proofQuotes = [
-  byName("Louise Mitchell"),
-  byName("Sammi Yates"),
-] as const;
-
-/** Beside the recruiter dashboard. */
-export const dashboardQuote = byName("Ben Hopwell");

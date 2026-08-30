@@ -5,7 +5,7 @@ import Image from "next/image";
 import { IconChip } from "@/components/ui/icon-chip";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionIntro } from "@/components/ui/section-intro";
-import { cost, friction, origin } from "@/data/content/site";
+import { friction, origin } from "@/data/content/site";
 
 /**
  * Act one: the three bands that state the reader's problem before Aplify is
@@ -384,133 +384,6 @@ export const Friction = () => {
 };
 
 /* -------------------------------------------------------------------------
-   Band 3 — what it costs
-   ------------------------------------------------------------------------- */
-
-/**
- * The cost, itemised. Full width, no card around it.
- *
- * THE SECOND BUILD OF THIS BAND. The first put the ledger in a 736px white box
- * inside a 1436 shell, with each row 700px of mostly empty space between the
- * item and a small "Paid" chip, four identical chips down the right, and the
- * abandoned line at the same size as everything above it. Stephen: "Do you
- * think that looks nice in the slightest?" It did not — it was an unstyled
- * table in a box, and the band's whole point arrived as a change of pill
- * colour.
- *
- * Three things changed and each one is doing a job:
- *
- * 1. THE BOX IS GONE. The rows run the full shell width and sit directly on
- *    the band, so the spend has the width to feel like an account rather than
- *    a form floating in the middle of the page.
- *
- * 2. THE ITEMS ARE AT `text-h4` (24px), NOT BODY. These are the things being
- *    counted, so they are the largest thing in their row. "Paid" drops to
- *    small muted type at the other end — four identical chips were the
- *    noisiest thing in the old build and they were only repeating a word.
- *
- * 3. THE LOSS BREAKS THE PATTERN COMPLETELY. Its own panel, its own ground,
- *    its own scale, and copy rather than a label. Four quiet rows and then
- *    something that looks different is what makes the accumulation land.
- *
- * GROUND 05, ORCHARD, and the choice is measured. It is the warmest of the
- * light set, which is what a loss line wants, and crucially its BODY ink
- * measures 5.29:1 — the only vivid ground that clears 4.5 for small text.
- * Harbour is 4.31 and Spectrum 3.72, so neither can carry the paragraph.
- * A DARK panel is not available: `#proof` is deliberately the page's only dark
- * surface, so the climax has to come from scale, ink and warmth instead.
- */
-const Ledger = () => (
-  <div className="mt-16">
-    {/* THE ROWS CARRY THE PANEL'S OWN HORIZONTAL PADDING, so the item column
-        and the Paid column line up exactly with the loss panel's content
-        below. Without it the columns missed each other by 66px — the panel is
-        inset by its padding and the rows were not — and the two stopped
-        reading as one account.
-
-        The rules stay FULL WIDTH: padding sits inside the border box, so the
-        hairline runs the whole shell while the content is inset, which is how
-        a printed statement actually sets. */}
-    <p className="eyebrow px-8 lg:px-14">{cost.ledger.heading}</p>
-
-    <ul className="mt-8 border-t border-hairline">
-      {cost.ledger.paid.map((item) => (
-        <li
-          key={item}
-          className="flex items-baseline justify-between gap-10 border-b border-hairline px-8 py-7 lg:px-14"
-        >
-          <span className="text-h4 leading-[1.3] text-ink">{item}</span>
-          {/* Quiet, and the same four times on purpose — the repetition is the
-              point, but it should be felt rather than shouted. */}
-          <span className="shrink-0 text-ui-sm text-ink-label">Paid</span>
-        </li>
-      ))}
-    </ul>
-
-    <Reveal variant="rise" className="mt-10">
-      <div className="grain bg-05 rounded-panel px-8 py-14 lg:px-14 lg:py-16">
-        {/* THE RIGHT-HAND COLUMN CONTINUES INTO THIS PANEL, which is what
-            makes it read as the fifth line of the same account rather than a
-            separate box that happens to follow one. The four rows above say
-            "Paid" at 13px in muted ink; this says "Abandoned" at 24px in
-            `--danger`. Same column, same alignment, amplified.
-
-            Measured on Orchard at its lightest pixel: `--danger` (#b91c1c) is
-            5.74:1, so it passes at any size. `ink-label` would NOT — it is
-            4.29 there, large-text only — which is why this word is not just
-            the muted label made bigger. */}
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between sm:gap-12">
-          <div className="max-w-[46rem]">
-            <h3 className="display card-title text-h3">
-              {cost.ledger.loss.title}
-            </h3>
-            <p className="mt-5 text-body leading-[1.6] text-ink-body">
-              {cost.ledger.loss.body}
-            </p>
-          </div>
-          <span className="shrink-0 text-h4 leading-none text-danger">
-            Abandoned
-          </span>
-        </div>
-      </div>
-    </Reveal>
-  </div>
-);
-
-export const Cost = () => (
-  <section id="cost" className="py-26">
-    <div className="shell">
-      <SectionIntro
-        eyebrow={cost.eyebrow}
-        lines={[...cost.lines]}
-        linesSm={[...cost.linesSm]}
-        standfirst={cost.standfirst}
-      />
-
-      <Ledger />
-
-      {/* SQUARE, the same shape as the friction band's cards. They were 1.87
-          letterboxes, which was the shape that band had just moved away from —
-          two adjacent bands disagreeing about what a card is. */}
-      <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
-        {cost.cards.map((card, i) => (
-          <Reveal key={card.title} variant="up" delay={i * 80}>
-            <article
-              className={`tile flex h-full flex-col rounded-panel p-8 lg:p-10 ${SQUARE}`}
-            >
-              <h3 className="display card-title text-h3">{card.title}</h3>
-              <p className="mt-5 text-body leading-[1.6] text-ink">
-                {card.body}
-              </p>
-            </article>
-          </Reveal>
-        ))}
-      </div>
-    </div>
-  </section>
-);
-
-/* -------------------------------------------------------------------------
    Band 4 — why we built it
    ------------------------------------------------------------------------- */
 
@@ -533,19 +406,34 @@ export const Cost = () => (
  * cuts and an itemised bill, a band that is one sentence lands harder than
  * anything with cards in it would.
  */
+/* NO BOX, 2026-08-30. Two treatments died here in one day: the Blush panel
+   on a white mat ("plonked" — page tint → white band → box is three nested
+   grounds), then a negative-margin interstitial that dissolved the band
+   rhythm into one long grey run. The diagnosis both times was the BOX, not
+   the white. So: a pure statement band — the One Sentence directly on the
+   white, with Blush kept as an EDGELESS ATMOSPHERE behind the words (the
+   house's own radial-blob language, minus the container). The hues are
+   bg-03's own at half strength; ink contrast is untouched at these alphas.
+   A scroll-animated ground shift was considered and rejected: the contrast
+   system is measured against static grounds, and a moving ground passes
+   ΔE-fragile surfaces through unverified intermediate states. */
 export const Origin = () => (
-  <section id="origin" className="band-white py-26">
-    <div className="shell">
-      <Reveal variant="rise">
-        <div className="grain bg-03 rounded-panel px-8 py-20 lg:py-28">
-          <SectionIntro
-            eyebrow={origin.eyebrow}
-            lines={[...origin.lines]}
-            linesSm={[...origin.linesSm]}
-            standfirst={origin.standfirst}
-          />
-        </div>
-      </Reveal>
+  <section id="origin" className="band-white relative overflow-hidden py-32 lg:py-40">
+    <div
+      aria-hidden
+      className="absolute inset-0"
+      style={{
+        background:
+          "radial-gradient(46% 52% at 38% 42%, rgb(245 158 11 / 0.09), transparent 70%), radial-gradient(40% 48% at 66% 60%, rgb(236 72 153 / 0.07), transparent 70%)",
+      }}
+    />
+    <div className="shell relative">
+      <SectionIntro
+        eyebrow={origin.eyebrow}
+        lines={[...origin.lines]}
+        linesSm={[...origin.linesSm]}
+        standfirst={origin.standfirst}
+      />
     </div>
   </section>
 );

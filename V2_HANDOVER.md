@@ -217,6 +217,14 @@ named integration.
 paired with the phrase *application drop-off rate* so it cannot be misread as a completion rate. Brandon
 Trust's logo is cleared for use alongside it.
 
+> **Amended 2026-08-30 (Stephen, in conversation):** a second Brandon Trust figure is approved —
+> **"55% more applications submitted"** — and leads the Brandon case study in the case-studies band.
+> The 85→30 pair keeps its mandatory pairing wherever it appears. Stephen also supplied the Cygnet
+> Group and HC-One logos for the case-study switcher on the same date; their case-study WRITE-UPS
+> remain placeholders built only from claims this document already approves, with no figures, until
+> he supplies the real material. The superseded wording above ("there is no second stat") is retained
+> for the record; this amendment is the second stat's authorisation.
+
 **The three client quotes.** All real, all cleared, all available as recorded voiceovers.
 
 - **Louise Mitchell, Brandon Trust** — *"Aplify has helped us significantly reduce application drop-out by
