@@ -914,6 +914,69 @@ export const integrations = {
  * `schema` must stay traceable field-for-field to `job`, the same discipline
  * §6.10 imposes on the AI rewrite. If you edit one side, edit the other.
  */
+/**
+ * `#implementation` — how Aplify gets onto a career site, graduated from
+ * /implementation-options on 2026-09-01 (Stephen picked "the receipts", the
+ * bento led by the claim IT asks about, after a dialect pass to keep the
+ * "don't be too techy" rule: the endpoints stay as evidence, but they are
+ * explicitly addressed to the reader's developers, and the prose speaks
+ * outcomes).
+ *
+ * CLAIMS PROVENANCE — every factual line here was verified against the
+ * plugin's code (aplify-integration 3.1.0, read 2026-09-01): no candidate
+ * data stored in WordPress (no post types, no tables, no cron sync; CVs
+ * streamed, never written to the site); the API key lives server-side and
+ * candidates' browsers only talk to the site's own domain; two required
+ * settings (API key + app URL); flow mode registers its own pages so
+ * nothing is page-built; the endpoints listed are real paths from the
+ * plugin's own requests. The one deliberate absence: no promise about
+ * non-WordPress packaged delivery, because it has not shipped — the API is
+ * the honest non-WordPress answer today (§6 discipline).
+ */
+export const implementation = {
+  eyebrow: "Implementation",
+  lines: ["Your site renders it.", "Our engine runs it."],
+  linesSm: ["Your site", "renders it.", "Our engine", "runs it."],
+  standfirst:
+    "Aplify is a hosted engine behind your career site, not software you install and hope for the best. There are two ways in, and they end at the same place.",
+  statement: {
+    eyebrow: "The bit IT will ask about",
+    title: "No candidate data lives in your CMS.",
+    body: "Applications and CVs go straight to the engine and stay there. Your website renders the experience; it never stores a candidate, and the API key never leaves your server.",
+    chips: ["Nothing to purge", "Nothing to leak", "GDPR handled engine side"],
+  },
+  setup: {
+    title: "Two settings to go live",
+    body: "On WordPress the flows bring their own pages. Nothing to build, and design tokens to make it yours.",
+    fields: [
+      { label: "API key", value: "aplify_sk_\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022" },
+      { label: "App URL", value: "https://app.aplify.co.uk" },
+    ],
+    footNote: "That is the whole setup.",
+    cta: "Connect",
+  },
+  routes: {
+    title: "Two ways in",
+    items: [
+      { title: "On WordPress", body: "Out of the box. Install, connect, style." },
+      { title: "On anything else", body: "Built in. Your front end on the same API." },
+    ],
+    engineLine:
+      "One engine behind both doors. A bespoke build isn't a special project, it's the same engine the plugin already talks to.",
+  },
+  api: {
+    title: "The same API either way",
+    body: "The plugin is a client of the API, not a shortcut around it. Scoped keys mean a site key can read jobs and nothing else.",
+    devLabel: "This bit is for your developers",
+    endpoints: [
+      { method: "GET", path: "/api/v1/job_vacancies/search" },
+      { method: "POST", path: "/api/v1/job_applications" },
+      { method: "GET", path: "/api/v1/events" },
+      { method: "POST", path: "/api/v1/gdpr_requests" },
+    ],
+  },
+};
+
 export const google = {
   eyebrow: "Google for Jobs",
   lines: ["Most job hunts don't", "start on your site"],

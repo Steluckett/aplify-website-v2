@@ -1,12 +1,31 @@
 ---
 tags: [meta, changelog]
-updated: 2026-08-30
+updated: 2026-09-01
 ---
 
 # Changelog
 
 Chronological log of notable changes to the project. Newest first.
 This is a human-curated log — not a mirror of `git log`.
+
+## 2026-09-01
+
+- **A new `#implementation` band: "the receipts"** — the page finally answers
+  "how does this get on our site?" before it becomes a silent objection.
+  Graduated from a three-option decision page (two-doorway cards, an engine
+  diagram, a bento — Stephen picked the bento after a dialect pass for the
+  don't-be-too-techy rule). Engine-first framing: the WordPress plugin is a
+  thin client of the same API a bespoke build would use, so the two routes
+  are one product with two doorways. The bento leads with "No candidate
+  data lives in your CMS." (bg-13), shows the whole WordPress setup as a
+  rendered two-field settings screen (bg-04), lists the two routes, and
+  prints four REAL endpoint paths on bg-08 explicitly captioned "This bit
+  is for your developers" — the Google band's whose-voice trick. Every
+  factual claim was verified against the plugin's code (aplify-integration
+  3.1.0, read 2026-09-01); provenance is documented on the content module.
+  Sits between `#integrations` and `#security` — exactly the question
+  between those two — with a hairline handoff into the white security band.
+  See [[decisions-log#ADR-0034 — The implementation band is engine-first, and its claims are code-verified|ADR-0034]].
 
 ## 2026-08-30
 

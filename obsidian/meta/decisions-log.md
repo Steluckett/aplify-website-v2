@@ -1,12 +1,44 @@
 ---
 tags: [meta, decision]
-updated: 2026-08-28
+updated: 2026-09-01
 ---
 
 # Decisions Log (ADRs)
 
 Architecture Decision Records. Each entry captures a choice, its context, and its
 consequences. Use [[templates/adr-note]] for new entries. Newest first.
+
+---
+
+## ADR-0034 — The implementation band is engine-first, and its claims are code-verified
+
+- **Date:** 2026-09-01
+- **Status:** Accepted
+
+**Context.** Job search ships through the WordPress plugin today; bespoke
+builds can use the API. Stephen asked whether WordPress-only delivery is a
+blocker, and whether to wait for a lead before disclosing it. A packaged
+non-WordPress delivery is being explored but has not shipped.
+
+**Decision.** Disclose now, framed engine-first: the plugin is a thin
+client of the same API a bespoke build would use (verified by reading
+aplify-integration 3.1.0 — no candidate data stored in WordPress, key
+server-side, two-setting install, real endpoint paths), so the band
+presents WordPress and anything-else as two doorways into one engine. The
+unshipped packaged delivery is deliberately absent from the page: the API
+is the honest non-WordPress answer today, and §6 discipline forbids
+marketing what has not shipped. Techy artefacts (endpoint paths) are
+allowed as EVIDENCE when explicitly addressed to the reader's developers;
+the buyer-facing prose stays in outcome language.
+
+**Consequences.** The band's copy carries a provenance comment on its
+content module naming what was verified and when; if the plugin's
+architecture changes (data stored locally, key handling, setup steps), the
+band must be re-verified, not just restyled. When packaged non-WordPress
+delivery ships, the copy upgrade is one line. Plugin hardening flags from
+the same code read (CDN-loaded Alpine without SRI, plaintext key in
+wp_options, uncached search round-trips, a stray console.log) live with
+the plugin project, not this site.
 
 ---
 

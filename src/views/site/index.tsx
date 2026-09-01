@@ -8,6 +8,7 @@ import { SiteFooter } from "./footer";
 import { GoogleSection } from "./google";
 import { Hero } from "./hero";
 import { HowItWorks } from "./how-it-works";
+import { Implementation } from "./implementation";
 import { Capabilities } from "./platform";
 import { Cost } from "./cost";
 import { Friction, Origin } from "./problem";
@@ -139,6 +140,10 @@ export const SiteView = () => (
           Jobs came off it and shipped as its own band above; feed-level
           reporting came off the site altogether. */}
       <Integrations />
+      {/* Between "does it fit our ATS?" and "will IT approve?" sits "how
+          does this get on our site?" — graduated 2026-09-01. White next to
+          white #security; the band carries its own hairline handoff. */}
+      <Implementation />
       <Security />
       <SiteFooter />
     </main>
