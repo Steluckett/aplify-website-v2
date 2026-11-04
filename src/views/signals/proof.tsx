@@ -28,6 +28,8 @@ export const SigProof = () => {
           <div className="mt-10 grid grid-cols-1 gap-8 lg:mt-14">
             <SigHeading
               lines={sigProof.lines}
+              linesSm={sigProof.linesSm}
+              toneLinesSm={2}
               size="text-sig-5xl lg:text-sig-8xl xl:text-sig-9xl"
             />
             <Reveal variant="up" delay={160}>

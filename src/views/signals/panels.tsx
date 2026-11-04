@@ -80,6 +80,8 @@ export const SigImplementation = () => (
           <div className="mt-10">
             <SigHeading
               lines={sigImplementation.lines}
+              linesSm={sigImplementation.linesSm}
+              toneLinesSm={2}
               size="text-sig-4xl lg:text-sig-5xl"
             />
           </div>
@@ -169,6 +171,7 @@ export const SigFaq = () => (
         <div>
           <SigHeading
             lines={sigFaq.lines}
+            linesSm={sigFaq.linesSm}
             size="text-sig-5xl lg:text-sig-7xl"
           />
           <Reveal variant="up" delay={160} className="mt-8">

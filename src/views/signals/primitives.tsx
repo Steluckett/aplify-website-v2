@@ -120,7 +120,13 @@ export const SigHeading = ({
       n > 1 && i >= n - k ? "sig-tone" : "",
     );
   const base = `sig-lines ${size} ${center ? "text-center" : ""} ${className}`;
-  const line = center ? "justify-center" : "";
+  // `flex-nowrap` is load-bearing. The text engine's line container is a
+  // WRAPPING flex row, so `whitespace-nowrap` alone never held: a line too
+  // wide for its column broke inside itself at the full 1.1 leading, while
+  // the gaps between authored lines are pulled to ~0.92 — two leadings in
+  // one heading. The engine sets `flex-wrap: wrap` INLINE, so the override
+  // must be important. Lines now never wrap; sizes are chosen so they fit.
+  const line = `flex-nowrap! ${center ? "justify-center" : ""}`;
   return (
     <>
       <StackedLines

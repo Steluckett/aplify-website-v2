@@ -128,9 +128,12 @@ export const sigFriction = {
   photo: { src: "/assets/stock/split-team.jpg", alt: "A recruitment team working around a long table with laptops." },
 };
 
+/* Phone breaks below are re-breaks of the same approved words, sized so no
+   line is wider than a 360px screen at the phone display size. */
 export const sigProof = {
   label: caseStudies.eyebrow,
   lines: caseStudies.lines,
+  linesSm: ["Same", "problems.", "Different", "postcodes."],
   standfirst: caseStudies.standfirst,
   cases: caseStudies.cases,
 };
@@ -138,6 +141,7 @@ export const sigProof = {
 export const sigStages = {
   lines: howItWorks.lines,
   linesSm: howItWorks.linesSm,
+  linesXs: ["Six stages.", "Only one", "of them", "needs you."],
   standfirst: howItWorks.standfirst,
   stages: howItWorks.stages,
 };
@@ -145,6 +149,7 @@ export const sigStages = {
 export const sigImplementation = {
   label: implementation.eyebrow,
   lines: implementation.lines,
+  linesSm: implementation.linesSm,
   statement: implementation.statement,
   engineLine: implementation.routes.engineLine,
   setup: implementation.setup,
@@ -179,6 +184,7 @@ export const sigSecurity = {
 /** Questions a buyer asks; every ANSWER is approved copy from `site.ts`. */
 export const sigFaq = {
   lines: ["Questions worth", "asking first"],
+  linesSm: ["Questions", "worth", "asking first"],
   items: [
     { q: "Do we have to replace our ATS?", a: integrations.standfirst },
     { q: "Which ATS does Aplify work with?", a: integrations.lead },

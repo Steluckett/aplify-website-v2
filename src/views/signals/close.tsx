@@ -51,7 +51,7 @@ export const SigClose = () => {
           <SigHeading
             lines={sigClose.lines}
             linesSm={sigClose.linesSm}
-            size="text-sig-5xl md:text-sig-7xl lg:text-sig-9xl"
+            size="text-sig-5xl md:text-sig-7xl xl:text-sig-9xl"
           />
           <Reveal variant="up" delay={160}>
             <p className="mt-7.5 max-w-[44.75rem] text-sig-base text-sig-label">

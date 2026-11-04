@@ -32,6 +32,7 @@ export const SigStages = () => (
       <div className="self-start lg:sticky lg:top-32">
         <SigHeading
           lines={sigStages.linesSm}
+          linesSm={sigStages.linesXs}
           size="text-sig-5xl xl:text-sig-6xl"
         />
         <Reveal variant="up" delay={160}>

@@ -250,6 +250,13 @@
   .sig-lines > * + * {
     margin-top: -0.18em;
   }
+  /* Words never squeeze to fit a too-narrow line (they are flex items in the
+     engine's row and would otherwise shrink and overlap). Paired with the
+     heading's `flex-nowrap!` — a line that is too wide must be fixed by its
+     size or its breaks, never hidden. */
+  .sig-lines .line-word {
+    flex-shrink: 0;
+  }
 
   /* The two-tone: an accent line or phrase. */
   .sig-tone,
