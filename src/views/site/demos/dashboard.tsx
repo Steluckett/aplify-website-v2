@@ -312,6 +312,7 @@ const TableShell = ({
 }) => (
   <div className="overflow-x-auto">
     <table
+      data-sig="dash-table"
       className="w-full border-separate border-spacing-x-0 border-spacing-y-3"
       style={{ minWidth }}
     >
@@ -342,7 +343,10 @@ const Panel = ({ title, subtitle, onClose, children }: PanelProps) => (
      it sizes to its content. The timeline panel has short lines and was
      collapsing to about 40% of the layer, letting the panel underneath show
      through beside it and reading as two panels side by side. */
-  <div className="flex h-full w-full min-w-0 flex-col overflow-hidden rounded-panel bg-surface-raised shadow-lift">
+  <div
+    data-sig="dash-panel"
+    className="flex h-full w-full min-w-0 flex-col overflow-hidden rounded-panel bg-surface-raised shadow-lift"
+  >
     <header className="flex flex-none items-start justify-between gap-4 border-b border-hairline px-5 py-4">
       <div className="min-w-0">
         <h4 className="truncate text-ui-lg font-medium tracking-tight text-ink-heading">
@@ -782,6 +786,7 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div
               role="tablist"
+              data-sig="dash-tabs"
               aria-label="Dashboard views"
               className="inline-flex gap-1 rounded-pill bg-ink/5 p-1"
             >

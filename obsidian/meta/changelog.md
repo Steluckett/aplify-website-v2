@@ -10,6 +10,12 @@ This is a human-curated log — not a mirror of `git log`.
 
 ## 2026-11-04
 
+- **SIGNALS option: job search, Easy Apply and dashboard reworked into the
+  page's language** — outline cards and rows, chunky outlined filters,
+  route toggles under the standfirst, an immersive apply flow, page-palette
+  status pills and creme slide-overs. Standfirsts now sit on their
+  heading's baseline. /classic unchanged.
+
 - **SIGNALS option: the demos fold into the page.** Job search, Easy Apply,
   dashboard and brand demos lose their boxes and sit on the paper at full
   width — lime job cards, a flat brand stage, no gradients. Inert

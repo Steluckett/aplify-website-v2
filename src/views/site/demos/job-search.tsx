@@ -405,6 +405,7 @@ export const JobSearchDemo = ({
             <div
               role="tablist"
               aria-label="Result views"
+              data-sig="dash-tabs"
               className="inline-flex gap-1 rounded-pill bg-ink/5 p-1"
             >
               {content.views.map((name) => {

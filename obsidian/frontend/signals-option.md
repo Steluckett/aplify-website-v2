@@ -102,6 +102,29 @@ Easy Apply as one white card with a lime job header, and the brand stage
 flat in its own derived base colour (`--b-stage`) instead of blobs. All
 functionality is unchanged.
 
+Later passes (2026-11-04) extended the hooks and the language:
+- **Job cards** (`job-card`, `job-table`): rounded 20px outline boxes, even
+  hairline, real padding, 40px titles, family on lime / hours on blue tint,
+  in grid, list and map. Easy Apply (`apply-btn`) is the page's 42px pill
+  with the ↗ (the demo's → turned a quarter back).
+- **Search and filter bars** (`search`, `search-wrap`): transparent 56px
+  pills, black 1px edge, bold text, a search glass and heavy chevrons as
+  SVG data URIs; shared with the dashboard.
+- **Apply route**: lifted out of the demo into two text toggles under the
+  standfirst (`JobSearchDemo` takes optional `route` / `onRouteChange` /
+  `hideRouteSwitch`). The link-out note (`link-note`) is a blue-tint card.
+- **Easy Apply flow** (`apply-*`): no white card; outline job box, outline
+  question boxes with chunky Yes/No, 56px fields two to a row, a lime
+  confirmation and an outline gate, both with display headings.
+- **Dashboard** (`dash-table`, `dash-panel`, `dash-tabs`): outline rows,
+  bold names and IDs, a creme hover fill, status pills on the page palette
+  (Accepted lime; Submitted / Reviewed / Shortlisted blue tint; Rejected /
+  Withdrawn creme) keeping their state dots; slide-overs as creme sheets
+  with a black edge and display titles.
+- **Standfirst baseline**: `.sig-baseline` lifts a paragraph beside a
+  display heading onto the heading's baseline (`--raw-sig-baseline-lift`,
+  measured — it was 18px low).
+
 ## Rules it keeps
 
 - No new claims: every fact comes from `site.ts` (V2_HANDOVER §5).
