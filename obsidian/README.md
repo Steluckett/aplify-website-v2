@@ -34,6 +34,7 @@ humans and AI agents (Claude Code, Cursor).
 ### 02 — Frontend
 - [[routing]] — App Router conventions, route → view delegation
 - [[design-system]] — Tailwind v4 tokens, CSS layers, styling rules
+- [[signals-option]] — the second homepage option on `design/signals-steer`
 - [[animation-system]] — the spring component library (the core of this starter)
 - [[text-engine]] — `spring-text-engine` usage summary & project rules
 - [[text-engine-reference]] — full `spring-text-engine` API reference

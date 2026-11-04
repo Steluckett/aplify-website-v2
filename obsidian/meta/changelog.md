@@ -8,6 +8,19 @@ updated: 2026-09-01
 Chronological log of notable changes to the project. Newest first.
 This is a human-curated log — not a mirror of `git log`.
 
+## 2026-11-04
+
+- **A second homepage option, on branch `design/signals-steer`.** Fully
+  reimagined on marketingsignals.com's section patterns: a black hero with a
+  120px two-tone headline and a drifting tilted strip of product shots, a
+  scroll-filled statement, odometer stats, a services-style slider for the
+  four steps, mirrored splits, a black proof panel with a case carousel, a
+  sticky stacked deck for the six stages, the live job search, a dark
+  implementation panel, a testimonial wall, a security insights layout, an
+  FAQ panel and a black close and footer. Hanken Grotesk, the reference's
+  creme / black / purple / lilac / lime palette and type ladder, all motion in
+  springs. Aurora stays at `/classic`. See [[signals-option]].
+
 ## 2026-09-01
 
 - **A new `#implementation` band: "the receipts"** — the page finally answers

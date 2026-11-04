@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Hanken_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 
 import {
@@ -27,6 +28,16 @@ const inter = localFont({
   display: "swap",
 });
 
+/** The SIGNALS option's face (`src/app/signals.css`). The reference sets in
+ *  Noi Grotesk, a commercial face; Hanken Grotesk is the closest open
+ *  neo-grotesk. Only the `.signals` root reads this variable. */
+const grotesk = Hanken_Grotesk({
+  subsets: ["latin"],
+  weight: "variable",
+  variable: "--font-grotesk",
+  display: "swap",
+});
+
 export const metadata: Metadata = generateMetadata();
 export const viewport: Viewport = generateViewport();
 
@@ -39,7 +50,7 @@ export default function RootLayout({
     /* The font variable goes on <html>, not <body>: globals.css resolves
        --raw-font-sans at :root, and a custom property declared on <body>
        is not in scope there. */
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable} ${grotesk.variable}`}>
       <body className="ground">
         <script
           type="application/ld+json"

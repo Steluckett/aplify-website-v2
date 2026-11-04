@@ -10,6 +10,31 @@ consequences. Use [[templates/adr-note]] for new entries. Newest first.
 
 ---
 
+## ADR-0035 — A second homepage option built on marketingsignals.com's patterns
+
+- **Date:** 2026-11-04
+- **Status:** Exploratory (branch `design/signals-steer` only)
+
+**Context.** Stephen asked for a full second option for the homepage, not a
+restyle: every section reworked after marketingsignals.com's layouts, type
+scale, palette, spacing and motion. A first pass that only re-tokened the
+Aurora page was rejected as too shallow and reverted on the branch.
+
+**Decision.** Build a separate view (`src/views/signals/`) with its own
+scoped token file (`src/app/signals.css`) and content map
+(`src/data/content/signals.ts`), and mount it at `/` on the branch with the
+Aurora page at `/classic`. The reference's GSAP / ScrollTrigger / Swiper
+effects are rebuilt in springs and sticky positioning (rule 1); display
+leading stays at 1.1 behind the text engine (rule 3); all copy is approved
+copy from `site.ts` (V2_HANDOVER §5).
+
+**Consequences.** Nothing outside `.signals` changes, so the two options can
+be compared on one branch. If this option is chosen, `/classic` and the
+Aurora views can go, and `signals.css` should be folded into the main token
+tiers. See [[signals-option]].
+
+---
+
 ## ADR-0034 — The implementation band is engine-first, and its claims are code-verified
 
 - **Date:** 2026-09-01

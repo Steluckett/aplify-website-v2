@@ -1,0 +1,307 @@
+/* ---------------------------------------------------------------------------
+   SIGNALS — the second homepage option (branch `design/signals-steer`).
+
+   Measured off marketingsignals.com's live build at 1252–1440px: its Tailwind
+   theme, its section geometry and its motion. Every value below is theirs
+   unless a note says otherwise. Scoped: nothing here applies outside a
+   `.signals` root, so the Aurora page at /classic is untouched.
+
+   Same three tiers as globals.css:
+     Tier 1  --raw-sig-*    primitives, the only literals
+     Tier 2  .signals { }   semantic roles
+     Tier 3  @theme inline  Tailwind bindings (`bg-sig-*`, `text-sig-*`)
+
+   THE ONE DELIBERATE DEPARTURE — LEADING. The reference sets display type at
+   0.92 / 0.97. Our text engine clips each line to its line-height box for the
+   reveal, so anything under 1.1 shaves glyphs (AGENTS.md rule 3). Animated
+   headings therefore run at 1.1 with `.lines-tight` pulling the lines
+   together (optical ≈ 0.92); static headings take the reference's values.
+
+   CONTRAST. The reference's purple #745cf6 measures 4.01:1 on creme — fine
+   for display type (3:1 large-text bar), not for body text. Small accent text
+   takes `--raw-sig-purple-ink` (5.13:1) instead.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --raw-sig-black: #0e0a10;
+  --raw-sig-black-200: #1c1720;
+  --raw-sig-creme-100: #f3f0e8;
+  --raw-sig-creme-200: #e9e6de;
+  --raw-sig-creme-300: #dddad1;
+  --raw-sig-creme-400: #d3d0c5;
+  --raw-sig-creme-500: #6b685f; /* 4.89:1 on creme-100 — labels */
+  --raw-sig-white: #ffffff;
+  --raw-sig-purple: #745cf6; /* display accent on creme, 4.01:1 */
+  --raw-sig-purple-ink: #5f46ee; /* small accent text on creme, 5.13:1 */
+  --raw-sig-lilac: #afafff; /* accent on black, 9.72:1; pill ground */
+  --raw-sig-lime: #dbfe87; /* accent on black 17.3:1; card ground */
+  --raw-sig-creme-dim: rgb(243 240 232 / 0.72); /* body on black, 11.6:1 */
+  --raw-sig-creme-hair: rgb(243 240 232 / 0.18);
+  --raw-sig-black-hair: rgb(14 10 16 / 0.16);
+  --raw-sig-black-veil: rgb(14 10 16 / 0.55);
+  --raw-sig-shadow-card: 0 30px 60px -30px rgb(14 10 16 / 0.35);
+
+  --raw-sig-font: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+
+  /* Their type ladder, rem for rem. */
+  --raw-sig-text-xs: 0.875rem; /* 14 */
+  --raw-sig-text-sm: 0.9375rem; /* 15 */
+  --raw-sig-text-base: 1rem; /* 16 — all running copy */
+  --raw-sig-text-md: 1.125rem; /* 18 */
+  --raw-sig-text-lg: 1.3125rem; /* 21 */
+  --raw-sig-text-xl: 1.4375rem; /* 23 — quotes, list titles */
+  --raw-sig-text-2xl: 1.5625rem; /* 25 */
+  --raw-sig-text-3xl: 1.875rem; /* 30 — hero sub, card statements */
+  --raw-sig-text-4xl: 2.5rem; /* 40 */
+  --raw-sig-text-5xl: 2.875rem; /* 46 — card titles, phone display */
+  --raw-sig-text-6xl: 3.4375rem; /* 55 — split headings */
+  --raw-sig-text-7xl: 3.875rem; /* 62 — panel headings */
+  --raw-sig-text-8xl: 4.375rem; /* 70 — section headings */
+  --raw-sig-text-9xl: 4.6875rem; /* 75 — statement, slide titles */
+  --raw-sig-text-10xl: 5.125rem; /* 82 */
+  --raw-sig-text-12xl: 7.5rem; /* 120 — hero at ≥1280 */
+  --raw-sig-text-13xl: 10rem; /* 160 — stat figures at ≥1536 */
+
+  --raw-sig-tracking-tighter: -0.04em;
+  --raw-sig-tracking-tight: -0.02em;
+  --raw-sig-leading-092: 0.92;
+  --raw-sig-leading-097: 0.97;
+  --raw-sig-leading-12: 1.2;
+  --raw-sig-leading-133: 1.33;
+
+  /* Geometry. Full-bleed with a 40px gutter (20px on phones), capped at
+     1920; sections are separated by 80px; dark panels pad 100 / 50. */
+  --raw-sig-gutter: 2.5rem;
+  --raw-sig-gutter-sm: 1.25rem;
+  --raw-sig-max: 120rem;
+  --raw-sig-section: 5rem;
+  --raw-sig-panel-y: 6.25rem;
+  --raw-sig-panel-x: 3.125rem;
+  --raw-sig-radius-panel: 1.25rem; /* 20 */
+  --raw-sig-radius-card: 1.875rem; /* 30 */
+  --raw-sig-radius-tile: 0.9375rem; /* 15 */
+  --raw-sig-radius-field: 0.625rem; /* 10 */
+}
+
+.signals {
+  --sig-bg: var(--raw-sig-creme-100);
+  --sig-ink: var(--raw-sig-black);
+  --sig-ink-label: var(--raw-sig-creme-500);
+  --sig-accent: var(--raw-sig-purple);
+  --sig-accent-ink: var(--raw-sig-purple-ink);
+  --sig-hair: var(--raw-sig-black-hair);
+
+  background: var(--sig-bg);
+  color: var(--sig-ink);
+  font-family: var(--raw-sig-font);
+  font-size: var(--raw-sig-text-base);
+  line-height: var(--raw-sig-leading-133);
+}
+
+/* The live product keeps the dashboard's own face. */
+.signals .screen {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* A black ground: the reference's hero, dark panels and footer. */
+.signals .sig-dark {
+  --sig-ink: var(--raw-sig-creme-100);
+  --sig-ink-label: var(--raw-sig-creme-dim);
+  --sig-accent: var(--raw-sig-lilac);
+  --sig-accent-ink: var(--raw-sig-lilac);
+  --sig-hair: var(--raw-sig-creme-hair);
+  background: var(--raw-sig-black);
+  color: var(--sig-ink);
+}
+
+/* The lime variant of a dark panel's accent ("Ambitious Brands" in lime). */
+.signals .sig-dark.sig-accent-lime {
+  --sig-accent: var(--raw-sig-lime);
+  --sig-accent-ink: var(--raw-sig-lime);
+}
+
+@theme inline {
+  --color-sig-black: var(--raw-sig-black);
+  --color-sig-black-200: var(--raw-sig-black-200);
+  --color-sig-creme-100: var(--raw-sig-creme-100);
+  --color-sig-creme-200: var(--raw-sig-creme-200);
+  --color-sig-creme-300: var(--raw-sig-creme-300);
+  --color-sig-creme-400: var(--raw-sig-creme-400);
+  --color-sig-white: var(--raw-sig-white);
+  --color-sig-lilac: var(--raw-sig-lilac);
+  --color-sig-lime: var(--raw-sig-lime);
+  --color-sig-purple: var(--raw-sig-purple);
+  --color-sig-veil: var(--raw-sig-black-veil);
+  --color-sig-ink: var(--sig-ink);
+  --color-sig-label: var(--sig-ink-label);
+  --color-sig-accent: var(--sig-accent);
+  --color-sig-accent-ink: var(--sig-accent-ink);
+  --color-sig-hair: var(--sig-hair);
+
+  --text-sig-xs: var(--raw-sig-text-xs);
+  --text-sig-sm: var(--raw-sig-text-sm);
+  --text-sig-base: var(--raw-sig-text-base);
+  --text-sig-md: var(--raw-sig-text-md);
+  --text-sig-lg: var(--raw-sig-text-lg);
+  --text-sig-xl: var(--raw-sig-text-xl);
+  --text-sig-2xl: var(--raw-sig-text-2xl);
+  --text-sig-3xl: var(--raw-sig-text-3xl);
+  --text-sig-4xl: var(--raw-sig-text-4xl);
+  --text-sig-5xl: var(--raw-sig-text-5xl);
+  --text-sig-6xl: var(--raw-sig-text-6xl);
+  --text-sig-7xl: var(--raw-sig-text-7xl);
+  --text-sig-8xl: var(--raw-sig-text-8xl);
+  --text-sig-9xl: var(--raw-sig-text-9xl);
+  --text-sig-10xl: var(--raw-sig-text-10xl);
+  --text-sig-12xl: var(--raw-sig-text-12xl);
+  --text-sig-13xl: var(--raw-sig-text-13xl);
+
+  --tracking-sig-tighter: var(--raw-sig-tracking-tighter);
+  --tracking-sig-tight: var(--raw-sig-tracking-tight);
+  --leading-sig-092: var(--raw-sig-leading-092);
+  --leading-sig-097: var(--raw-sig-leading-097);
+  --leading-sig-12: var(--raw-sig-leading-12);
+  --leading-sig-133: var(--raw-sig-leading-133);
+
+  --radius-sig-panel: var(--raw-sig-radius-panel);
+  --radius-sig-card: var(--raw-sig-radius-card);
+  --radius-sig-tile: var(--raw-sig-radius-tile);
+  --radius-sig-field: var(--raw-sig-radius-field);
+}
+
+@layer components {
+  /* The reference's container: full width, a fixed gutter, capped at 1920. */
+  .sig-wrap {
+    width: 100%;
+    max-width: var(--raw-sig-max);
+    margin-inline: auto;
+    padding-inline: var(--raw-sig-gutter-sm);
+  }
+  @media (min-width: 48rem) {
+    .sig-wrap {
+      padding-inline: var(--raw-sig-gutter);
+    }
+  }
+
+  .sig-section {
+    padding-bottom: var(--raw-sig-section);
+  }
+
+  .sig-panel {
+    border-radius: var(--raw-sig-radius-panel);
+    padding: var(--raw-sig-gutter) var(--raw-sig-gutter-sm);
+  }
+  @media (min-width: 64rem) {
+    .sig-panel {
+      padding: var(--raw-sig-panel-y) var(--raw-sig-panel-x);
+    }
+  }
+
+  /* Display type. 600, -0.04em — the reference's every heading. */
+  .sig-display {
+    font-weight: 600;
+    letter-spacing: var(--raw-sig-tracking-tighter);
+    line-height: var(--raw-sig-leading-097);
+    color: var(--sig-ink);
+  }
+
+  /* Animated display lines: leading 1.1 for the clip box, pulled to ≈0.92. */
+  .sig-lines {
+    font-weight: 600;
+    letter-spacing: var(--raw-sig-tracking-tighter);
+    line-height: 1.1;
+    color: var(--sig-ink);
+  }
+  .sig-lines > * + * {
+    margin-top: -0.18em;
+  }
+
+  /* The two-tone: an accent line or phrase. */
+  .sig-tone,
+  .sig-tone .line-word {
+    color: var(--sig-accent);
+  }
+
+  /* The reference's section label: 16px medium, a hairline running out. */
+  .sig-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 1px solid var(--sig-hair);
+    font-size: var(--raw-sig-text-base);
+    font-weight: 500;
+    line-height: var(--raw-sig-leading-133);
+    color: var(--sig-ink);
+  }
+
+  /* Pills. 16px medium, ~44px tall, a small arrow riding the label. */
+  .sig-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    height: 2.75rem;
+    padding-inline: 1.25rem;
+    border-radius: 999px;
+    font-size: var(--raw-sig-text-base);
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    transition:
+      background-color var(--raw-dur-fast) var(--raw-ease-entrance),
+      color var(--raw-dur-fast) var(--raw-ease-entrance),
+      box-shadow var(--raw-dur-fast) var(--raw-ease-entrance);
+  }
+  .sig-pill-creme {
+    background: var(--raw-sig-creme-100);
+    color: var(--raw-sig-black);
+  }
+  .sig-pill-creme:hover {
+    background: var(--raw-sig-lilac);
+  }
+  .sig-pill-lilac {
+    background: var(--raw-sig-lilac);
+    color: var(--raw-sig-black);
+  }
+  .sig-pill-lilac:hover {
+    background: var(--raw-sig-black);
+    color: var(--raw-sig-creme-100);
+  }
+  .sig-pill-black {
+    background: var(--raw-sig-black);
+    color: var(--raw-sig-creme-100);
+  }
+  .sig-pill-black:hover {
+    background: var(--raw-sig-lilac);
+    color: var(--raw-sig-black);
+  }
+  .sig-pill-ghost {
+    background: transparent;
+    color: var(--sig-ink);
+    box-shadow: inset 0 0 0 1px var(--sig-ink);
+  }
+  .sig-pill-ghost:hover {
+    background: var(--sig-ink);
+    color: var(--sig-bg);
+  }
+  .sig-dark .sig-pill-ghost:hover {
+    color: var(--raw-sig-black);
+  }
+
+  /* Round icon buttons: carousel prev/next, accordion toggles. */
+  .sig-round {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex: none;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px currentColor;
+  }
+
+  .sig-hairline {
+    border-color: var(--sig-hair);
+  }
+}
