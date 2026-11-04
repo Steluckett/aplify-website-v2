@@ -24,11 +24,6 @@ export const SigClose = () => {
       id="contact"
       className="sig-dark relative isolate overflow-hidden rounded-t-sig-band px-5 pt-10 pb-[3.4375rem] md:px-10"
     >
-      <div
-        aria-hidden
-        className="sig-watermark absolute right-0 bottom-0 -z-10 aspect-square w-3/4 translate-y-[30%]"
-      />
-
       <section
         id="demo"
         aria-label="Book a demo"

@@ -1150,14 +1150,6 @@
     box-shadow: inset 0 0 0 1px currentColor;
   }
 
-  /* The footer's vast mark, painted in black-200 through the logo as a mask
-     (theirs is an inline SVG in that colour, 3/4 of the width, dropped 30%). */
-  .sig-watermark {
-    background: var(--raw-sig-black-200);
-    -webkit-mask: url("/aplify-mark-light.svg") center / contain no-repeat;
-    mask: url("/aplify-mark-light.svg") center / contain no-repeat;
-  }
-
   /* A paragraph beside a display heading sits on the heading's BASELINE,
      not on its line box: the box runs below the glyphs by the reveal's
      descender padding plus half the leading. Set the heading's size
