@@ -88,7 +88,7 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
           bar. The chips need nothing HERE, because `globals.css` now gives any
           chip on a deep ground a glass pill automatically — see the
           `.bg-07 .chip` block and the note beside it. */}
-      <div className="grain bg-15 wash-lg rounded-panel">
+      <div data-sig="ai-stage" className="grain bg-15 wash-lg rounded-panel">
         <div>
           <div className="grid gap-10 md:grid-cols-2">
             {aiRewriteContent.jobs.map((job, index) => (
@@ -105,6 +105,7 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
             <button
               type="button"
               onClick={() => setRewritten((value) => !value)}
+              data-sig="ai-action"
               /* The white pill in BOTH states. `btn-primary` is a blue-violet
                  gradient, and every deep ground in the set is the same colour
                  family — on bg-15 its edge measures 2.13:1 against the ground,
@@ -119,12 +120,15 @@ export const AiRewriteDemo = ({ className }: AiRewriteDemoProps) => {
                 : aiRewriteContent.actionLabel}
               <ArrowIcon />
             </button>
-            <p className="max-w-[34rem] flex-1 text-ui-xs leading-[1.6] text-white/75">
+            <p
+              data-sig="ai-caption"
+              className="max-w-[34rem] flex-1 text-ui-xs leading-[1.6] text-white/75"
+            >
               {aiRewriteContent.caption}
             </p>
           </div>
 
-          <ul className="mt-8 flex flex-wrap gap-2">
+          <ul data-sig="ai-caps" className="mt-8 flex flex-wrap gap-2">
             {aiRewriteContent.capabilities.map((capability) => (
               <li key={capability}>
                 <span className="chip">{capability}</span>
@@ -169,7 +173,11 @@ const RewriteCard = ({ job, rewritten, delay }: RewriteCardProps) => {
   const metaParts = job.afterMeta.split(" · ").filter(Boolean);
 
   return (
-    <div className="tile grid">
+    <div
+      data-sig="ai-card"
+      data-rewritten={rewritten ? "true" : "false"}
+      className="tile grid"
+    >
       <animated.figure
         style={{
           ...beforeStyles,

@@ -503,6 +503,121 @@
   box-shadow: none;
 }
 
+/* --- The AI rewrite, IMMERSIVE ---------------------------------------------
+   Off the black stage and onto the paper, in the job cards' language: two
+   rounded outline cards, the label icons as solid discs so they read (an
+   outline doc on black for the ATS original, a lime spark for the rewrite),
+   the rewritten title in display type with the page's coloured pills, and
+   the action as the page's chunky black pill — set well apart from the
+   capability pills, which become small blue-tint tags. Once rewritten, the
+   cards' edge goes black: the after state is the finished one. */
+.signals .sig-immersive [data-sig="ai-stage"] {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-family: var(--raw-sig-font);
+}
+.signals .sig-immersive [data-sig="ai-card"] {
+  --ink-heading: var(--raw-sig-black);
+  --ink: var(--raw-sig-black);
+  --ink-body: var(--raw-sig-ink-body);
+  --ink-label: var(--raw-sig-ink-label);
+  --ink-accent: var(--raw-sig-blue);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--raw-sig-black-hair);
+  border-radius: var(--raw-sig-radius-panel);
+  transition: box-shadow var(--raw-dur-slow) var(--raw-ease-entrance);
+}
+.signals .sig-immersive [data-sig="ai-card"][data-rewritten="true"] {
+  box-shadow: inset 0 0 0 1px var(--raw-sig-black);
+}
+.signals .sig-immersive [data-sig="ai-card"] figure {
+  padding: 1.75rem;
+}
+@media (min-width: 64rem) {
+  .signals .sig-immersive [data-sig="ai-card"] figure {
+    padding: 2.25rem;
+  }
+}
+.signals .sig-immersive [data-sig="ai-card"] figcaption > span:last-child {
+  font-size: var(--raw-sig-text-sm);
+  font-weight: 700;
+  color: var(--raw-sig-black);
+}
+.signals .sig-immersive [data-sig="ai-card"] .icon-chip {
+  width: 2.75rem;
+  height: 2.75rem;
+  box-shadow: none;
+  background: var(--raw-sig-black);
+  color: var(--raw-sig-creme-100);
+}
+.signals .sig-immersive [data-sig="ai-card"] .icon-chip[data-ai] {
+  background: var(--raw-sig-lime);
+  color: var(--raw-sig-black);
+}
+.signals .sig-immersive [data-sig="ai-card"] figure > p {
+  font-size: var(--raw-sig-text-base);
+  line-height: var(--raw-sig-leading-133);
+}
+.signals .sig-immersive [data-sig="ai-card"] h4 {
+  margin-top: 1.75rem;
+  font-size: var(--raw-sig-text-4xl);
+  font-weight: 700;
+  letter-spacing: var(--raw-sig-tracking-tighter);
+  line-height: var(--raw-sig-leading-097);
+}
+.signals .sig-immersive [data-sig="ai-card"] h4 + p {
+  margin-top: 1rem;
+  color: var(--raw-sig-black);
+}
+.signals .sig-immersive [data-sig="ai-card"] .chip {
+  box-shadow: none;
+  background: var(--raw-sig-lime);
+  color: var(--raw-sig-black);
+  padding: 0.3rem 0.8rem;
+  font-size: var(--raw-sig-text-xs);
+  font-weight: 600;
+}
+.signals .sig-immersive [data-sig="ai-card"] .chip[data-tint] {
+  background: var(--raw-sig-blue-tint);
+}
+.signals .sig-immersive button[data-sig="ai-action"] {
+  height: 3.5rem;
+  padding-inline: 1.75rem;
+  gap: 0.625rem;
+  background: var(--raw-sig-black);
+  color: var(--raw-sig-creme-100);
+  box-shadow: none;
+  font-size: var(--raw-sig-text-base);
+  font-weight: 600;
+}
+.signals .sig-immersive button[data-sig="ai-action"]:hover {
+  background: var(--raw-sig-blue);
+  color: var(--raw-sig-white);
+}
+.signals .sig-immersive [data-sig="ai-action"] svg {
+  transform: rotate(-45deg);
+}
+.signals .sig-immersive [data-sig="ai-caption"] {
+  font-size: var(--raw-sig-text-sm);
+  color: var(--raw-sig-ink-label);
+}
+.signals .sig-immersive [data-sig="ai-caps"] {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--raw-sig-black-hair);
+}
+.signals .sig-immersive [data-sig="ai-caps"] .chip {
+  box-shadow: none;
+  background: var(--raw-sig-blue-tint);
+  color: var(--raw-sig-black);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  padding: 0.35rem 0.85rem;
+  font-size: var(--raw-sig-text-xs);
+  font-weight: 600;
+}
+
 /* The link-out note, when "Link to your ATS" is chosen: a full-width blue
    tint card on the paper, not a floating white box. */
 .signals .sig-immersive [data-sig="link-note"] {

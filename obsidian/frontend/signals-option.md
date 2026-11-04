@@ -121,6 +121,11 @@ Later passes (2026-11-04) extended the hooks and the language:
   (Accepted lime; Submitted / Reviewed / Shortlisted blue tint; Rejected /
   Withdrawn creme) keeping their state dots; slide-overs as creme sheets
   with a black edge and display titles.
+- **AI rewrite** (`ai-stage`, `ai-card` + `data-rewritten`, `ai-action`,
+  `ai-caption`, `ai-caps`): off the black stage onto the paper; outline
+  cards whose edge goes black once rewritten, solid label discs (black doc,
+  lime spark), display titles with lime / blue-tint pills, the action as
+  the chunky black pill, capabilities as small blue-tint tags under a rule.
 - **Standfirst baseline**: `.sig-baseline` lifts a paragraph beside a
   display heading onto the heading's baseline (`--raw-sig-baseline-lift`,
   measured — it was 18px low).
