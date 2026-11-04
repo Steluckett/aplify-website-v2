@@ -10,6 +10,37 @@ consequences. Use [[templates/adr-note]] for new entries. Newest first.
 
 ---
 
+## ADR-0035 — Branch `design/signals-steer`: an exploratory restyle after marketingsignals.com
+
+- **Date:** 2026-11-04
+- **Status:** Exploratory (branch only — `main` is untouched)
+
+**Context.** Stephen asked for a branch that keeps the live Aurora page
+intact on `main` while taking a heavy steer from marketingsignals.com for
+design, layout and type: a violet-black night hero, warm paper ground,
+huge tight grotesk headings set two-tone (closing line in lavender/violet),
+pill buttons, a fan of tilted cards out of the hero's foot, lime and
+lavender card grounds, and a night footer.
+
+**Decision.** Restyle through the token tiers rather than rewriting bands.
+Hanken Grotesk (Google, via `next/font`) replaces Inter for the marketing
+register — the reference's Noi Grotesk is commercial; `.screen` keeps Inter
+and Aurora's cool neutrals so the product reads as the product. Ground
+`#f2efe8`, night `#100c15`, violet text `#4f3fd6` (6.07:1 on paper),
+lavender `#b5adff` on night (9.57:1). The fifteen blob grounds are
+flattened into that palette, each keeping its light/dark role so every
+measured ink still clears AA. `SectionIntro` defaults to left-aligned and
+two-tone. The hero is rebuilt (night, left-set, fan of product shots);
+the nav inverts over it. Content claims are unchanged — only the phone
+headline's line breaks moved.
+
+**Consequences.** If this direction is adopted it should land as its own
+pass on the vault (design-system.md still describes Aurora). `/backgrounds`
+now renders the flattened grounds, not the blobs. The OG/share images still
+use the Inter static cuts.
+
+---
+
 ## ADR-0034 — The implementation band is engine-first, and its claims are code-verified
 
 - **Date:** 2026-09-01

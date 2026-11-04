@@ -25,9 +25,12 @@ export interface SectionIntroProps {
 }
 
 /**
- * The section opener: eyebrow, display heading, standfirst — centred by
- * default, because the reference centres every one of its section heads and
- * that symmetry is a large part of why the page reads as composed.
+ * The section opener: eyebrow, display heading, standfirst.
+ *
+ * SIGNALS STEER (branch design/signals-steer): LEFT-aligned by default and
+ * TWO-TONE — a multi-line heading sets its closing line in the accent
+ * (`grad-tip`), after marketingsignals.com, whose every section opens that way.
+ * `align="center"` still exists for the closing ask.
  *
  * The heading reveals line by line; the eyebrow leads it and the standfirst
  * follows, so the group arrives as one gesture reading top to bottom.
@@ -37,7 +40,7 @@ export const SectionIntro = ({
   lines,
   linesSm,
   standfirst,
-  align = "center",
+  align = "left",
   tag = "h2",
   className,
   children,
@@ -48,10 +51,14 @@ export const SectionIntro = ({
   // the justify has to land on that container, which is what StackedLines
   // forwards its `lineClassName` to.
   const lineClass = centred ? "justify-center" : "";
+  // The closing line takes the accent — only when there is more than one,
+  // or a single-line heading would set entirely in violet.
+  const tone = (n: number) =>
+    n > 1 ? Array.from({ length: n }, (_, i) => (i === n - 1 ? "grad-tip" : "")) : undefined;
 
   return (
     <div
-      className={`${centred ? "mx-auto max-w-[46rem] text-center" : "max-w-[38rem]"} ${className ?? ""}`}
+      className={`${centred ? "mx-auto max-w-[60rem] text-center" : "max-w-[64rem]"} ${className ?? ""}`}
     >
       {eyebrow ? (
         <Reveal variant="fade">
@@ -66,6 +73,7 @@ export const SectionIntro = ({
         lines={lines}
         className={`${headingClass} mt-5 ${linesSm ? "hidden sm:block" : ""}`}
         lineClassName={lineClass}
+        lineClassNames={tone(lines.length)}
         stagger={110}
         duration={1000}
       />
@@ -75,6 +83,7 @@ export const SectionIntro = ({
           lines={linesSm}
           className={`${headingClass} mt-5 sm:hidden`}
           lineClassName={lineClass}
+          lineClassNames={tone(linesSm.length)}
           stagger={110}
           duration={1000}
         />
@@ -83,7 +92,7 @@ export const SectionIntro = ({
       {standfirst ? (
         <Reveal variant="up" delay={220}>
           <p
-            className={`mt-6 text-lead leading-[1.6] text-ink-body ${centred ? "mx-auto max-w-[var(--measure-lead)]" : ""}`}
+            className={`mt-6 max-w-[var(--measure-lead)] text-lead leading-[1.5] text-ink-body ${centred ? "mx-auto" : ""}`}
           >
             {standfirst}
           </p>

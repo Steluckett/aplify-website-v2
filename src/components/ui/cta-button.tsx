@@ -48,6 +48,8 @@ export interface CtaButtonProps {
   label: string;
   /** `lg` is the hero's one action — `.btn-lg`, 20px. */
   size?: "base" | "lg";
+  /** `light` is the cream pill for night grounds (`.btn-light`). */
+  tone?: "dark" | "light";
   /** Overrides the default action (opening the book-a-demo dialog) — the
       dialog's own closing button wears this treatment too, and it must not
       reopen the thing it closes. */
@@ -80,6 +82,7 @@ const ArrowIcon = () => (
 export const CtaButton = ({
   label,
   size = "base",
+  tone = "dark",
   onClick,
   className,
 }: CtaButtonProps) => {
@@ -88,7 +91,7 @@ export const CtaButton = ({
     <button
       type="button"
       onClick={onClick ?? open}
-      className={`btn btn-primary group relative overflow-hidden ${
+      className={`btn ${tone === "light" ? "btn-light" : "btn-primary"} group relative overflow-hidden ${
         size === "lg" ? "btn-lg" : ""
       } ${className ?? ""}`}
     >
@@ -98,7 +101,7 @@ export const CtaButton = ({
       <span className="relative flex items-center justify-center gap-2">
         <span
           aria-hidden
-          className={`h-2 w-2 rounded-pill bg-white ${MOVE} group-hover:scale-[100.8]`}
+          className={`h-2 w-2 rounded-pill bg-[var(--cta-flood)] ${MOVE} group-hover:scale-[100.8]`}
         />
         <span
           className={`relative inline-block ${MOVE} group-hover:translate-x-12 group-hover:opacity-0`}
@@ -110,7 +113,7 @@ export const CtaButton = ({
       {/* The arriving label and arrow, on the flood. */}
       <span
         aria-hidden
-        className={`absolute inset-0 z-10 flex translate-x-12 items-center justify-center gap-2 opacity-0 text-ink-accent ${MOVE} group-hover:translate-x-0 group-hover:opacity-100`}
+        className={`absolute inset-0 z-10 flex translate-x-12 items-center justify-center gap-2 opacity-0 text-[var(--cta-arrive)] ${MOVE} group-hover:translate-x-0 group-hover:opacity-100`}
       >
         {label}
         <ArrowIcon />

@@ -8,6 +8,16 @@ updated: 2026-09-01
 Chronological log of notable changes to the project. Newest first.
 This is a human-curated log — not a mirror of `git log`.
 
+## 2026-11-04
+
+- **Branch `design/signals-steer` — the page restyled after
+  marketingsignals.com**, with `main` kept as the Aurora build to return to.
+  Night hero with a two-tone left-set headline and a fan of tilted product
+  cards; warm paper ground; Hanken Grotesk at 600 with −0.045em tracking;
+  72px two-tone section heads, left-aligned; night and cream pill buttons;
+  blob grounds flattened to night/violet/lime/lavender; night footer card.
+  See [[decisions-log#ADR-0035 — Branch `design/signals-steer`: an exploratory restyle after marketingsignals.com|ADR-0035]].
+
 ## 2026-09-01
 
 - **A new `#implementation` band: "the receipts"** — the page finally answers
