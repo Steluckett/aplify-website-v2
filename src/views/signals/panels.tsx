@@ -1,64 +1,121 @@
 "use client";
 
 import Image from "next/image";
+import type { ReactNode } from "react";
+import { useState } from "react";
 
 import { Reveal } from "@/components/ui/reveal";
+import { jobSearchContent } from "@/data/content/job-search";
 import { demos } from "@/data/content/site";
 import { sigFaq, sigImplementation, sigSecurity } from "@/data/content/signals";
-import { JobSearchDemo } from "@/views/site/demos/job-search";
+import { type ApplyRoute, JobSearchDemo } from "@/views/site/demos/job-search";
 
 import { SigAccordion } from "./accordion";
 import { DemoPill, LinkPill, SigHeading, SigLabel } from "./primitives";
 
 /** Label rule, then a heading on the left and its standfirst on the right —
  *  the reference's insights header, reused wherever a band opens. */
+const BAND_HEAD_SIZE = "text-sig-5xl lg:text-sig-8xl xl:text-sig-10xl";
+
 export const BandHead = ({
   label,
   lines,
   linesSm,
   standfirst,
+  aside,
 }: {
   label: string;
   lines: readonly string[];
   linesSm?: readonly string[];
   standfirst?: string;
+  /** Sits under the standfirst — the job search's route toggles. */
+  aside?: ReactNode;
 }) => (
   <>
     <SigLabel>{label}</SigLabel>
     <div className="mt-10 grid grid-cols-1 gap-8 lg:mt-14 lg:grid-cols-[1fr_auto] lg:items-end">
-      <SigHeading
-        lines={lines}
-        linesSm={linesSm}
-        size="text-sig-5xl lg:text-sig-8xl xl:text-sig-10xl"
-      />
+      <SigHeading lines={lines} linesSm={linesSm} size={BAND_HEAD_SIZE} />
       {standfirst ? (
-        <Reveal variant="up" delay={160}>
-          <p className="max-w-[26rem] text-sig-base">{standfirst}</p>
-        </Reveal>
+        /* `.sig-baseline` carries the heading's own size classes so its
+           bottom padding is measured in the HEADING's em — which is what
+           lifts the paragraph's last line onto the heading's baseline. */
+        <div className={`sig-baseline ${BAND_HEAD_SIZE}`}>
+          <Reveal variant="up" delay={160}>
+            <p className="max-w-[26rem] text-sig-base">{standfirst}</p>
+            {aside}
+          </Reveal>
+        </div>
       ) : null}
     </div>
   </>
 );
 
+/** The apply route as two quiet text buttons under the standfirst. It is a
+ *  per-client SETTING, not candidate UI (§2), so it reads as a choice about
+ *  the demo rather than as part of it. */
+const RouteToggle = ({
+  route,
+  onChange,
+}: {
+  route: ApplyRoute;
+  onChange: (r: ApplyRoute) => void;
+}) => {
+  const options: [ApplyRoute, string][] = [
+    ["easy", jobSearchContent.routeSwitch.easyApply],
+    ["link", jobSearchContent.routeSwitch.linkOut],
+  ];
+  return (
+    <div
+      role="radiogroup"
+      aria-label={jobSearchContent.routeSwitch.label}
+      className="mt-6 flex flex-wrap gap-x-6 gap-y-2"
+    >
+      {options.map(([value, text]) => {
+        const on = route === value;
+        return (
+          <button
+            key={value}
+            type="button"
+            role="radio"
+            aria-checked={on}
+            onClick={() => onChange(value)}
+            className={`sig-route text-sig-base font-medium ${on ? "is-on" : ""}`}
+          >
+            {text}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
 /** The live job search — the one band the reference has no twin for, so it
  *  borrows the insights header and sits the real product in a creme panel. */
-export const SigDemo = () => (
-  <section id="job-search" className="sig-section">
-    <div className="sig-wrap">
-      <BandHead
-        label={demos.jobSearch.eyebrow}
-        lines={demos.jobSearch.lines}
-        linesSm={demos.jobSearch.linesSm}
-        standfirst={demos.jobSearch.standfirst}
-      />
-      <Reveal variant="rise" className="mt-12 lg:mt-16">
-        <div className="sig-product sig-immersive">
-          <JobSearchDemo />
-        </div>
-      </Reveal>
-    </div>
-  </section>
-);
+export const SigDemo = () => {
+  const [route, setRoute] = useState<ApplyRoute>("easy");
+  return (
+    <section id="job-search" className="sig-section">
+      <div className="sig-wrap">
+        <BandHead
+          label={demos.jobSearch.eyebrow}
+          lines={demos.jobSearch.lines}
+          linesSm={demos.jobSearch.linesSm}
+          standfirst={demos.jobSearch.standfirst}
+          aside={<RouteToggle route={route} onChange={setRoute} />}
+        />
+        <Reveal variant="rise" className="mt-12 lg:mt-16">
+          <div className="sig-product sig-immersive">
+            <JobSearchDemo
+              route={route}
+              onRouteChange={setRoute}
+              hideRouteSwitch
+            />
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+};
 
 /** The reference's "what makes us different" panel: black, 5px inset, a
  *  picture filling the left and the argument on the right in two columns. */

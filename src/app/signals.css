@@ -101,6 +101,9 @@
   --raw-sig-radius-card: 1.875rem; /* 30 */
   --raw-sig-radius-tile: 0.9375rem; /* 15 */
   --raw-sig-radius-field: 0.625rem; /* 10 */
+  /* Measured: a heading line box runs 0.343em below its baseline; a 16px
+     paragraph runs ~6px below its own. The difference lifts one onto the other. */
+  --raw-sig-baseline-lift: calc(0.343em - 0.375rem);
 }
 
 .signals {
@@ -183,19 +186,81 @@
 .signals .sig-immersive [data-sig="search-wrap"] {
   padding-inline: 0;
 }
+/* The search bar and filters, CHUNKY (Stephen, 2026-11-04): transparent
+   56px pills with a black 1px edge on the paper, bold black text, a search
+   glass leading the keyword field and a heavier chevron on every select.
+   The icons are inline SVG data URIs — a select cannot carry a pseudo
+   element — drawn in the page's near-black. The dashboard's filter bar
+   shares the hook, so both demos read the same. */
 .signals .sig-immersive [data-sig="search"] {
   background: transparent;
   box-shadow: none;
   padding: 0;
   border-radius: 0;
-  --surface-chip: var(--raw-sig-white);
+  gap: 0.75rem;
+  --surface-chip: transparent;
 }
-.signals .sig-immersive [data-sig="search"] .bg-surface-chip {
-  box-shadow: inset 0 0 0 1px var(--raw-sig-creme-300);
+.signals .sig-immersive [data-sig="search"] :is(input:not([type="checkbox"]), select) {
+  height: 3.5rem;
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px var(--raw-sig-black);
+  color: var(--raw-sig-black);
+  font-family: var(--raw-sig-font);
+  font-size: var(--raw-sig-text-base);
+  font-weight: 600;
+  letter-spacing: var(--raw-sig-tracking-tight);
 }
-.signals .sig-immersive [data-sig="search"] .btn-primary {
+.signals .sig-immersive [data-sig="search"] :is(input, select):focus-visible {
+  box-shadow: inset 0 0 0 2px var(--raw-sig-blue);
+  outline: none;
+}
+.signals .sig-immersive [data-sig="search"] input::placeholder {
+  color: var(--raw-sig-ink-body);
+  font-weight: 600;
+}
+/* The keyword field only — the place field sits in its own wrapper beside
+   the "use my location" disc and takes no icon. */
+.signals .sig-immersive [data-sig="search"] input:is([type="search"], :first-child):not(.relative > input) {
+  padding-left: 3.25rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230e0a10' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='m16 16 4.5 4.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 1.25rem center;
+  background-size: 1.25rem;
+}
+.signals .sig-immersive [data-sig="search"] select {
+  appearance: none;
+  padding-right: 3rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230e0a10' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.25rem center;
+  background-size: 1.1rem;
+}
+/* The dashboard draws its own chevron beside each select; ours replaces it. */
+.signals .sig-immersive [data-sig="search"] select + svg {
+  display: none;
+}
+.signals .sig-immersive [data-sig="search"] :is(.btn-primary, .btn-secondary, .bg-accent) {
+  height: 3.5rem;
+  font-size: var(--raw-sig-text-base);
+  font-weight: 600;
+}
+.signals .sig-immersive [data-sig="search"] .btn-primary,
+.signals .sig-immersive [data-sig="search"] .bg-accent {
   background: var(--raw-sig-black);
   color: var(--raw-sig-creme-100);
+}
+.signals .sig-immersive [data-sig="search"] .btn-secondary {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--raw-sig-black);
+}
+/* The place field carries the "use my location" disc inside it, so it
+   takes a wider share of the row than the two selects. */
+.signals .sig-immersive [data-sig="search"] > .relative {
+  flex: 1.25 1 0%;
+}
+/* The "use my location" button inside the place field: a black disc. */
+.signals .sig-immersive [data-sig="search"] .bg-accent.rounded-full {
+  height: 2.75rem;
 }
 .signals .sig-immersive [data-sig="results"] {
   background: transparent;
@@ -303,6 +368,31 @@
   letter-spacing: var(--raw-sig-tracking-tighter);
 }
 
+/* The link-out note, when "Link to your ATS" is chosen: a full-width blue
+   tint card on the paper, not a floating white box. */
+.signals .sig-immersive [data-sig="link-note"] {
+  max-width: none;
+  margin-top: 0.5rem;
+  padding: 1.75rem 2rem;
+  gap: 1.25rem;
+  background: var(--raw-sig-blue-tint);
+  box-shadow: none;
+  border-radius: var(--raw-sig-radius-panel);
+  --ink-heading: var(--raw-sig-black);
+  --ink-body: var(--raw-sig-black);
+  --ink-label: var(--raw-sig-ink-body);
+}
+.signals .sig-immersive [data-sig="link-note"] h3 {
+  font-size: var(--raw-sig-text-xl);
+  font-weight: 700;
+  letter-spacing: var(--raw-sig-tracking-tighter);
+}
+.signals .sig-immersive [data-sig="link-note"] .icon-chip {
+  background: var(--raw-sig-black);
+  color: var(--raw-sig-creme-100);
+  box-shadow: none;
+}
+
 /* Easy Apply: the page's own chunky pill — 42px, 16px medium, the arrow
    kept — in black on the paper. The ATS link-out takes the outline pill. */
 .signals .sig-immersive [data-sig="apply-btn"] {
@@ -315,6 +405,11 @@
 .signals .sig-immersive button[data-sig="apply-btn"] {
   background: var(--raw-sig-black);
   color: var(--raw-sig-creme-100);
+}
+/* The page's own up-right arrow: the demo draws a right arrow; a quarter
+   turn back makes it the ↗ every other pill on the page carries. */
+.signals .sig-immersive [data-sig="apply-btn"] svg {
+  transform: rotate(-45deg);
 }
 .signals .sig-immersive button[data-sig="apply-btn"]:hover {
   background: var(--raw-sig-blue);
@@ -613,6 +708,36 @@
     background: var(--raw-sig-black-200);
     -webkit-mask: url("/aplify-mark-light.svg") center / contain no-repeat;
     mask: url("/aplify-mark-light.svg") center / contain no-repeat;
+  }
+
+  /* A paragraph beside a display heading sits on the heading's BASELINE,
+     not on its line box: the box runs below the glyphs by the reveal's
+     descender padding plus half the leading. Set the heading's size
+     classes on this wrapper and the padding is in the heading's em.
+     Measured, see `--raw-sig-baseline-lift`. */
+  @media (min-width: 64rem) {
+    .sig-baseline {
+      padding-bottom: var(--raw-sig-baseline-lift);
+    }
+  }
+
+  /* Quiet text toggles (the job search's apply route). */
+  .sig-route {
+    color: var(--raw-sig-ink-label);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.35em;
+    transition:
+      color var(--raw-dur-fast) var(--raw-ease-entrance),
+      text-decoration-color var(--raw-dur-fast) var(--raw-ease-entrance);
+  }
+  .sig-route:hover {
+    color: var(--raw-sig-black);
+  }
+  .sig-route.is-on {
+    color: var(--raw-sig-black);
+    text-decoration-color: var(--raw-sig-blue);
   }
 
   .sig-hairline {

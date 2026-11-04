@@ -46,9 +46,7 @@ const DemoBand = ({
         standfirst={standfirst}
       />
       <Reveal variant="rise" className="mt-12 lg:mt-16">
-        <div className="sig-product sig-immersive">
-          {children}
-        </div>
+        <div className="sig-product sig-immersive">{children}</div>
       </Reveal>
     </div>
   </section>
@@ -116,13 +114,11 @@ export const SigCost = () => {
               size="text-sig-5xl lg:text-sig-7xl xl:text-sig-10xl"
             />
           </div>
-          <Reveal
-            variant="up"
-            delay={160}
-            className="lg:col-span-4 lg:col-start-9 lg:self-end"
-          >
-            <p className="text-sig-base">{cost.standfirst}</p>
-          </Reveal>
+          <div className="sig-baseline text-sig-5xl lg:col-span-4 lg:col-start-9 lg:self-end lg:text-sig-7xl xl:text-sig-10xl">
+            <Reveal variant="up" delay={160}>
+              <p className="text-sig-base">{cost.standfirst}</p>
+            </Reveal>
+          </div>
         </div>
 
         <p

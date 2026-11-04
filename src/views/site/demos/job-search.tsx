@@ -97,10 +97,27 @@ const ArrowIcon = () => (
  */
 export interface JobSearchDemoProps {
   className?: string;
+  /** Controlled apply route. When the host page owns the setting (the
+   *  SIGNALS option puts it beside the section heading), pass `route` and
+   *  `onRouteChange` and set `hideRouteSwitch`. Omitted, the demo keeps its
+   *  own state and its own switch, as on the Aurora page. */
+  route?: ApplyRoute;
+  onRouteChange?: (route: ApplyRoute) => void;
+  hideRouteSwitch?: boolean;
 }
 
-export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
-  const [route, setRoute] = useState<ApplyRoute>("easy");
+export const JobSearchDemo = ({
+  className,
+  route: routeProp,
+  onRouteChange,
+  hideRouteSwitch = false,
+}: JobSearchDemoProps) => {
+  const [routeState, setRouteState] = useState<ApplyRoute>("easy");
+  const route = routeProp ?? routeState;
+  const setRoute = (next: ApplyRoute) => {
+    setRouteState(next);
+    onRouteChange?.(next);
+  };
   const [view, setView] = useState<ViewName>("Grid");
   const [keyword, setKeyword] = useState<string>("");
   const [place, setPlace] = useState<string>("");
@@ -184,60 +201,62 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
 
           The track is translucent, so the page ground reads through it — the
           control sits ON the page rather than in a container of its own. */}
-      <div
-        role="radiogroup"
-        aria-label={content.routeSwitch.label}
-        data-sig="route-switch"
-        className="mx-auto flex w-full max-w-3xl gap-1.5 rounded-pill bg-ink/5 p-1.5"
-      >
-        {(
-          [
+      {hideRouteSwitch ? null : (
+        <div
+          role="radiogroup"
+          aria-label={content.routeSwitch.label}
+          data-sig="route-switch"
+          className="mx-auto flex w-full max-w-3xl gap-1.5 rounded-pill bg-ink/5 p-1.5"
+        >
+          {(
             [
-              "easy",
-              content.routeSwitch.easyApply,
-              content.routeSwitch.easyApplyNote,
-            ],
-            [
-              "link",
-              content.routeSwitch.linkOut,
-              content.routeSwitch.linkOutNote,
-            ],
-          ] as const
-        ).map(([value, label, note]) => {
-          const on = route === value;
-          return (
-            <button
-              key={value}
-              type="button"
-              role="radio"
-              aria-checked={on}
-              onClick={() => setRoute(value)}
-              className={`flex-1 rounded-pill px-5 py-3 text-center transition-colors duration-[var(--duration-fast)] ease-entrance ${
-                on ? "bg-surface-raised shadow-sm" : "hover:bg-ink/5"
-              }`}
-            >
-              <span
-                className={`block text-ui-lg font-medium tracking-tight ${
-                  on ? "text-ink" : "text-ink-body"
+              [
+                "easy",
+                content.routeSwitch.easyApply,
+                content.routeSwitch.easyApplyNote,
+              ],
+              [
+                "link",
+                content.routeSwitch.linkOut,
+                content.routeSwitch.linkOutNote,
+              ],
+            ] as const
+          ).map(([value, label, note]) => {
+            const on = route === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                onClick={() => setRoute(value)}
+                className={`flex-1 rounded-pill px-5 py-3 text-center transition-colors duration-[var(--duration-fast)] ease-entrance ${
+                  on ? "bg-surface-raised shadow-sm" : "hover:bg-ink/5"
                 }`}
               >
-                {label}
-              </span>
-              {/* The note needs different ink on each side. On the white
+                <span
+                  className={`block text-ui-lg font-medium tracking-tight ${
+                    on ? "text-ink" : "text-ink-body"
+                  }`}
+                >
+                  {label}
+                </span>
+                {/* The note needs different ink on each side. On the white
                   active pill `--ink-label` measures 5.39:1; on the track's
                   own grey it drops to 4.31, which is under the 4.5 this size
                   needs. `--ink-body` clears it at 7.05. */}
-              <span
-                className={`mt-0.5 block text-ui-xs ${
-                  on ? "text-ink-label" : "text-ink-body"
-                }`}
-              >
-                {note}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+                <span
+                  className={`mt-0.5 block text-ui-xs ${
+                    on ? "text-ink-label" : "text-ink-body"
+                  }`}
+                >
+                  {note}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* Link-out cost — §2's honesty, shown the moment the switch raises
             it. It belongs to the SETTING, not to the search, because it
@@ -249,6 +268,7 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
                 over grey is near-white text on a surface you cannot see. */}
           <aside
             aria-label={content.linkOutPanel.heading}
+            data-sig="link-note"
             className="mx-auto flex max-w-3xl items-start gap-4 rounded-card bg-surface-raised p-5 shadow-sm"
           >
             <span className="icon-chip h-10 w-10" aria-hidden>
