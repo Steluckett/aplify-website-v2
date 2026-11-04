@@ -3,9 +3,10 @@ import { BookDemoOverlay } from "@/views/site/book-demo";
 import { SigClose } from "./close";
 import { SigHero } from "./hero";
 import { SigNav } from "./nav";
-import { SigDemo, SigFaq, SigImplementation, SigQuotes, SigSecurity } from "./panels";
+import { SigDemo, SigFaq, SigImplementation, SigSecurity } from "./panels";
 import { SigProof } from "./proof";
-import { SigFriction, SigSplit } from "./splits";
+import { SigQuotes } from "./quotes";
+import { SigSplit } from "./splits";
 import { SigStages } from "./stages";
 import { SigStatement, SigStats } from "./statement";
 import { SigSteps } from "./steps";
@@ -23,12 +24,12 @@ import { SigSteps } from "./steps";
  *   who we are (fill)     → why we built it
  *   stats                 → four figures, each sourced
  *   services slider       → the four candidate steps
- *   split ×2              → where it sits / why they leave
+ *   built around search   → where it sits / why they leave
  *   featured work panel   → proof
  *   industries deck       → six stages
  *   (no twin)             → the live job search
  *   what makes us diff.   → implementation
- *   testimonials wall     → the three quotes
+ *   testimonials (pinned) → three quotes + three case results
  *   insights              → security
  *   FAQ panel             → questions, answered in approved copy
  *   close + footer        → the ask
@@ -43,7 +44,6 @@ export const SignalsView = () => (
       <SigStats />
       <SigSteps />
       <SigSplit />
-      <SigFriction />
       <SigProof />
       <SigStages />
       <SigDemo />

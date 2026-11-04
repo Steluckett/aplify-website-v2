@@ -41,6 +41,7 @@
   --raw-sig-black-veil: rgb(14 10 16 / 0.55);
   --raw-sig-shadow-card: 0 30px 60px -30px rgb(14 10 16 / 0.35);
 
+  /* Schibsted Grotesk standing in for Noi Grotesk — see layout.tsx. */
   --raw-sig-font: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
 
   /* Their type ladder, rem for rem. */
@@ -74,7 +75,11 @@
   --raw-sig-gutter: 2.5rem;
   --raw-sig-gutter-sm: 1.25rem;
   --raw-sig-max: 120rem;
+  --raw-sig-section-sm: 4rem;
   --raw-sig-section: 5rem;
+  --raw-sig-section-xl: 6rem;
+  --raw-sig-section-2xl: 8rem;
+  --raw-sig-radius-band: 1.875rem; /* 30 — hero foot, footer head */
   --raw-sig-panel-y: 6.25rem;
   --raw-sig-panel-x: 3.125rem;
   --raw-sig-radius-panel: 1.25rem; /* 20 */
@@ -132,6 +137,7 @@
   --color-sig-lime: var(--raw-sig-lime);
   --color-sig-purple: var(--raw-sig-purple);
   --color-sig-veil: var(--raw-sig-black-veil);
+  --radius-sig-band: var(--raw-sig-radius-band);
   --color-sig-ink: var(--sig-ink);
   --color-sig-label: var(--sig-ink-label);
   --color-sig-accent: var(--sig-accent);
@@ -183,8 +189,24 @@
     }
   }
 
+  /* Their section rhythm: pb-16 / lg:pb-20 / xl:pb-24 / 2xl:pb-32. */
   .sig-section {
-    padding-bottom: var(--raw-sig-section);
+    padding-bottom: var(--raw-sig-section-sm);
+  }
+  @media (min-width: 64rem) {
+    .sig-section {
+      padding-bottom: var(--raw-sig-section);
+    }
+  }
+  @media (min-width: 80rem) {
+    .sig-section {
+      padding-bottom: var(--raw-sig-section-xl);
+    }
+  }
+  @media (min-width: 96rem) {
+    .sig-section {
+      padding-bottom: var(--raw-sig-section-2xl);
+    }
   }
 
   .sig-panel {
@@ -241,7 +263,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.625rem;
-    height: 2.75rem;
+    height: 2.625rem; /* 42, theirs: px-5 py-3 at 16px */
     padding-inline: 1.25rem;
     border-radius: 999px;
     font-size: var(--raw-sig-text-base);
@@ -276,16 +298,14 @@
     background: var(--raw-sig-lilac);
     color: var(--raw-sig-black);
   }
+  /* Their outline pill: a 1px creme-300 edge that fills creme-300 on hover. */
   .sig-pill-ghost {
     background: transparent;
     color: var(--sig-ink);
-    box-shadow: inset 0 0 0 1px var(--sig-ink);
+    box-shadow: inset 0 0 0 1px var(--raw-sig-creme-300);
   }
   .sig-pill-ghost:hover {
-    background: var(--sig-ink);
-    color: var(--sig-bg);
-  }
-  .sig-dark .sig-pill-ghost:hover {
+    background: var(--raw-sig-creme-300);
     color: var(--raw-sig-black);
   }
 
@@ -299,6 +319,14 @@
     flex: none;
     border-radius: 999px;
     box-shadow: inset 0 0 0 1px currentColor;
+  }
+
+  /* The footer's vast mark, painted in black-200 through the logo as a mask
+     (theirs is an inline SVG in that colour, 3/4 of the width, dropped 30%). */
+  .sig-watermark {
+    background: var(--raw-sig-black-200);
+    -webkit-mask: url("/aplify-mark-light.svg") center / contain no-repeat;
+    mask: url("/aplify-mark-light.svg") center / contain no-repeat;
   }
 
   .sig-hairline {

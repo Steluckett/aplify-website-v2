@@ -16,7 +16,10 @@ import { useViewportProgress } from "./use-viewport-progress";
 export const SigStatement = () => {
   const ref = useRef<HTMLHeadingElement>(null);
   const progress = useViewportProgress(ref);
-  const { p } = useSpring({ p: progress, config: { tension: 120, friction: 26 } });
+  const { p } = useSpring({
+    p: progress,
+    config: { tension: 120, friction: 26 },
+  });
 
   const plain = sigOrigin.plain.split(" ");
   const accent = sigOrigin.accent.split(" ");
@@ -25,7 +28,11 @@ export const SigStatement = () => {
     <animated.span
       key={`${w}-${i}`}
       aria-hidden
-      style={{ opacity: p.to((v) => 0.2 + 0.8 * Math.min(1, Math.max(0, v * total - i))) }}
+      style={{
+        opacity: p.to(
+          (v) => 0.2 + 0.8 * Math.min(1, Math.max(0, v * total - i)),
+        ),
+      }}
     >
       {w}{" "}
     </animated.span>
@@ -41,7 +48,9 @@ export const SigStatement = () => {
           className="sig-display mt-10 text-sig-5xl indent-[calc((100%+1.25rem)/6)] md:text-sig-7xl lg:mt-16 lg:text-sig-9xl 2xl:text-sig-10xl"
         >
           {plain.map((w, i) => word(w, i))}
-          <span className="sig-tone">{accent.map((w, i) => word(w, plain.length + i))}</span>
+          <span className="sig-tone">
+            {accent.map((w, i) => word(w, plain.length + i))}
+          </span>
         </h2>
       </div>
     </section>
@@ -51,7 +60,15 @@ export const SigStatement = () => {
 const DIGITS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
 /** One rolling digit column: the reference's odometer. */
-const Odometer = ({ value, suffix, run }: { value: number; suffix: string; run: boolean }) => {
+const Odometer = ({
+  value,
+  suffix,
+  run,
+}: {
+  value: number;
+  suffix: string;
+  run: boolean;
+}) => {
   const digits = String(value).split("").map(Number);
   const [springs] = useSprings(
     digits.length,
@@ -89,7 +106,10 @@ export const SigStats = () => {
   return (
     <section aria-label="Aplify in numbers" className="sig-section">
       <div className="sig-wrap">
-        <ul ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <ul
+          ref={ref}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+        >
           {sigStats.map((stat) => (
             <li
               key={stat.label}
@@ -97,9 +117,15 @@ export const SigStats = () => {
             >
               <span className="sr-only">{`${stat.value}${stat.suffix}`}</span>
               <span className="sig-display text-sig-10xl leading-none lg:text-sig-12xl 2xl:text-sig-13xl">
-                <Odometer value={stat.value} suffix={stat.suffix} run={inView} />
+                <Odometer
+                  value={stat.value}
+                  suffix={stat.suffix}
+                  run={inView}
+                />
               </span>
-              <span className="mt-4 max-w-[15rem] text-sig-base">{stat.label}</span>
+              <span className="mt-4 max-w-[15rem] text-sig-base">
+                {stat.label}
+              </span>
             </li>
           ))}
         </ul>

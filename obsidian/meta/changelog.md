@@ -10,6 +10,15 @@ This is a human-curated log — not a mirror of `git log`.
 
 ## 2026-11-04
 
+- **SIGNALS option, closer pass.** Hero headline and intro rewritten to the
+  reference's lengths ("Completion-First / Recruitment Technology", "No
+  Account. No Redirect. Just Apply."); face switched to Schibsted Grotesk,
+  measured within 1% of Noi Grotesk's width; hero band rounded at its foot
+  and footer band at its top (30px); the slider rebuilt on tinted photos;
+  the ATS section rebuilt as the reference's "Built Around Search" layout;
+  the testimonial wall pinned, with the case results joining the quotes.
+  Placeholder Unsplash stock in `public/assets/stock/`.
+
 - **A second homepage option, on branch `design/signals-steer`.** Fully
   reimagined on marketingsignals.com's section patterns: a black hero with a
   120px two-tone headline and a drifting tilted strip of product shots, a

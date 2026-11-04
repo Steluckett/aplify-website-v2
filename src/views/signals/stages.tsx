@@ -30,9 +30,14 @@ export const SigStages = () => (
   <section id="how-it-works" className="sig-section">
     <div className="sig-wrap grid grid-cols-1 gap-12 lg:grid-cols-[0.8fr_1.5fr] lg:gap-16">
       <div className="self-start lg:sticky lg:top-32">
-        <SigHeading lines={sigStages.linesSm} size="text-sig-5xl xl:text-sig-6xl" />
+        <SigHeading
+          lines={sigStages.linesSm}
+          size="text-sig-5xl xl:text-sig-6xl"
+        />
         <Reveal variant="up" delay={160}>
-          <p className="mt-6 max-w-[23rem] text-sig-base">{sigStages.standfirst}</p>
+          <p className="mt-6 max-w-[23rem] text-sig-base">
+            {sigStages.standfirst}
+          </p>
           <div className="mt-8">
             <DemoPill label="Book a demo" tone="lilac" />
           </div>
@@ -51,11 +56,19 @@ export const SigStages = () => (
               style={{ transform: `rotate(${TILTS[i]}deg)` }}
             >
               <div className="flex flex-col justify-between rounded-sig-tile bg-current/[0.06] p-6 lg:p-8">
-                <p className="sig-display text-sig-10xl leading-none opacity-90 md:text-sig-12xl">{stage.n}</p>
+                <p className="sig-display text-sig-10xl leading-none opacity-90 md:text-sig-12xl">
+                  {stage.n}
+                </p>
                 <ul className="mt-10 space-y-2.5">
                   {stage.points.map((pt) => (
-                    <li key={pt} className="flex items-center gap-3 text-sig-base">
-                      <span aria-hidden className="h-1.5 w-1.5 flex-none rounded-full bg-current" />
+                    <li
+                      key={pt}
+                      className="flex items-center gap-3 text-sig-base"
+                    >
+                      <span
+                        aria-hidden
+                        className="h-1.5 w-1.5 flex-none rounded-full bg-current"
+                      />
                       {pt}
                     </li>
                   ))}
@@ -63,7 +76,9 @@ export const SigStages = () => (
               </div>
               <div className="flex flex-col justify-center p-4 lg:p-8">
                 <h3 className="sig-display text-sig-5xl">{stage.title}</h3>
-                <p className="mt-2 text-sig-lg font-medium tracking-sig-tight">{stage.sub}</p>
+                <p className="mt-2 text-sig-lg font-medium tracking-sig-tight">
+                  {stage.sub}
+                </p>
                 <p className="mt-6 max-w-[20rem] text-sig-base">{stage.body}</p>
               </div>
             </article>

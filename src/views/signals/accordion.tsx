@@ -49,7 +49,12 @@ const Row = ({
           </span>
         </button>
       </h3>
-      <animated.div id={id} role="region" style={style} className="overflow-hidden">
+      <animated.div
+        id={id}
+        role="region"
+        style={style}
+        className="overflow-hidden"
+      >
         <div ref={inner} className="max-w-[36rem] pb-6 text-sig-base">
           {item.body}
         </div>

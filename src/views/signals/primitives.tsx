@@ -13,27 +13,72 @@ import type { Tags } from "@/types/springs";
  * page has one heading treatment, one label and one pill — the reference's.
  */
 
-export const ArrowUpRight = ({ className = "h-3 w-3" }: { className?: string }) => (
+export const ArrowUpRight = ({
+  className = "h-3 w-3",
+}: {
+  className?: string;
+}) => (
   <svg viewBox="0 0 12 12" fill="none" className={className} aria-hidden>
-    <path d="M3 9 9 3M4 3h5v5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M3 9 9 3M4 3h5v5"
+      stroke="currentColor"
+      strokeWidth="1.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
-export const ArrowSide = ({ dir, className = "h-3 w-3" }: { dir: "left" | "right"; className?: string }) => (
-  <svg viewBox="0 0 12 12" fill="none" className={`${className} ${dir === "left" ? "rotate-180" : ""}`} aria-hidden>
-    <path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+export const ArrowSide = ({
+  dir,
+  className = "h-3 w-3",
+}: {
+  dir: "left" | "right";
+  className?: string;
+}) => (
+  <svg
+    viewBox="0 0 12 12"
+    fill="none"
+    className={`${className} ${dir === "left" ? "rotate-180" : ""}`}
+    aria-hidden
+  >
+    <path
+      d="M2 6h8M6.5 2.5 10 6l-3.5 3.5"
+      stroke="currentColor"
+      strokeWidth="1.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
 export const PlusIcon = ({ open }: { open: boolean }) => (
   <svg viewBox="0 0 12 12" fill="none" className="h-2.5 w-2.5" aria-hidden>
-    <path d="M2 6h8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-    {open ? null : <path d="M6 2v8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />}
+    <path
+      d="M2 6h8"
+      stroke="currentColor"
+      strokeWidth="1.3"
+      strokeLinecap="round"
+    />
+    {open ? null : (
+      <path
+        d="M6 2v8"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    )}
   </svg>
 );
 
 /** The section label with its hairline. `aside` sits at the right end. */
-export const SigLabel = ({ children, aside }: { children: ReactNode; aside?: ReactNode }) => (
+export const SigLabel = ({
+  children,
+  aside,
+}: {
+  children: ReactNode;
+  aside?: ReactNode;
+}) => (
   <Reveal variant="fade">
     <p className="sig-label">
       <span>{children}</span>
@@ -50,6 +95,8 @@ export interface SigHeadingProps {
   tag?: Tags;
   /** How many closing lines take the accent. Default: the last one. */
   toneLines?: number;
+  /** The same for the phone break, when it splits the accent phrase. */
+  toneLinesSm?: number;
   center?: boolean;
   className?: string;
 }
@@ -64,11 +111,14 @@ export const SigHeading = ({
   size,
   tag = "h2",
   toneLines = 1,
+  toneLinesSm,
   center = false,
   className = "",
 }: SigHeadingProps) => {
-  const tones = (n: number) =>
-    Array.from({ length: n }, (_, i) => (n > 1 && i >= n - toneLines ? "sig-tone" : ""));
+  const tones = (n: number, k = toneLines) =>
+    Array.from({ length: n }, (_, i) =>
+      n > 1 && i >= n - k ? "sig-tone" : "",
+    );
   const base = `sig-lines ${size} ${center ? "text-center" : ""} ${className}`;
   const line = center ? "justify-center" : "";
   return (
@@ -88,7 +138,7 @@ export const SigHeading = ({
           lines={[...linesSm]}
           className={`${base} md:hidden`}
           lineClassName={line}
-          lineClassNames={tones(linesSm.length)}
+          lineClassNames={tones(linesSm.length, toneLinesSm ?? toneLines)}
           stagger={90}
           duration={1000}
         />
@@ -100,10 +150,20 @@ export const SigHeading = ({
 type PillTone = "creme" | "lilac" | "black" | "ghost";
 
 /** A pill that opens the book-a-demo dialog. */
-export const DemoPill = ({ label, tone = "lilac" }: { label: string; tone?: PillTone }) => {
+export const DemoPill = ({
+  label,
+  tone = "lilac",
+}: {
+  label: string;
+  tone?: PillTone;
+}) => {
   const open = useContactModal((s) => s.open);
   return (
-    <button type="button" onClick={open} className={`sig-pill sig-pill-${tone}`}>
+    <button
+      type="button"
+      onClick={open}
+      className={`sig-pill sig-pill-${tone}`}
+    >
       {label}
       <ArrowUpRight />
     </button>
@@ -111,7 +171,15 @@ export const DemoPill = ({ label, tone = "lilac" }: { label: string; tone?: Pill
 };
 
 /** A pill that navigates. */
-export const LinkPill = ({ label, href, tone = "ghost" }: { label: string; href: string; tone?: PillTone }) => (
+export const LinkPill = ({
+  label,
+  href,
+  tone = "ghost",
+}: {
+  label: string;
+  href: string;
+  tone?: PillTone;
+}) => (
   <Link href={href} className={`sig-pill sig-pill-${tone}`}>
     {label}
     <ArrowUpRight />

@@ -50,9 +50,23 @@ export const SigNav = () => {
   return (
     <>
       <header className="pointer-events-none fixed inset-x-0 top-0 z-[60] mix-blend-difference">
-        <nav aria-label="Primary" className="sig-wrap flex h-20 items-center justify-between lg:h-24">
-          <Link href="#home" className="pointer-events-auto" aria-label="Aplify, home">
-            <Image src="/aplify-light.svg" alt="Aplify" width={317} height={103} priority className="h-6 w-auto" />
+        <nav
+          aria-label="Primary"
+          className="sig-wrap flex h-20 items-center justify-between lg:h-24"
+        >
+          <Link
+            href="#home"
+            className="pointer-events-auto"
+            aria-label="Aplify, home"
+          >
+            <Image
+              src="/aplify-light.svg"
+              alt="Aplify"
+              width={317}
+              height={103}
+              priority
+              className="h-6 w-auto"
+            />
           </Link>
           <button
             type="button"
@@ -86,7 +100,10 @@ export const SigNav = () => {
             {sigNav.items.map((item, i) => (
               <animated.li
                 key={item.href}
-                style={{ opacity: trail[i].opacity, transform: trail[i].y.to((v) => `translate3d(0,${v}px,0)`) }}
+                style={{
+                  opacity: trail[i].opacity,
+                  transform: trail[i].y.to((v) => `translate3d(0,${v}px,0)`),
+                }}
               >
                 <Link
                   href={item.href}
@@ -102,7 +119,9 @@ export const SigNav = () => {
           <animated.div
             style={{
               opacity: trail[sigNav.items.length].opacity,
-              transform: trail[sigNav.items.length].y.to((v) => `translate3d(0,${v}px,0)`),
+              transform: trail[sigNav.items.length].y.to(
+                (v) => `translate3d(0,${v}px,0)`,
+              ),
             }}
             className="mt-12"
           >

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Hanken_Grotesk } from "next/font/google";
+import { Schibsted_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 
 import {
@@ -29,9 +29,11 @@ const inter = localFont({
 });
 
 /** The SIGNALS option's face (`src/app/signals.css`). The reference sets in
- *  Noi Grotesk, a commercial face; Hanken Grotesk is the closest open
- *  neo-grotesk. Only the `.signals` root reads this variable. */
-const grotesk = Hanken_Grotesk({
+ *  Noi Grotesk, a commercial face. Schibsted Grotesk is the measured match:
+ *  the same two-storey g and straight-legged R, and "Digital Marketing
+ *  Agency" at 600 / -0.04em sets within 1% of Noi's width (572 vs 568px at
+ *  52px). Hanken, the first pick, ran 6% narrow. Only `.signals` reads it. */
+const grotesk = Schibsted_Grotesk({
   subsets: ["latin"],
   weight: "variable",
   variable: "--font-grotesk",

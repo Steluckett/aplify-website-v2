@@ -39,21 +39,35 @@ export const sigNav = {
   ctaLabel: "Book a demo",
 };
 
+/**
+ * The hero, written to the reference's lengths: a two-line headline of about
+ * 40 characters (theirs: "Performance-Driven / Digital Marketing Agency")
+ * and a two-tone intro of about 40 (theirs: "Built Around Search. Measured
+ * On Revenue."). Title case, as theirs.
+ *
+ * "Completion-first" is the page's own argument (ADR-0031: the page argues
+ * completion-first) set as a category descriptor. The intro restates two
+ * shipped facts — no account to create, no ATS redirect — from
+ * `capabilities.steps[1].points`. The approved §4 position stays in the page
+ * metadata, verbatim.
+ */
 export const sigHero = {
-  lines: hero.lines,
-  linesSm: hero.linesSm,
-  standfirst: hero.standfirst,
+  lines: ["Completion-First", "Recruitment Technology"],
+  linesSm: ["Completion-First", "Recruitment", "Technology"],
+  intro: { plain: "No Account. No Redirect.", accent: "Just Apply." },
   cta: hero.cta,
   secondary: hero.secondary,
-  /** The drifting strip of product surfaces. Repeated to fill the loop. */
+  /** The drifting strip — the reference fills it with photography of its
+   *  clients' worlds, so ours shows the people Aplify's customers hire.
+   *  PLACEHOLDER STOCK (Unsplash, see public/assets/stock/README.md). */
   cards: [
-    { src: "/assets/steps/search-mobile.png", alt: "Job search on a phone, with two job cards showing salary and category." },
-    { src: "/assets/steps/job-description.png", alt: "The Easy Apply flow: pre-qualification questions above a short details form." },
-    { src: "/assets/hero/company-home-screen-hero.png", alt: "The Aplify dashboard home screen with a jobs and applications summary." },
-    { src: "/assets/steps/application-received.png", alt: "The confirmation screen after applying, reading Application received." },
-    { src: "/assets/steps/event-registration.png", alt: "Registration for a careers open day, with a You’re registered confirmation." },
-    { src: "/assets/platform/feed-import.png", alt: "The feed import screen, mapping source fields onto Aplify’s own." },
-    { src: "/assets/friction/not-frustrated.png", alt: "Aplify’s apply flow on a phone, with a short pre-qualification step." },
+    { src: "/assets/stock/strip-nurse.jpg", alt: "A care worker smiling with an older resident." },
+    { src: "/assets/stock/strip-barista.jpg", alt: "A barista at work behind a coffee machine." },
+    { src: "/assets/stock/strip-caregiver.jpg", alt: "A caregiver helping two older people with a colouring activity." },
+    { src: "/assets/stock/strip-phone.jpg", alt: "A woman at a cafe table looking at her phone." },
+    { src: "/assets/stock/strip-talk.jpg", alt: "Two colleagues talking in an office." },
+    { src: "/assets/stock/strip-bar.jpg", alt: "Staff working behind a busy cafe counter." },
+    { src: "/assets/stock/strip-walker.jpg", alt: "A caregiver helping an older woman with a walking frame." },
   ],
 };
 
@@ -77,30 +91,41 @@ export const sigStats = [
   { value: 2, suffix: "", label: "Settings between WordPress and live" },
 ];
 
+/** The services-style slider. Each step gets a tinted photograph behind it,
+ *  as the reference's slides do. PLACEHOLDER STOCK. Decorative: the step's
+ *  title and copy carry the meaning. */
 export const sigSteps = {
-  label: capabilities.eyebrow,
-  lines: capabilities.lines,
+  label: capabilities.lines.join(" "),
   steps: capabilities.steps,
+  photos: [
+    "/assets/stock/step-search.jpg",
+    "/assets/stock/step-apply.jpg",
+    "/assets/stock/step-events.jpg",
+    "/assets/stock/step-informed.jpg",
+  ],
 };
 
+/**
+ * The reference's "Built Around Search" section: a centred two-tone heading
+ * that repeats the hero intro (theirs repeats "Built Around Search. Measured
+ * On Revenue."), then two split rows. PLACEHOLDER STOCK in both rows.
+ */
 export const sigSplit = {
-  lines: siteMap.lines,
-  linesSm: siteMap.linesSm,
+  heading: sigHero.intro,
+  plain: siteMap.lines[0],
+  accent: siteMap.lines[1],
   standfirst: siteMap.standfirst,
-  shot: siteMap.shot,
+  photo: { src: "/assets/stock/split-care.jpg", alt: "A care worker sharing a joke with an older resident." },
   points: integrations.items.slice(0, 6),
   secondary: { label: "How it works", href: "#how-it-works" },
 };
 
 export const sigFriction = {
-  lines: friction.lines,
-  linesSm: friction.linesSm,
+  plain: `${friction.lines[0]} ${friction.lines[1]}`,
+  accent: friction.lines[2],
   standfirst: friction.standfirst,
   cuts: friction.cuts,
-  shot: {
-    src: "/assets/friction/not-frustrated.png",
-    alt: "Aplify’s apply flow on a phone: a short pre-qualification step asking about right to work, experience and shifts, above a confirmation that the application has been sent.",
-  },
+  photo: { src: "/assets/stock/split-team.jpg", alt: "A recruitment team working around a long table with laptops." },
 };
 
 export const sigProof = {
@@ -133,6 +158,9 @@ export const sigQuotes = {
   lines: testimonials.lines,
   linesSm: testimonials.linesSm,
   quotes: testimonials.quotes,
+  /** The wall interleaves the three case results with the three quotes,
+   *  giving the pin six cards to scroll past, as the reference's does. */
+  results: caseStudies.cases,
   logos: {
     "Brandon Trust": { src: "/assets/case-studies/brandon-word.png", ratio: 642 / 137 },
     "Cygnet Group": { src: "/assets/case-studies/cygnet.svg", ratio: 220 / 88 },
@@ -166,11 +194,12 @@ export const sigClose = {
   linesSm: footer.cta.linesSm,
   standfirst: footer.cta.standfirst,
   cta: footer.cta.primary,
+  /** PLACEHOLDER STOCK — the reference's close shows its team. */
   tiles: [
-    { src: "/assets/steps/search-mobile.png", alt: "Job search on a phone." },
-    { src: "/assets/steps/application-received.png", alt: "The Application received confirmation." },
-    { src: "/assets/steps/job-description.png", alt: "The Easy Apply form." },
-    { src: "/assets/hero/company-home-screen-hero.png", alt: "The recruiter dashboard home screen." },
+    { src: "/assets/stock/tile-laugh.jpg", alt: "A care worker laughing with an older woman." },
+    { src: "/assets/stock/tile-handshake.jpg", alt: "Two people shaking hands." },
+    { src: "/assets/stock/quote-office.jpg", alt: "A team meeting around a table." },
+    { src: "/assets/stock/tile-portrait.jpg", alt: "Two women smiling together." },
   ],
   footer,
   /** The footer's columns, re-pointed at this page's own anchors. */

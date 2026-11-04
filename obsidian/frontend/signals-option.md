@@ -25,14 +25,22 @@ src/app/classic/page.tsx       The Aurora page, for comparison
   section heads 70, panel heads 62, split heads 55, statement 75, card titles
   46, hero sub and card statements 30, quotes 23, body 16 / 1.33. Weight 600,
   tracking −0.04em everywhere at display size.
-- **Face** — they set Noi Grotesk (commercial). Hanken Grotesk via
-  `next/font/google` is the closest open neo-grotesk. `.screen` keeps Inter.
+- **Face** — they set Noi Grotesk (commercial, not licensed here). Schibsted
+  Grotesk via `next/font/google` is the measured stand-in: same two-storey g
+  and straight-legged R, and within 1% of Noi's set width at 600 / −0.04em.
+  Hanken Grotesk (the first pick) ran 6% narrow, which is why the tracking
+  read wrong. `.screen` keeps Inter.
 - **Colour** — black `#0e0a10`, creme 100–500, purple `#745cf6` (display
   only, 4.01:1), purple ink `#5f46ee` for small text (5.13:1), lilac
   `#afafff`, lime `#dbfe87`.
-- **Geometry** — full-bleed, 40px gutter (20 on phones), max 1920; 80px
-  between sections; dark panels radius 20, padding 100/50; cards radius 30;
-  tiles 15.
+- **Geometry** — full-bleed, 40px gutter (20 on phones), max 1920; section
+  padding 64 / 80 / 96 / 128 by breakpoint; the hero band is full-viewport
+  with its FOOT rounded 30px, and the footer band has its TOP rounded 30px;
+  panels radius 20, padding 100/50. Pills 42px with a 1px creme-300 edge.
+- **Photography** — tinted full-bleed photos in the slider, square and 16:9
+  photos in the split section, a photo strip in the hero, a 2×2 in the
+  footer card. Placeholder Unsplash stock in `public/assets/stock/` (sources
+  in its README); replace before launch.
 - **Motion** — theirs is GSAP + ScrollTrigger, Lenis and Swiper. Ours is the
   same effects in springs: a looping linear spring for the hero strip, a
   scroll-scrubbed `SpringTrigger` lift, a spring-smoothed word fill, rolling
@@ -47,12 +55,12 @@ src/app/classic/page.tsx       The Aurora page, for comparison
 | "Who we are" word fill | why we built it |
 | Odometer stats | four sourced figures (see `sigStats`) |
 | Services slider | the four candidate steps |
-| Split ×2 | where it sits / why they leave |
+| "Built Around Search" (centred h2 + two 12-col split rows) | where it sits / why they leave |
 | Featured-work panel | proof (three case studies) |
 | Industries deck | six stages |
 | (no twin) | live job search demo |
 | "What makes us different" | implementation |
-| Testimonial wall | the three approved quotes |
+| Testimonial wall, heading pinned with `sticky` | three quotes + three case results |
 | Insights | security |
 | FAQ panel | buyer questions, answered in approved copy |
 | Close + footer | the ask |
