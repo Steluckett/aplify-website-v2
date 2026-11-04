@@ -5,7 +5,6 @@ import { SigHero } from "./hero";
 import { SigNav } from "./nav";
 import {
   SigAi,
-  SigBrand,
   SigCost,
   SigDashboard,
   SigData,
@@ -57,7 +56,9 @@ export const SignalsView = () => (
       <SigCost />
       <SigSteps />
       <SigDemo />
-      <SigBrand />
+      {/* <SigBrand /> — "It should look like you, not like us" is parked
+          (Stephen, 2026-11-04). The band and its demo styles are kept in
+          more.tsx / signals.css; restore this line to bring it back. */}
       <SigProof />
       <SigData />
       <SigAi />

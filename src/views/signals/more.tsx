@@ -52,6 +52,8 @@ const DemoBand = ({
   </section>
 );
 
+/** PARKED (2026-11-04): not mounted in `SignalsView`. Kept so the band can
+ *  return by restoring one line in index.tsx. */
 export const SigBrand = () => (
   <DemoBand
     id="brand"

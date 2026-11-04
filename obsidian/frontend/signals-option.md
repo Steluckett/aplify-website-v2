@@ -77,7 +77,10 @@ src/app/classic/page.tsx       The Aurora page, for comparison
 | Ruled "brands" grid | integrations (Eploy in lime, text only) |
 | Close + footer | the ask |
 
-Every band of the Aurora page now has a home here, in its original order.
+Every band of the Aurora page now has a home here, in its original order —
+except **brand** ("It should look like you, not like us"), PARKED on
+2026-11-04: `SigBrand` and its `brand-*` styles are kept but not mounted;
+restore the commented line in `index.tsx` to bring it back.
 
 ## The demos, re-skinned
 
