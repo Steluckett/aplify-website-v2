@@ -203,26 +203,72 @@
   margin-top: 2.5rem;
   border-radius: 0;
 }
+/* Job cards — "almost transparent" (Stephen's pick, option D): no fill, no
+   radius, a hairline above each, the title set in the page's display type
+   and the two tags as the page's own coloured pills — the job family on
+   lime, the hours on the blue tint. Black ink throughout, black button. */
+.signals .sig-immersive ul:has(> li [data-sig="job-card"]) {
+  column-gap: 2.5rem;
+  row-gap: 3.5rem;
+}
 .signals .sig-immersive [data-sig="job-card"] {
   --ink-heading: var(--raw-sig-black);
   --ink: var(--raw-sig-black);
-  --ink-body: var(--raw-sig-black);
-  --ink-label: var(--raw-sig-ink-body); /* 8.94:1 on lime */
-  background: var(--raw-sig-lime);
+  --ink-body: var(--raw-sig-ink-body);
+  --ink-label: var(--raw-sig-ink-label);
+  background: transparent;
   box-shadow: none;
-  border-radius: var(--raw-sig-radius-panel);
-  padding: 1.75rem;
+  border-radius: 0;
+  border-top: 1px solid var(--raw-sig-black-hair);
+  padding: 1.5rem 0 0;
+}
+.signals .sig-immersive article[data-sig="job-card"] h4 {
+  font-size: var(--raw-sig-text-4xl);
+  font-weight: 700;
+  letter-spacing: var(--raw-sig-tracking-tighter);
+  line-height: var(--raw-sig-leading-097);
+}
+.signals .sig-immersive [data-sig="job-card"] h4 {
+  font-weight: 700;
+  letter-spacing: var(--raw-sig-tracking-tighter);
+}
+.signals .sig-immersive article[data-sig="job-card"] > p:first-of-type {
+  margin-top: 0.75rem;
+  font-size: var(--raw-sig-text-sm);
+}
+.signals .sig-immersive article[data-sig="job-card"] .text-ui-base.font-medium {
+  margin-top: 1.25rem;
+  font-size: var(--raw-sig-text-xl);
+  font-weight: 700;
+  letter-spacing: var(--raw-sig-tracking-tight);
 }
 .signals .sig-immersive [data-sig="job-card"] .chip {
-  background: var(--raw-sig-creme-100);
   box-shadow: none;
+  color: var(--raw-sig-black);
+  padding: 0.3rem 0.8rem;
+  font-size: var(--raw-sig-text-xs);
+}
+.signals .sig-immersive [data-sig="job-card"] .chip[data-tint="sky"] {
+  background: var(--raw-sig-lime);
+}
+.signals .sig-immersive [data-sig="job-card"] .chip.bg-surface-chip {
+  background: var(--raw-sig-blue-tint);
 }
 .signals .sig-immersive [data-sig="job-card"] .btn-primary {
   background: var(--raw-sig-black);
   color: var(--raw-sig-creme-100);
 }
-.signals .sig-immersive [data-sig="job-card"][aria-pressed="true"] {
-  box-shadow: inset 0 0 0 2px var(--raw-sig-black);
+/* Map view: the list beside the map keeps the same language; the selected
+   job takes a heavy black rule rather than a blue ring. */
+.signals .sig-immersive button[data-sig="job-card"] {
+  padding: 1rem 0.25rem 0.75rem;
+}
+.signals .sig-immersive button[data-sig="job-card"] h4 {
+  font-size: var(--raw-sig-text-xl);
+}
+.signals .sig-immersive button[data-sig="job-card"][aria-pressed="true"] {
+  --tw-ring-shadow: 0 0 #0000;
+  border-top: 3px solid var(--raw-sig-black);
 }
 /* Easy Apply: the stage loses its panel; the form is one full-width white
    card on the paper, its job summary a lime tile. */
