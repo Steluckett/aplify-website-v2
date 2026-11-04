@@ -75,10 +75,13 @@
   --raw-sig-gutter: 2.5rem;
   --raw-sig-gutter-sm: 1.25rem;
   --raw-sig-max: 120rem;
-  --raw-sig-section-sm: 4rem;
-  --raw-sig-section: 5rem;
-  --raw-sig-section-xl: 6rem;
-  --raw-sig-section-2xl: 8rem;
+  /* Section rhythm. Theirs is 64 / 80 / 96 / 128; ours runs half again
+     larger, because at their values the page read as crammed against its
+     bigger type (Stephen, 2026-11-04). */
+  --raw-sig-section-sm: 6rem;
+  --raw-sig-section: 8rem;
+  --raw-sig-section-xl: 10rem;
+  --raw-sig-section-2xl: 12rem;
   --raw-sig-radius-band: 1.875rem; /* 30 — hero foot, footer head */
   --raw-sig-panel-y: 6.25rem;
   --raw-sig-panel-x: 3.125rem;
@@ -189,7 +192,7 @@
     }
   }
 
-  /* Their section rhythm: pb-16 / lg:pb-20 / xl:pb-24 / 2xl:pb-32. */
+  /* Section rhythm by breakpoint — see the tokens. */
   .sig-section {
     padding-bottom: var(--raw-sig-section-sm);
   }
@@ -219,9 +222,12 @@
     }
   }
 
-  /* Display type. 600, -0.04em — the reference's every heading. */
+  /* Display type, -0.04em as theirs. WEIGHT 700, not their 600: Schibsted's
+     600 draws a visibly thinner stroke than Noi Grotesk's 600, and read as
+     "lighter and weaker" beside it (Stephen, 2026-11-04). 700 matches Noi's
+     stroke and sets within ~4% of its width (measured on four lines). */
   .sig-display {
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: var(--raw-sig-tracking-tighter);
     line-height: var(--raw-sig-leading-097);
     color: var(--sig-ink);
@@ -229,7 +235,7 @@
 
   /* Animated display lines: leading 1.1 for the clip box, pulled to ≈0.92. */
   .sig-lines {
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: var(--raw-sig-tracking-tighter);
     line-height: 1.1;
     color: var(--sig-ink);

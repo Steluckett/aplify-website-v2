@@ -72,7 +72,7 @@ export const SigQuotes = () => {
       <div className="sig-wrap">
         <div className="relative">
           <div className="top-20 lg:sticky xl:top-[7.6875rem]">
-            <h2 className="sig-display mx-auto max-w-[63rem] text-center text-sig-4xl md:text-sig-6xl lg:text-sig-8xl">
+            <h2 className="sig-display mx-auto max-w-[78rem] text-center text-sig-4xl md:text-sig-7xl lg:text-sig-9xl xl:text-sig-10xl">
               {sigQuotes.lines[0]}{" "}
               <span className="block text-sig-accent">
                 {sigQuotes.lines[1]}

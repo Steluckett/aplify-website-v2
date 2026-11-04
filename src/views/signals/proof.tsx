@@ -25,10 +25,10 @@ export const SigProof = () => {
       <div className="sig-wrap">
         <div className="sig-dark sig-panel overflow-hidden">
           <SigLabel>{sigProof.label}</SigLabel>
-          <div className="mt-10 grid grid-cols-1 gap-8 lg:mt-14 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div className="mt-10 grid grid-cols-1 gap-8 lg:mt-14">
             <SigHeading
               lines={sigProof.lines}
-              size="text-sig-5xl lg:text-sig-7xl"
+              size="text-sig-5xl lg:text-sig-8xl xl:text-sig-9xl"
             />
             <Reveal variant="up" delay={160}>
               <p className="max-w-[26rem] text-sig-base text-sig-label">

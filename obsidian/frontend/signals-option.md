@@ -29,12 +29,16 @@ src/app/classic/page.tsx       The Aurora page, for comparison
   Grotesk via `next/font/google` is the measured stand-in: same two-storey g
   and straight-legged R, and within 1% of Noi's set width at 600 / −0.04em.
   Hanken Grotesk (the first pick) ran 6% narrow, which is why the tracking
-  read wrong. `.screen` keeps Inter.
+  read wrong. Display type runs at WEIGHT 700: Schibsted's 600 strokes
+  thinner than Noi's 600 and read as weaker; 700 matches the stroke and sets
+  within ~4% of Noi's width. Licensing Noi itself is the remaining upgrade.
+  `.screen` keeps Inter.
 - **Colour** — black `#0e0a10`, creme 100–500, purple `#745cf6` (display
   only, 4.01:1), purple ink `#5f46ee` for small text (5.13:1), lilac
   `#afafff`, lime `#dbfe87`.
 - **Geometry** — full-bleed, 40px gutter (20 on phones), max 1920; section
-  padding 64 / 80 / 96 / 128 by breakpoint; the hero band is full-viewport
+  padding 96 / 128 / 160 / 192 by breakpoint (half again on theirs — at their
+  values the page read crammed); the hero band is full-viewport
   with its FOOT rounded 30px, and the footer band has its TOP rounded 30px;
   panels radius 20, padding 100/50. Pills 42px with a 1px creme-300 edge.
 - **Photography** — tinted full-bleed photos in the slider, square and 16:9

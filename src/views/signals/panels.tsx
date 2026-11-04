@@ -29,7 +29,7 @@ const BandHead = ({
       <SigHeading
         lines={lines}
         linesSm={linesSm}
-        size="text-sig-5xl lg:text-sig-7xl"
+        size="text-sig-5xl lg:text-sig-8xl xl:text-sig-10xl"
       />
       {standfirst ? (
         <Reveal variant="up" delay={160}>
