@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Hanken_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 
 import {
@@ -28,16 +27,6 @@ const inter = localFont({
   display: "swap",
 });
 
-/** The marketing register's face on the `design/signals-steer` branch: a
- *  neo-grotesk set heavy and tight, in place of Inter. Inter stays loaded for
- *  `.screen`, so the product shots keep the dashboard's own type. */
-const hanken = Hanken_Grotesk({
-  subsets: ["latin"],
-  weight: "variable",
-  variable: "--font-grotesk",
-  display: "swap",
-});
-
 export const metadata: Metadata = generateMetadata();
 export const viewport: Viewport = generateViewport();
 
@@ -50,7 +39,7 @@ export default function RootLayout({
     /* The font variable goes on <html>, not <body>: globals.css resolves
        --raw-font-sans at :root, and a custom property declared on <body>
        is not in scope there. */
-    <html lang="en" className={`${inter.variable} ${hanken.variable}`}>
+    <html lang="en" className={inter.variable}>
       <body className="ground">
         <script
           type="application/ld+json"

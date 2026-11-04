@@ -23,7 +23,6 @@ export const SiteFooter = () => (
     <section id="demo" className="py-26">
       <div className="shell">
         <SectionIntro
-          align="center"
           lines={[...footer.cta.lines]}
           linesSm={[...footer.cta.linesSm]}
           standfirst={footer.cta.standfirst}
@@ -35,14 +34,22 @@ export const SiteFooter = () => (
 
     <footer id="contact" className="pb-5 sm:pb-6">
       <Reveal variant="fade">
-        {/* Signals steer: the closing card is NIGHT, so the page is
-            bookended by the hero's ground. */}
-        <div className="on-night shell relative overflow-hidden rounded-panel">
+        <div className="shell relative overflow-hidden rounded-panel bg-white shadow-group">
+          {/* The wash pools at the FOOT of the card, not across it — the page's
+              last surface glows from below, the way the ground's own washes do. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%]"
+            style={{
+              background:
+                "linear-gradient(to top, rgb(91 78 224 / 0.14), rgb(14 165 233 / 0.08) 45%, transparent 100%)",
+            }}
+          />
 
           <div className="relative grid grid-cols-1 gap-12 p-8 sm:p-12 lg:grid-cols-[1.1fr_1.4fr]">
             <div>
               <Image
-                src="/aplify-light.svg"
+                src="/aplify-dark.svg"
                 alt="Aplify"
                 width={317}
                 height={103}
@@ -53,7 +60,7 @@ export const SiteFooter = () => (
               </p>
               <a
                 href={`mailto:${footer.email}`}
-                className="mt-6 inline-flex text-body font-medium text-ink-lavender hover:underline"
+                className="mt-6 inline-flex text-body font-medium text-ink-accent hover:underline"
               >
                 {footer.email}
               </a>
@@ -62,7 +69,7 @@ export const SiteFooter = () => (
             <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
               {footer.columns.map((col) => (
                 <nav key={col.heading} aria-label={col.heading}>
-                  <h2 className="text-sm font-medium text-ink-heading">
+                  <h2 className="text-sm font-medium text-ink">
                     {col.heading}
                   </h2>
                   <ul className="mt-4 space-y-3">
@@ -70,7 +77,7 @@ export const SiteFooter = () => (
                       <li key={link.label}>
                         <Link
                           href={link.href}
-                          className="text-body text-ink-body transition-colors duration-[var(--duration-fast)] ease-entrance hover:text-ink-heading"
+                          className="text-body text-ink-body transition-colors duration-[var(--duration-fast)] ease-entrance hover:text-ink"
                         >
                           {link.label}
                         </Link>

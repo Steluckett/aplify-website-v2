@@ -63,41 +63,22 @@
      to lift with their shadow, and light enough that the page does not read
      as grey. The pastel cards no longer depend on this separation: they
      live on the white bands, which is what freed the ground to lighten. */
-  /* SIGNALS STEER (branch design/signals-steer): the ground is warm paper and
-     the dark moment is a violet-black night, after marketingsignals.com. The
-     accent family keeps Aplify's own violet, deepened for text on paper. */
-  --raw-color-ground: #f2efe8;
-  --raw-color-paper-deep: #e8e4db;
-  --raw-color-aurora-ground: #eff1f6;
-  --raw-color-aurora-chip: #eef0f5;
-  --raw-color-aurora-border: #e6e9f0;
-  --raw-color-night: #100c15;
-  --raw-color-night-raised: #1d1824;
-  --raw-color-paper-ink: #f3f0e8; /* cream type on night */
-  --raw-color-paper-ink-body: rgb(243 240 232 / 0.74); /* 10.9:1 on night */
-  --raw-color-paper-ink-label: rgb(243 240 232 / 0.62); /* 8.0:1 on night */
-  --raw-color-paper-hairline: rgb(243 240 232 / 0.16);
-  --raw-color-paper-edge: rgb(243 240 232 / 0.45);
-  --raw-color-lavender: #b5adff; /* second-line colour on night, 9.4:1 */
-  --raw-color-lime: #dcfc8c; /* highlight card ground, takes night ink */
-  --raw-color-lavender-tint: #e4e0fb; /* light card ground, night ink 15.1:1 */
-  --raw-color-violet-night: #2a1f5c; /* deep card ground, white 14.5:1 */
-  --raw-color-violet-text: #4f3fd6; /* violet as TEXT on paper, 6.07:1 */
+  --raw-color-ground: #eff1f6;
   --raw-color-white: #ffffff;
-  --raw-color-chip: #ebe7de;
-  --raw-color-border: #dcd7cc;
-  --raw-color-track: #ddd8ce;
+  --raw-color-chip: #eef0f5;
+  --raw-color-border: #e6e9f0;
+  --raw-color-track: #e2e6ee;
 
-  --raw-color-ink: #100c15; /* UI ink */
-  --raw-color-heading: #100c15; /* headings sit a shade deeper than UI ink */
-  --raw-color-body: #45404c; /* running copy — a step lighter, 8.01:1 on white */
+  --raw-color-ink: #101318; /* UI ink */
+  --raw-color-heading: #0c1220; /* headings sit a shade deeper than UI ink */
+  --raw-color-body: #4a515c; /* running copy — a step lighter, 8.01:1 on white */
   /* Labels. The dashboard runs #868d97 at 3.35:1 by explicit decision; a
      public page cannot. #696e76 is the same neutral axis walked down until
      it clears 4.5:1 on ALL THREE grounds it lands on — white 5.13, page
      ground 4.77, chip 4.72. Re-solved when the ground moved — moving a
      ground silently breaks every ink measured against it, which is the
      trap that made the pastel cards vanish in the first place. */
-  --raw-color-label: #635e68;
+  --raw-color-label: #656b72;
 
   /* --- Status chip inks. Dots mean STATE. Each ink is the hue's 700-shade
      nudged until it clears 4.5:1 on the chip wash as well as on white;
@@ -193,7 +174,7 @@
 
      `--font-inter` is next/font's generated family name, set on <html> in
      layout.tsx so it is in scope here at :root. */
-  --raw-font-sans: var(--font-grotesk), -apple-system, BlinkMacSystemFont,
+  --raw-font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* Marketing register. rem is viewport-scaled by the adaptive grid below, so
@@ -214,10 +195,8 @@
      copy is 4:1 instead of 5.3:1. The hero was never too big on its own; it
      was too big for the text beneath it. Section heads stay at their 56px,
      which keeps a clear step down from the hero. */
-  /* Signals steer: section heads come UP to nearly the hero's size (the
-     reference runs 82 / 75), so every band opens on a statement. */
-  --raw-text-display: 5.75rem; /* 92px — hero */
-  --raw-text-h1: 4.5rem; /* 72px — section heads */
+  --raw-text-display: 6rem; /* 96px — hero */
+  --raw-text-h1: 3.5rem; /* 56px — section heads */
   --raw-text-h2: 2.5rem; /* 40px */
   --raw-text-h3: 2rem; /* 32px — card titles */
   --raw-text-h4: 1.5rem; /* 24px */
@@ -239,8 +218,7 @@
   --raw-text-stat: 3rem; /* 48px — stat tile figure */
   --raw-text-stat-hero: 5.25rem; /* 84px — the metric card's figure */
 
-  --raw-tracking-display: -0.045em;
-  --raw-font-ui: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
+  --raw-tracking-display: -0.035em;
   --raw-tracking-eyebrow: 0.18em;
   /* 1.1 is a FLOOR, not a preference: the text engine clips each line to its
      line-height box for the reveal, so anything tighter shaves descenders.
@@ -344,8 +322,8 @@
    already small enough that the re-basing is what you want. */
 @media (max-width: 1024px) {
   :root {
-    --raw-text-display: 4.25rem;
-    --raw-text-h1: 3.5rem;
+    --raw-text-display: 4rem;
+    --raw-text-h1: 2.75rem;
     --raw-text-h2: 2rem;
     --raw-text-h3: 1.625rem;
     --raw-text-lead: 1.3125rem;
@@ -354,8 +332,8 @@
 
 @media (max-width: 640px) {
   :root {
-    --raw-text-display: 3rem;
-    --raw-text-h1: 2.5rem;
+    --raw-text-display: 2.9rem;
+    --raw-text-h1: 2rem;
     --raw-text-h2: 1.75rem;
     --raw-text-h3: 1.375rem;
     --raw-text-lead: 1.125rem;
@@ -370,18 +348,14 @@
   --surface-raised: var(--raw-surface-tile);
   --surface-chip: var(--raw-color-chip);
   --surface-chip-on-dark: var(--raw-surface-glass-dark);
-  --surface-dark: var(--raw-color-night);
-  --surface-night-raised: var(--raw-color-night-raised);
-  --surface-paper-deep: var(--raw-color-paper-deep);
-  --surface-lime: var(--raw-color-lime);
+  --surface-dark: var(--raw-color-navy);
 
   --ink: var(--raw-color-ink);
   --ink-heading: var(--raw-color-heading);
   --ink-body: var(--raw-color-body);
   --ink-label: var(--raw-color-label);
-  --ink-accent: var(--raw-color-violet-text);
-  --ink-lavender: var(--raw-color-lavender);
-  --ink-on-dark: var(--raw-color-paper-ink);
+  --ink-accent: var(--raw-color-blue-ink);
+  --ink-on-dark: #f4f5f8;
 
   --hairline: var(--raw-color-border);
   --track: var(--raw-color-track);
@@ -436,8 +410,12 @@
 
   /* The spectrum wash. Wherever this grounds a surface, its content sits in
      an INSET 12px from the edge — the wash is a frame, not padding. */
-  /* Signals steer: the spectrum wash becomes a flat lavender field. */
-  --wash: linear-gradient(var(--raw-color-lavender-tint), var(--raw-color-lavender-tint));
+  --wash: linear-gradient(
+    135deg,
+    rgb(14 165 233 / 0.2),
+    rgb(91 78 224 / 0.21) 52%,
+    rgb(80 200 190 / 0.15)
+  );
 }
 
 /* --- The product register -------------------------------------------------
@@ -447,13 +425,8 @@
    rather than as more page. */
 .screen {
   --canvas: var(--raw-surface-tile);
-  /* The product keeps Aurora's cool neutrals and Inter: the page around it
-     went warm on this branch, the software it shows did not. */
-  --surface: var(--raw-color-aurora-ground);
+  --surface: var(--raw-color-ground);
   --surface-raised: var(--raw-surface-tile);
-  --surface-chip: var(--raw-color-aurora-chip);
-  --hairline: var(--raw-color-aurora-border);
-  font-family: var(--raw-font-ui);
 
   --radius-panel: var(--raw-radius-card);
   --radius-card: var(--raw-radius-card);
@@ -471,9 +444,6 @@
   --color-surface-raised: var(--surface-raised);
   --color-surface-chip: var(--surface-chip);
   --color-surface-dark: var(--surface-dark);
-  --color-surface-night-raised: var(--surface-night-raised);
-  --color-surface-paper-deep: var(--surface-paper-deep);
-  --color-surface-lime: var(--surface-lime);
 
   --color-ink: var(--ink);
   --color-ink-heading: var(--ink-heading);
@@ -481,7 +451,6 @@
   --color-ink-label: var(--ink-label);
   --color-ink-accent: var(--ink-accent);
   --color-ink-on-dark: var(--ink-on-dark);
-  --color-ink-lavender: var(--ink-lavender);
 
   --color-hairline: var(--hairline);
   --color-track: var(--track);
@@ -626,7 +595,10 @@ body {
     z-index: -1;
     pointer-events: none;
     background:
-      var(--canvas); /* signals steer: flat paper, no washes */
+      radial-gradient(55% 60% at 8% -5%, rgb(120 165 245 / 0.16), transparent 60%),
+      radial-gradient(45% 50% at 92% 0%, rgb(150 122 240 / 0.14), transparent 56%),
+      radial-gradient(50% 60% at 75% 108%, rgb(80 200 190 / 0.1), transparent 60%),
+      var(--canvas);
   }
 
   /* --- Type ---------------------------------------------------------------
@@ -634,7 +606,7 @@ body {
      variable axis — the reference's headline weight, and the single biggest
      reason its headings read light rather than shouted. */
   .display {
-    font-weight: 600;
+    font-weight: 550;
     letter-spacing: var(--raw-tracking-display);
     line-height: var(--raw-leading-display);
     color: var(--ink-heading);
@@ -682,14 +654,8 @@ body {
   /* Scoped to the LAST WORD of the line, not the line — matching the
      dashboard, where one word takes the tip and the rest of the heading stays
      ink. Everything before it inherits normal heading ink. */
-  /* SIGNALS STEER: the tip is now a whole-line TWO-TONE — the heading's
-     closing line sets in violet (lavender on night). Painted on every word
-     so no transformed descendant can drop it. */
-  .grad-tip .line-word {
-    color: var(--ink-accent);
-  }
-  .on-night .grad-tip .line-word {
-    color: var(--ink-lavender);
+  .grad-tip .line-word:last-child {
+    color: var(--accent-mid);
   }
 
   /* And the blend holds ink most of the way, turning only at the far edge:
@@ -697,14 +663,16 @@ body {
      two-tone word rather than a dissolve. Painted on the innermost span —
      background-clip does not paint through a transformed descendant, and the
      text engine transforms every line to animate it. */
-  /* A night ground: headings and copy invert. */
-  .on-night {
-    background: var(--surface-dark);
-    color: var(--ink-on-dark);
-    --ink-heading: var(--raw-color-paper-ink);
-    --ink-body: var(--raw-color-paper-ink-body);
-    --ink-label: var(--raw-color-paper-ink-label);
-    --hairline: var(--raw-color-paper-hairline);
+  .grad-tip .line-word:last-child > * {
+    background-image: linear-gradient(
+      100deg,
+      var(--ink-heading) 0%,
+      var(--ink-heading) 52%,
+      var(--accent-mid) 104%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   /* Closing display leading WITHOUT touching line-height. Each stacked line
@@ -720,10 +688,11 @@ body {
     display: inline-flex;
     align-items: center;
     gap: var(--raw-space-2);
-    font-size: var(--raw-text-sm);
+    font-size: var(--raw-text-caption);
     font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--ink-heading);
+    text-transform: uppercase;
+    letter-spacing: var(--raw-tracking-eyebrow);
+    color: var(--ink-label);
   }
 
   /* The eyebrow's dot is the only place the accent appears at caption size. */
@@ -1097,10 +1066,9 @@ body {
     justify-content: center;
     gap: var(--raw-space-2);
     border-radius: var(--radius-pill);
-    padding: 0.85em 1.5em;
+    padding: 0.9em 1.6em;
     font-size: var(--raw-text-sm);
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-weight: 500;
     border: none;
     text-decoration: none;
     transition:
@@ -1108,35 +1076,17 @@ body {
       box-shadow var(--raw-dur-fast) var(--raw-ease-entrance);
   }
 
-  /* Signals steer: a solid night pill on paper; `.btn-light` is the cream
-     pill for night grounds. The CTA's hover flood reads its two colours
-     from --cta-flood / --cta-arrive so one component serves both. */
   .btn-primary {
-    background: var(--surface-dark);
-    color: var(--raw-color-paper-ink);
-    --cta-flood: var(--raw-color-lavender);
-    --cta-arrive: var(--raw-color-night);
-  }
-  .btn-light {
-    background: var(--raw-color-paper-ink);
-    color: var(--raw-color-night);
-    --cta-flood: var(--raw-color-lavender);
-    --cta-arrive: var(--raw-color-night);
-  }
-  .btn-outline {
-    background: transparent;
-    color: var(--raw-color-paper-ink);
-    box-shadow: inset 0 0 0 1px var(--raw-color-paper-edge);
-  }
-  .btn-outline:hover {
-    box-shadow: inset 0 0 0 1px var(--raw-color-paper-ink);
+    background: var(--accent-grad-solid);
+    color: #fff;
+    box-shadow: 0 6px 16px rgb(60 120 235 / 0.25);
   }
 
   /* The hero's one action. Bigger than a UI button because it is the only
      thing being asked on the whole first screen. */
   .btn-lg {
-    padding: 0.9em 1.75em;
-    font-size: 1.125rem; /* 20px — Workable's hero CTA, the one step above body */
+    padding: 1em 2em;
+    font-size: 1.25rem; /* 20px — Workable's hero CTA, the one step above body */
   }
 
   .btn-secondary {
@@ -1428,33 +1378,6 @@ body {
       radial-gradient(58% 56% at 98% 6%, rgb(13 148 136 / 0.44), transparent 62%),
       radial-gradient(62% 58% at 52% 106%, rgb(109 40 217 / 0.32), transparent 62%),
       #3a2708;
-  }
-
-  /* SIGNALS STEER — the fifteen blob grounds flattened into the branch's
-     palette. Each class keeps its role (deep grounds still take white ink,
-     light ones dark ink), so every component that names a ground keeps its
-     measured contrast: white on violet 6.97:1, on violet-night 14.5:1, on
-     night 19.4:1; night ink on lime 16.9:1, on lavender tint 15.1:1. */
-  .bg-01, .bg-04, .bg-06 {
-    background: var(--raw-color-lavender-tint);
-  }
-  .bg-02, .bg-05 {
-    background: var(--raw-color-lime);
-  }
-  .bg-03 {
-    background: var(--raw-color-paper-deep);
-  }
-  .bg-07, .bg-14 {
-    background: var(--raw-color-violet-text);
-  }
-  .bg-08, .bg-10, .bg-12 {
-    background: var(--raw-color-night);
-  }
-  .bg-09, .bg-11 {
-    background: var(--raw-color-night-raised);
-  }
-  .bg-13, .bg-15 {
-    background: var(--raw-color-violet-night);
   }
 
   /* Film grain. Very fine, very low opacity — without it a large gradient

@@ -83,9 +83,7 @@ export const hero = {
       recruitment) — adapted from playbook truth #24, "Your careers site
       works hard to get candidates to Apply. Don't lose them there." */
   lines: ["You got candidates to Apply.", "Don't lose them there."],
-  /* Re-broken on design/signals-steer so the two-tone split falls on the
-     sentence break: the second sentence takes the accent. */
-  linesSm: ["You got", "candidates", "to Apply.", "Don't lose", "them there."],
+  linesSm: ["You got", "candidates to", "Apply. Don't", "lose them there."],
   /* The standfirst lands the headline: names the exact loss point, in the
      playbook's own phrase ("this is the point candidates quietly
      disappear"). The hero's 40rem measure is a DOCUMENTED EXCEPTION to
@@ -102,36 +100,6 @@ export const hero = {
        alt text. */
     alt: "The Aplify dashboard home screen: a jobs and applications summary, a live-now panel, and setup cards.",
   },
-  /** Signals steer: the hero's fan of tilted cards. Every image is a product
-      surface already on the page, so the fan shows the product rather than
-      stock people. Order is left to right; the centre card is the largest. */
-  fan: [
-    {
-      src: "/assets/steps/search-mobile.png",
-      alt: "Job search on a phone: keyword and location fields and two job cards with salary and category.",
-      tilt: -9,
-    },
-    {
-      src: "/assets/steps/job-description.png",
-      alt: "The Easy Apply flow: pre-qualification questions above a short details form.",
-      tilt: -5,
-    },
-    {
-      src: "/assets/hero/company-home-screen-hero.png",
-      alt: "The Aplify dashboard home screen: a jobs and applications summary and a live-now panel.",
-      tilt: -1,
-    },
-    {
-      src: "/assets/steps/application-received.png",
-      alt: "The confirmation screen after applying, reading Application received.",
-      tilt: 4,
-    },
-    {
-      src: "/assets/steps/event-registration.png",
-      alt: "Registration for a careers open day, with a You’re registered confirmation.",
-      tilt: 8,
-    },
-  ],
 };
 
 /**

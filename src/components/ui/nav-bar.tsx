@@ -35,9 +35,6 @@ export interface NavBarProps {
 export const NavBar = ({ items, ctaLabel }: NavBarProps) => {
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
-  /* Signals steer: over the night hero the bar has no glass and inverts —
-     light wordmark, cream links, cream pill. */
-  const [onHero, setOnHero] = useState(true);
   const openBookDemo = useContactModal((s) => s.open);
 
   /* HIDE ON SCROLL DOWN, RETURN ON SCROLL UP (Stephen, 2026-08-30): the page
@@ -53,8 +50,6 @@ export const NavBar = ({ items, ctaLabel }: NavBarProps) => {
     const measure = () => {
       frame = null;
       const y = window.scrollY;
-      const hero = document.getElementById("home");
-      setOnHero(y < (hero ? hero.offsetHeight - 96 : 0));
       const delta = y - last;
       if (Math.abs(delta) > 4) {
         if (y < 120) setHidden(false);
@@ -98,15 +93,11 @@ export const NavBar = ({ items, ctaLabel }: NavBarProps) => {
     >
       <nav
         aria-label="Primary"
-        className={`shell pointer-events-auto flex h-[4.5rem] items-center gap-2 rounded-pill pr-3 pl-6 transition-[background-color,box-shadow] duration-[var(--duration-base)] ease-entrance sm:pl-8 ${
-          onHero && !open
-            ? "bg-transparent"
-            : "glass shadow-[0_1px_2px_rgba(16,19,26,0.04),0_10px_28px_rgba(16,19,26,0.07)]"
-        }`}
+        className="glass shell pointer-events-auto flex h-[4.5rem] items-center gap-2 rounded-pill pr-3 pl-6 shadow-[0_1px_2px_rgba(16,19,26,0.04),0_10px_28px_rgba(16,19,26,0.07)] sm:pl-8"
       >
         <Link href="#home" className="flex flex-none items-center" aria-label="Aplify — home">
           <Image
-            src={onHero && !open ? "/aplify-light.svg" : "/aplify-dark.svg"}
+            src="/aplify-dark.svg"
             alt="Aplify"
             width={317}
             height={103}
@@ -120,11 +111,7 @@ export const NavBar = ({ items, ctaLabel }: NavBarProps) => {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className={`rounded-pill px-3 py-2 text-sm font-medium transition-colors duration-[var(--duration-fast)] ease-entrance ${
-                  onHero
-                    ? "text-ink-on-dark/80 hover:bg-white/[0.08] hover:text-ink-on-dark"
-                    : "text-ink-body hover:bg-black/[0.04] hover:text-ink"
-                }`}
+                className="rounded-pill px-3 py-2 text-sm text-ink-body transition-colors duration-[var(--duration-fast)] ease-entrance hover:bg-black/[0.04] hover:text-ink"
               >
                 {item.label}
               </Link>
@@ -133,11 +120,7 @@ export const NavBar = ({ items, ctaLabel }: NavBarProps) => {
         </ul>
 
         <div className="flex flex-1 items-center justify-end gap-2 lg:flex-none">
-          <CtaButton
-            label={ctaLabel}
-            tone={onHero && !open ? "light" : "dark"}
-            className="hidden sm:inline-flex"
-          />
+          <CtaButton label={ctaLabel} className="hidden sm:inline-flex" />
 
           <button
             type="button"
