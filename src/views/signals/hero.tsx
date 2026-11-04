@@ -43,8 +43,7 @@ export const SigHero = () => {
             lines={sigHero.lines}
             linesSm={sigHero.linesSm}
             toneLinesSm={2}
-            size="text-sig-4xl sm:text-sig-5xl md:text-sig-8xl lg:text-sig-10xl xl:text-sig-12xl"
-            className="max-w-[79rem]"
+            size="text-sig-4xl sm:text-sig-5xl md:text-sig-hero"
           />
           <Reveal variant="up" delay={250}>
             <p className="mt-6 text-sig-2xl leading-sig-12 font-medium tracking-sig-tighter text-pretty lg:mt-8 lg:text-sig-3xl">

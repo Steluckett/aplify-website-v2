@@ -62,6 +62,12 @@
   --raw-sig-text-10xl: 5.125rem; /* 82 */
   --raw-sig-text-12xl: 7.5rem; /* 120 — hero at ≥1280 */
   --raw-sig-text-13xl: 10rem; /* 160 — stat figures at ≥1536 */
+  /* The hero headline, FLUID: it rises to their 120px but never past the
+     width of the container. "Recruitment Technology" at 700 / -0.04em
+     measures 11.1× its font size, so dividing the available width (viewport
+     less the two 40px gutters) by 11.5 keeps ~3% slack — a stepped 120px at
+     xl wrapped the line inside itself on a 1512px MacBook. */
+  --raw-sig-text-hero: min(7.5rem, calc((100vw - 5rem) / 11.5));
 
   --raw-sig-tracking-tighter: -0.04em;
   --raw-sig-tracking-tight: -0.02em;
@@ -164,6 +170,7 @@
   --text-sig-10xl: var(--raw-sig-text-10xl);
   --text-sig-12xl: var(--raw-sig-text-12xl);
   --text-sig-13xl: var(--raw-sig-text-13xl);
+  --text-sig-hero: var(--raw-sig-text-hero);
 
   --tracking-sig-tighter: var(--raw-sig-tracking-tighter);
   --tracking-sig-tight: var(--raw-sig-tracking-tight);
