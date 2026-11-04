@@ -1,0 +1,23 @@
+{
+  "name": "aplify-film",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Aplify's 45-second kinetic-type film, rendered with Remotion in the SIGNALS page style.",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render AplifyFilm out/aplify-film.mp4",
+    "still": "remotion still AplifyFilm"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.540",
+    "@remotion/google-fonts": "4.0.540",
+    "@remotion/transitions": "4.0.540",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.540"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "typescript": "7.0.2"
+  }
+}
