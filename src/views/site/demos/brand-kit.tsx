@@ -2,7 +2,11 @@
 
 import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
 
-import { BRAND_STOPS, brandKit, type BrandStop } from "@/data/content/brand-kit";
+import {
+  BRAND_STOPS,
+  brandKit,
+  type BrandStop,
+} from "@/data/content/brand-kit";
 
 /**
  * The brand kit — a bento, with a phone doing the arguing.
@@ -199,6 +203,9 @@ export const BrandKitDemo = ({ className }: BrandKitDemoProps) => {
        white in Oklab. Authoring a tint per stop invites one that drifts off its
        own colour, and deriving it means a new stop cannot get it wrong. */
     "--b-tint-main": mix(main, "#ffffff", 0.92),
+    /* The ground's base, flat — the SIGNALS page shows the stage without its
+       blobs (no gradients on that page) via `[data-sig="brand-stage"]`. */
+    "--b-stage": mix(main, "#0a0f1c", 0.52),
     "--b-tint-highlight": mix(highlight, "#ffffff", 0.92),
     "--b-font": nearer.font,
     "--b-r": `${radius}px`,
@@ -228,8 +235,9 @@ export const BrandKitDemo = ({ className }: BrandKitDemoProps) => {
           requires for anything sized against fixed artwork: a ratio cannot
           drift, because both sides scale from the same width. Do NOT replace
           this with a rem or px height. */}
-      <div className="mx-auto max-w-[64rem]">
+      <div data-sig="brand-wrap" className="mx-auto max-w-[64rem]">
         <div
+          data-sig="brand-stage"
           style={{ ...vars, background: ground }}
           className="grain relative overflow-hidden rounded-panel border border-white/15 px-6 pt-6 sm:px-10 sm:pt-12 lg:aspect-[16/10]"
         >
@@ -340,7 +348,13 @@ const SearchPanel = () => (
           strokeWidth="1.7"
           strokeLinejoin="round"
         />
-        <circle cx="12" cy="10" r="2.4" stroke="currentColor" strokeWidth="1.7" />
+        <circle
+          cx="12"
+          cy="10"
+          r="2.4"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        />
       </svg>
       {brandKit.phone.location}
     </div>

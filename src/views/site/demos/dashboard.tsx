@@ -81,7 +81,9 @@ import {
 
 const content = dashboardContent;
 
-const CATEGORIES = [...new Set(SEED_APPLICATIONS.map((a) => a.category))].sort();
+const CATEGORIES = [
+  ...new Set(SEED_APPLICATIONS.map((a) => a.category)),
+].sort();
 const ROLES = [...new Set(SEED_APPLICATIONS.map((a) => a.role))].sort();
 const SOURCES = [...new Set(SEED_APPLICATIONS.map((a) => a.source))].sort();
 const JOBS = [...new Set(SEED_APPLICATIONS.map((a) => a.job))].sort();
@@ -488,11 +490,7 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
    *  now: the row itself opens the application, the notes icon opens the
    *  candidate — and the notes icon is not a shortcut through the application
    *  panel, it is its own destination. */
-  const openAt = (
-    id: string,
-    kind: LayerKind,
-    trigger: HTMLElement | null,
-  ) => {
+  const openAt = (id: string, kind: LayerKind, trigger: HTMLElement | null) => {
     triggerRef.current = trigger;
     setOpenId(id);
     setLayers([kind]);
@@ -648,9 +646,13 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
           `lg:` only. Stacked on a phone this is six fields tall, and a tall
           column straddling a panel edge reads as a mistake rather than a
           device — which is exactly the note job-search.tsx leaves. */}
-      <div className="relative z-10 mx-auto w-full px-0 sm:px-6 lg:px-10">
+      <div
+        data-sig="search-wrap"
+        className="relative z-10 mx-auto w-full px-0 sm:px-6 lg:px-10"
+      >
         <form
           onSubmit={(event) => event.preventDefault()}
+          data-sig="search"
           className="screen rounded-panel bg-surface-raised p-3 shadow-lift"
         >
           <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center">
@@ -772,6 +774,7 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
            shrink the panel to ~300px and the record opened nearly unreadable.
            44rem leaves the overlay ~570px on desktop after the top-24/bottom-10
            insets, and only binds when filtering shrinks the table. */
+        data-sig="results"
         className="screen grain bg-04 relative min-h-[44rem] overflow-hidden rounded-panel px-5 pb-7 pt-12 sm:px-7 lg:-mt-9 lg:px-10 lg:pb-10 lg:pt-20"
       >
         <div className="flex flex-col gap-6">
@@ -805,9 +808,7 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
                       recipe — ink pill, white label (the product's
                       --helion-nav-pill). */}
                   <span
-                    className={
-                      tab === value ? "text-ink-on-dark" : "text-ink"
-                    }
+                    className={tab === value ? "text-ink-on-dark" : "text-ink"}
                   >
                     {count}
                   </span>
@@ -818,11 +819,7 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
             {/* Directly on the vivid ground, so full ink — --ink-label
                measures 2.92:1 at Harbour's darkest point and --ink-body 4.34,
                both under AA for small text. */}
-            <p
-              id={countId}
-              aria-live="polite"
-              className="text-ui-sm text-ink"
-            >
+            <p id={countId} aria-live="polite" className="text-ui-sm text-ink">
               {showing}
             </p>
           </div>
@@ -988,10 +985,7 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
               </TableShell>
             )
           ) : (
-            <TableShell
-              minWidth="46rem"
-              caption="Sample event registrations"
-            >
+            <TableShell minWidth="46rem" caption="Sample event registrations">
               <thead>
                 <tr>
                   <th
@@ -1056,7 +1050,6 @@ export const DashboardDemo = ({ className }: DashboardDemoProps) => {
               </tbody>
             </TableShell>
           )}
-
         </div>
 
         {/* --- THE STACK ------------------------------------------------- */}

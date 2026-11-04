@@ -187,6 +187,7 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
       <div
         role="radiogroup"
         aria-label={content.routeSwitch.label}
+        data-sig="route-switch"
         className="mx-auto flex w-full max-w-3xl gap-1.5 rounded-pill bg-ink/5 p-1.5"
       >
         {(
@@ -279,7 +280,10 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
           The bleed is `lg:` only. Stacked on a phone the row is five fields
           tall, and a tall column straddling a panel edge reads as a mistake
           rather than as a device. */}
-      <div className="relative z-10 mx-auto mt-8 w-full px-0 sm:px-6 lg:px-10">
+      <div
+        data-sig="search-wrap"
+        className="relative z-10 mx-auto mt-8 w-full px-0 sm:px-6 lg:px-10"
+      >
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -288,6 +292,7 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
           /* A card, not a bare row. It has to read as one object crossing the
              panel edge, and a row of loose pills straddling a boundary reads
              as pills that happen to overlap something. */
+          data-sig="search"
           className="flex flex-col gap-2.5 rounded-panel bg-surface-raised p-3 shadow-lift lg:flex-row lg:items-center"
         >
           <input
@@ -370,6 +375,7 @@ export const JobSearchDemo = ({ className }: JobSearchDemoProps) => {
            result used to shrink the whole instrument (and the section below
            jumped up under the reader's cursor). 44rem matches the dashboard's
            floor so the two demos hold the same ground when filtered. */
+        data-sig="results"
         className="screen grain bg-04 min-h-[44rem] rounded-panel px-5 pb-7 pt-12 sm:px-7 lg:-mt-9 lg:px-10 lg:pb-10 lg:pt-20"
       >
         <div className="flex flex-col gap-6">
@@ -616,7 +622,10 @@ const GridView = ({ jobs, route, origin, onApply }: ViewProps) => {
             delay={Math.min(i, 8) * 45}
             className="h-full"
           >
-            <article className="tile flex h-full flex-col p-5">
+            <article
+              data-sig="job-card"
+              className="tile flex h-full flex-col p-5"
+            >
               <h4 className="text-ui-lg font-medium tracking-tight text-ink-heading">
                 {job.title}
               </h4>
@@ -842,6 +851,7 @@ const MapView = ({ jobs, route, origin, onApply }: ViewProps) => {
                   type="button"
                   onClick={() => setSelectedKey(key)}
                   aria-pressed={on}
+                  data-sig="job-card"
                   className={`tile w-full p-4 text-left transition-shadow duration-[var(--duration-fast)] ease-entrance ${
                     on ? "ring-2 ring-accent" : "hover:shadow-tile"
                   }`}
@@ -886,7 +896,6 @@ const MapView = ({ jobs, route, origin, onApply }: ViewProps) => {
           onSelect={(key) => setSelectedKey(key)}
         />
       </div>
-
     </div>
   );
 };

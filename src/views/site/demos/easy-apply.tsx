@@ -120,11 +120,18 @@ export const EasyApplyDemo = ({
      * section's height (the confirmation step is short).
      */
     <div
+      data-sig="apply-stage"
       className={`screen grain bg-04 min-h-[44rem] rounded-panel p-5 sm:p-7 lg:p-10 ${className ?? ""}`}
     >
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-5 rounded-panel bg-surface-raised p-6 shadow-lift sm:p-8 lg:p-10">
+      <div
+        data-sig="apply-card"
+        className="mx-auto flex w-full max-w-5xl flex-col gap-5 rounded-panel bg-surface-raised p-6 shadow-lift sm:p-8 lg:p-10"
+      >
         {/* The role being applied for, and the way back. */}
-        <div className="tile flex flex-wrap items-center justify-between gap-4 p-4 sm:p-5">
+        <div
+          data-sig="apply-head"
+          className="tile flex flex-wrap items-center justify-between gap-4 p-4 sm:p-5"
+        >
           <div className="min-w-0">
             <h4 className="text-ui-xl font-medium tracking-tight text-ink-heading">
               {job.title}

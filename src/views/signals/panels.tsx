@@ -52,7 +52,7 @@ export const SigDemo = () => (
         standfirst={demos.jobSearch.standfirst}
       />
       <Reveal variant="rise" className="mt-12 lg:mt-16">
-        <div className="sig-product rounded-sig-panel bg-sig-creme-200 p-3 lg:p-6">
+        <div className="sig-product sig-immersive">
           <JobSearchDemo />
         </div>
       </Reveal>

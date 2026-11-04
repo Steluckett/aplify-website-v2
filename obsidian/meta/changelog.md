@@ -10,6 +10,11 @@ This is a human-curated log — not a mirror of `git log`.
 
 ## 2026-11-04
 
+- **SIGNALS option: the demos fold into the page.** Job search, Easy Apply,
+  dashboard and brand demos lose their boxes and sit on the paper at full
+  width — lime job cards, a flat brand stage, no gradients. Inert
+  `data-sig` hooks added to the demos; /classic is unchanged.
+
 - **SIGNALS option: the missing bands are back, and the demos match.** What
   it costs, brand, better data, AI enrichment, Google for Jobs, dashboard
   and integrations rebuilt in the reference's language, in the Aurora page's

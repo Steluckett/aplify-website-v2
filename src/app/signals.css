@@ -167,6 +167,91 @@
 .signals .sig-product :is(.bg-07, .bg-08, .bg-09, .bg-10, .bg-11, .bg-12, .bg-13, .bg-14, .bg-15) {
   background: var(--raw-sig-black);
 }
+/* --- Immersive demos ------------------------------------------------------
+   `.sig-immersive` takes the boxes away. The demos' containers are hooked
+   with `data-sig` attributes (inert on /classic) and here lose their panels,
+   insets, shadows and the overlap trick, so the search bar, filters and
+   results sit straight on the paper at the full width of the wrap, like
+   every other band. Job cards become the page's lime cards with black ink;
+   the brand stage drops its blobs for its own flat base colour. These rules
+   are unlayered on purpose, so they beat the demos' Tailwind utilities
+   (which live in a layer) without `!important` — except where the demo sets
+   an inline style. */
+.signals .sig-immersive [data-sig="route-switch"] {
+  background: var(--raw-sig-creme-200);
+}
+.signals .sig-immersive [data-sig="search-wrap"] {
+  padding-inline: 0;
+}
+.signals .sig-immersive [data-sig="search"] {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+  --surface-chip: var(--raw-sig-white);
+}
+.signals .sig-immersive [data-sig="search"] .bg-surface-chip {
+  box-shadow: inset 0 0 0 1px var(--raw-sig-creme-300);
+}
+.signals .sig-immersive [data-sig="search"] .btn-primary {
+  background: var(--raw-sig-black);
+  color: var(--raw-sig-creme-100);
+}
+.signals .sig-immersive [data-sig="results"] {
+  background: transparent;
+  padding: 0;
+  margin-top: 2.5rem;
+  border-radius: 0;
+}
+.signals .sig-immersive [data-sig="job-card"] {
+  --ink-heading: var(--raw-sig-black);
+  --ink: var(--raw-sig-black);
+  --ink-body: var(--raw-sig-black);
+  --ink-label: var(--raw-sig-ink-body); /* 8.94:1 on lime */
+  background: var(--raw-sig-lime);
+  box-shadow: none;
+  border-radius: var(--raw-sig-radius-panel);
+  padding: 1.75rem;
+}
+.signals .sig-immersive [data-sig="job-card"] .chip {
+  background: var(--raw-sig-creme-100);
+  box-shadow: none;
+}
+.signals .sig-immersive [data-sig="job-card"] .btn-primary {
+  background: var(--raw-sig-black);
+  color: var(--raw-sig-creme-100);
+}
+.signals .sig-immersive [data-sig="job-card"][aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--raw-sig-black);
+}
+/* Easy Apply: the stage loses its panel; the form is one full-width white
+   card on the paper, its job summary a lime tile. */
+.signals .sig-immersive [data-sig="apply-stage"] {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+.signals .sig-immersive [data-sig="apply-card"] {
+  max-width: none;
+  box-shadow: none;
+  border-radius: var(--raw-sig-radius-panel);
+}
+.signals .sig-immersive [data-sig="apply-head"] {
+  --ink-heading: var(--raw-sig-black);
+  --ink-label: var(--raw-sig-ink-body);
+  background: var(--raw-sig-lime);
+  box-shadow: none;
+  border-radius: var(--raw-sig-radius-tile);
+}
+.signals .sig-immersive [data-sig="brand-wrap"] {
+  max-width: none;
+}
+.signals .sig-immersive [data-sig="brand-stage"] {
+  background: var(--b-stage) !important; /* the demo paints its ground inline */
+  border: 0;
+  border-radius: var(--raw-sig-radius-panel);
+}
+
 /* Aurora's tracked capitals have no place in this page's voice. */
 .signals .sig-product .uppercase.tracking-eyebrow,
 .signals .sig-product .eyebrow {

@@ -90,6 +90,18 @@ creme-200 and its deep grounds to near-black, and no tracked capitals.
 The brand demo's preview keeps its own colours by design (it shows a
 client's brand). Change a demo's look here, never in the demo.
 
+**Immersive, not boxed.** The job search, Easy Apply, dashboard and brand
+demos carry `data-sig` hooks on their containers (`route-switch`,
+`search-wrap`, `search`, `results`, `job-card`, `apply-stage`,
+`apply-card`, `apply-head`, `brand-wrap`, `brand-stage`). The hooks are
+inert on /classic. Under `.sig-immersive` the panels, insets, shadows and
+the controls-straddle-the-panel overlap are removed, so each demo sits on
+the paper at the full wrap width: white pill fields ruled in creme-300 and
+a black Search button, lime job cards with black ink and black buttons,
+Easy Apply as one white card with a lime job header, and the brand stage
+flat in its own derived base colour (`--b-stage`) instead of blobs. All
+functionality is unchanged.
+
 ## Rules it keeps
 
 - No new claims: every fact comes from `site.ts` (V2_HANDOVER §5).
