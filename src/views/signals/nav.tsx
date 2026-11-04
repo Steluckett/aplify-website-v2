@@ -109,7 +109,7 @@ export const SigNav = () => {
                   href={item.href}
                   tabIndex={open ? 0 : -1}
                   onClick={() => setOpen(false)}
-                  className="sig-display text-sig-5xl transition-colors duration-[var(--duration-fast)] ease-entrance hover:text-sig-lilac lg:text-sig-8xl"
+                  className="sig-display text-sig-5xl transition-colors duration-[var(--duration-fast)] ease-entrance hover:text-sig-blue-tint lg:text-sig-8xl"
                 >
                   {item.label}
                 </Link>

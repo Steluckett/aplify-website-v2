@@ -73,7 +73,7 @@ export const SigClose = () => {
           </p>
           <a
             href={`mailto:${footer.email}`}
-            className="mt-8 inline-flex h-10 items-center rounded-full bg-sig-black-200 px-4 text-sig-sm transition-colors duration-[var(--duration-fast)] ease-entrance hover:bg-sig-lilac hover:text-sig-black"
+            className="mt-8 inline-flex h-10 items-center rounded-full bg-sig-black-200 px-4 text-sig-sm transition-colors duration-[var(--duration-fast)] ease-entrance hover:bg-sig-blue-tint hover:text-sig-black"
           >
             {footer.email}
           </a>
@@ -87,7 +87,7 @@ export const SigClose = () => {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sig-base font-medium transition-colors duration-[var(--duration-fast)] ease-entrance hover:text-sig-lilac"
+                      className="text-sig-base font-medium transition-colors duration-[var(--duration-fast)] ease-entrance hover:text-sig-blue-tint"
                     >
                       {link.label}
                     </Link>

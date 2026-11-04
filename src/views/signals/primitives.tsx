@@ -103,7 +103,7 @@ export interface SigHeadingProps {
 
 /**
  * The two-tone heading: ink lines, then the closing line in the accent
- * (purple on creme, lilac or lime on black). A single-line heading stays ink.
+ * (royal blue on creme, blue tint or lime on black). A single-line heading stays ink.
  */
 export const SigHeading = ({
   lines,
@@ -153,12 +153,12 @@ export const SigHeading = ({
   );
 };
 
-type PillTone = "creme" | "lilac" | "black" | "ghost";
+type PillTone = "creme" | "blue" | "black" | "ghost";
 
 /** A pill that opens the book-a-demo dialog. */
 export const DemoPill = ({
   label,
-  tone = "lilac",
+  tone = "blue",
 }: {
   label: string;
   tone?: PillTone;

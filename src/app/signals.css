@@ -17,9 +17,12 @@
    headings therefore run at 1.1 with `.lines-tight` pulling the lines
    together (optical ≈ 0.92); static headings take the reference's values.
 
-   CONTRAST. The reference's purple #745cf6 measures 4.01:1 on creme — fine
-   for display type (3:1 large-text bar), not for body text. Small accent text
-   takes `--raw-sig-purple-ink` (5.13:1) instead.
+   PALETTE (Stephen, 2026-11-04): the reference's purple and lilac are
+   dropped. Near-black stays as our dark, creme as the ground, and the colour
+   comes from TWO hues only — Aplify royal blue and the reference's lime —
+   plus one pale tint of the royal for card grounds and accents on black.
+   Royal blue clears AA as text on both cremes (4.97 / 4.54) and carries
+   white at 5.67:1, so one value serves display and small accent text.
    --------------------------------------------------------------------------- */
 
 :root {
@@ -31,9 +34,8 @@
   --raw-sig-creme-400: #d3d0c5;
   --raw-sig-creme-500: #6b685f; /* 4.89:1 on creme-100 — labels */
   --raw-sig-white: #ffffff;
-  --raw-sig-purple: #745cf6; /* display accent on creme, 4.01:1 */
-  --raw-sig-purple-ink: #5f46ee; /* small accent text on creme, 5.13:1 */
-  --raw-sig-lilac: #afafff; /* accent on black, 9.72:1; pill ground */
+  --raw-sig-blue: #2563c9; /* Aplify royal — accent on creme 4.97:1, white on it 5.67:1 */
+  --raw-sig-blue-tint: #b4c9f5; /* its pale tint — accent on black and card ground, 11.8:1 */
   --raw-sig-lime: #dbfe87; /* accent on black 17.3:1; card ground */
   --raw-sig-creme-dim: rgb(243 240 232 / 0.72); /* body on black, 11.6:1 */
   --raw-sig-creme-hair: rgb(243 240 232 / 0.18);
@@ -101,8 +103,8 @@
   --sig-bg: var(--raw-sig-creme-100);
   --sig-ink: var(--raw-sig-black);
   --sig-ink-label: var(--raw-sig-creme-500);
-  --sig-accent: var(--raw-sig-purple);
-  --sig-accent-ink: var(--raw-sig-purple-ink);
+  --sig-accent: var(--raw-sig-blue);
+  --sig-accent-ink: var(--raw-sig-blue);
   --sig-hair: var(--raw-sig-black-hair);
 
   background: var(--sig-bg);
@@ -121,8 +123,8 @@
 .signals .sig-dark {
   --sig-ink: var(--raw-sig-creme-100);
   --sig-ink-label: var(--raw-sig-creme-dim);
-  --sig-accent: var(--raw-sig-lilac);
-  --sig-accent-ink: var(--raw-sig-lilac);
+  --sig-accent: var(--raw-sig-blue-tint);
+  --sig-accent-ink: var(--raw-sig-blue-tint);
   --sig-hair: var(--raw-sig-creme-hair);
   background: var(--raw-sig-black);
   color: var(--sig-ink);
@@ -142,9 +144,9 @@
   --color-sig-creme-300: var(--raw-sig-creme-300);
   --color-sig-creme-400: var(--raw-sig-creme-400);
   --color-sig-white: var(--raw-sig-white);
-  --color-sig-lilac: var(--raw-sig-lilac);
+  --color-sig-blue-tint: var(--raw-sig-blue-tint);
   --color-sig-lime: var(--raw-sig-lime);
-  --color-sig-purple: var(--raw-sig-purple);
+  --color-sig-blue: var(--raw-sig-blue);
   --color-sig-veil: var(--raw-sig-black-veil);
   --radius-sig-band: var(--raw-sig-radius-band);
   --color-sig-ink: var(--sig-ink);
@@ -300,13 +302,14 @@
     color: var(--raw-sig-black);
   }
   .sig-pill-creme:hover {
-    background: var(--raw-sig-lilac);
+    background: var(--raw-sig-blue-tint);
   }
-  .sig-pill-lilac {
-    background: var(--raw-sig-lilac);
-    color: var(--raw-sig-black);
+  /* The primary pill on creme: royal blue, white label. */
+  .sig-pill-blue {
+    background: var(--raw-sig-blue);
+    color: var(--raw-sig-white);
   }
-  .sig-pill-lilac:hover {
+  .sig-pill-blue:hover {
     background: var(--raw-sig-black);
     color: var(--raw-sig-creme-100);
   }
@@ -315,8 +318,8 @@
     color: var(--raw-sig-creme-100);
   }
   .sig-pill-black:hover {
-    background: var(--raw-sig-lilac);
-    color: var(--raw-sig-black);
+    background: var(--raw-sig-blue);
+    color: var(--raw-sig-white);
   }
   /* Their outline pill: a 1px creme-300 edge that fills creme-300 on hover. */
   .sig-pill-ghost {

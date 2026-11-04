@@ -13,14 +13,14 @@ import { DemoPill, SigHeading } from "./primitives";
  * it on the compositor and it needs no scroll loop at all. Under `md` the
  * cards outgrow the viewport, so there they simply stack as a list.
  *
- * Six stages, so the reference's palette cycles: white, black, lilac, lime.
+ * Six stages, so the reference's palette cycles: white, black, blue tint, lime.
  * The stage that "needs you" (Manage) lands on lime, the highlight.
  */
 const TILTS = [2, -1, 0, 1.5, -1.5, 0.5];
 const GROUNDS = [
   "bg-sig-white text-sig-black",
   "sig-dark",
-  "bg-sig-lilac text-sig-black",
+  "bg-sig-blue-tint text-sig-black",
   "bg-sig-creme-300 text-sig-black",
   "bg-sig-lime text-sig-black",
   "sig-dark",
@@ -40,7 +40,7 @@ export const SigStages = () => (
             {sigStages.standfirst}
           </p>
           <div className="mt-8">
-            <DemoPill label="Book a demo" tone="lilac" />
+            <DemoPill label="Book a demo" tone="blue" />
           </div>
         </Reveal>
       </div>

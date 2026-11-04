@@ -33,9 +33,12 @@ src/app/classic/page.tsx       The Aurora page, for comparison
   thinner than Noi's 600 and read as weaker; 700 matches the stroke and sets
   within ~4% of Noi's width. Licensing Noi itself is the remaining upgrade.
   `.screen` keeps Inter.
-- **Colour** — black `#0e0a10`, creme 100–500, purple `#745cf6` (display
-  only, 4.01:1), purple ink `#5f46ee` for small text (5.13:1), lilac
-  `#afafff`, lime `#dbfe87`.
+- **Colour** — NOT theirs any more (Stephen, 2026-11-04): their purple and
+  lilac are dropped. Near-black `#0e0a10` is our dark, creme 100–500 the
+  ground, and colour comes from two hues only: Aplify royal blue `#2563c9`
+  (accent text on creme 4.97:1, white on it 5.67:1, the primary pill) and
+  their lime `#dbfe87`, plus one pale royal tint `#b4c9f5` for card grounds
+  and accents on black (11.8:1).
 - **Geometry** — full-bleed, 40px gutter (20 on phones), max 1920; section
   padding 96 / 128 / 160 / 192 by breakpoint (half again on theirs — at their
   values the page read crammed); the hero band is full-viewport

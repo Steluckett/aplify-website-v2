@@ -10,6 +10,10 @@ This is a human-curated log — not a mirror of `git log`.
 
 ## 2026-11-04
 
+- **SIGNALS option palette: purple out.** Two hues only — Aplify royal blue
+  `#2563c9` and lime — on near-black and creme, with a pale royal tint
+  `#b4c9f5` where lilac was. Primary pill is royal blue with white text.
+
 - **SIGNALS option, closer pass.** Hero headline and intro rewritten to the
   reference's lengths ("Completion-First / Recruitment Technology", "No
   Account. No Redirect. Just Apply."); face switched to Schibsted Grotesk,

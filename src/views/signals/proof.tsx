@@ -12,7 +12,7 @@ import { useTrack } from "./use-track";
 /**
  * The reference's "featured work" panel: a black rounded panel inset in the
  * page (radius 20, padding 100/50), a label rule, a 62px two-tone heading in
- * creme and lilac, then a slide track of case cards with the next one cut by
+ * creme and blue tint, then a slide track of case cards with the next one cut by
  * the panel edge. Each card leads with its figure in lime — the reference's
  * highlight colour on black. The customers' own words are on the quote wall.
  */
@@ -90,7 +90,7 @@ export const SigProof = () => {
               type="button"
               onClick={next}
               disabled={index === cases.length - 1}
-              className="sig-pill sig-pill-lilac disabled:opacity-40"
+              className="sig-pill sig-pill-blue disabled:opacity-40"
             >
               Next
               <ArrowSide dir="right" />

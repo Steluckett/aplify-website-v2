@@ -17,7 +17,7 @@ import { DemoPill, LinkPill } from "./primitives";
  *
  * Six cards to scroll past, as theirs has: the three approved quotes
  * interleaved with the three case results, in the reference's palette
- * (lime, lilac, black, creme-200).
+ * (lime, blue tint, black, creme-200).
  */
 const PLACES = [
   "lg:col-start-1",
@@ -29,11 +29,11 @@ const PLACES = [
 ];
 const GROUNDS = [
   "bg-sig-lime text-sig-black",
-  "bg-sig-lilac text-sig-black",
+  "bg-sig-blue-tint text-sig-black",
   "sig-dark",
   "bg-sig-creme-200 text-sig-black",
   "bg-sig-lime text-sig-black",
-  "bg-sig-lilac text-sig-black",
+  "bg-sig-blue-tint text-sig-black",
 ];
 
 const initials = (name: string) =>
@@ -137,7 +137,7 @@ export const SigQuotes = () => {
 
         <div className="mt-10 flex flex-wrap justify-center gap-2.5">
           <LinkPill label="See the case studies" href="#proof" />
-          <DemoPill label="Book a demo" tone="lilac" />
+          <DemoPill label="Book a demo" tone="blue" />
         </div>
       </div>
     </section>

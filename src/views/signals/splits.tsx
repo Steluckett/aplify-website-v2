@@ -14,7 +14,7 @@ import { DemoPill, LinkPill } from "./primitives";
  *   a centred two-tone h2 on two lines, repeating the hero intro — set a
  *   clear step ABOVE the row headings, as theirs is (70 against 55)
  *   row one   — a SQUARE photo in columns 1–6; columns 8–12 hold a 55px
- *               two-tone h3, the copy, a two-column checklist with purple
+ *               two-tone h3, the copy, a two-column checklist with royal-blue
  *               dots and two pills
  *   row two   — the friction line is the page's sharpest sentence, so it is
  *               lifted out of the half-column to run the full width at
@@ -73,16 +73,16 @@ export const SigSplit = () => (
                 <li key={pt} className="flex items-start gap-[7px]">
                   <span
                     aria-hidden
-                    className="mt-[0.2em] flex h-4 w-4 flex-none items-center justify-center rounded-full bg-sig-purple/20"
+                    className="mt-[0.2em] flex h-4 w-4 flex-none items-center justify-center rounded-full bg-sig-blue/20"
                   >
-                    <span className="h-1.5 w-1.5 rounded-full bg-sig-purple" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-sig-blue" />
                   </span>
                   {pt}
                 </li>
               ))}
             </ul>
             <div className="mt-10 flex flex-wrap gap-2.5">
-              <DemoPill label="Book a demo" tone="lilac" />
+              <DemoPill label="Book a demo" tone="blue" />
               <LinkPill
                 label={sigSplit.secondary.label}
                 href={sigSplit.secondary.href}

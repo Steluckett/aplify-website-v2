@@ -121,7 +121,7 @@ export const SigSteps = () => {
             type="button"
             onClick={next}
             disabled={index === steps.length - 1}
-            className="sig-pill sig-pill-lilac disabled:opacity-40"
+            className="sig-pill sig-pill-blue disabled:opacity-40"
           >
             Next
             <ArrowSide dir="right" />

@@ -175,7 +175,7 @@ export const SigFaq = () => (
             size="text-sig-5xl lg:text-sig-7xl"
           />
           <Reveal variant="up" delay={160} className="mt-8">
-            <DemoPill label="Book a demo" tone="lilac" />
+            <DemoPill label="Book a demo" tone="blue" />
           </Reveal>
         </div>
         <SigAccordion

@@ -14,7 +14,7 @@ const LOOP_MS = 48000;
 
 /**
  * The hero, after the reference's: a full-viewport black band rounded at its
- * foot, a 120px two-tone headline (creme, then lilac), a 30px two-tone
+ * foot, a 120px two-tone headline (creme, then blue tint), a 30px two-tone
  * intro, two pills, and a strip of tilted photographs rising out of the foot.
  *
  * The strip is the reference's construction exactly — a row on a ~7°
