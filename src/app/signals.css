@@ -419,25 +419,274 @@
   border-color: var(--raw-sig-creme-400);
 }
 
-/* Easy Apply: the stage loses its panel; the form is one full-width white
-   card on the paper, its job summary a lime tile. */
+/* Easy Apply, IMMERSIVE (Stephen, 2026-11-04): no white card — the flow
+   sits on the paper at full width and speaks the job cards' language. The
+   job is a rounded outline box with a display title; each question is its
+   own outline box with chunky Yes/No pills; fields are the search bar's
+   56px black-edged pills; the confirmation is a lime panel and the
+   not-eligible gate an outline panel, both left-set with display headings. */
 .signals .sig-immersive [data-sig="apply-stage"] {
   background: transparent;
   padding: 0;
   border-radius: 0;
+  min-height: 0; /* the flow is its own height on the paper — no empty panel */
+  font-family: var(--raw-sig-font);
 }
 .signals .sig-immersive [data-sig="apply-card"] {
+  --ink-heading: var(--raw-sig-black);
+  --ink: var(--raw-sig-black);
+  --ink-body: var(--raw-sig-ink-body);
+  --ink-label: var(--raw-sig-ink-label);
   max-width: none;
+  padding: 0;
+  gap: 2.5rem;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+.signals .sig-immersive [data-sig="apply-card"] .btn {
+  height: 3.5rem;
+  padding-inline: 1.75rem;
+  font-size: var(--raw-sig-text-base);
+  font-weight: 600;
+  box-shadow: none;
+}
+.signals .sig-immersive [data-sig="apply-card"] .btn-primary {
+  background: var(--raw-sig-black);
+  color: var(--raw-sig-creme-100);
+}
+.signals .sig-immersive [data-sig="apply-card"] .btn-secondary {
+  background: transparent;
+  color: var(--raw-sig-black);
+  box-shadow: inset 0 0 0 1px var(--raw-sig-black);
+}
+.signals .sig-immersive [data-sig="apply-card"] .btn svg {
+  transform: rotate(-45deg);
+}
+
+/* The job: the job card, at the head of the flow. */
+.signals .sig-immersive [data-sig="apply-head"] {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--raw-sig-black-hair);
+  border-radius: var(--raw-sig-radius-panel);
+  padding: 1.75rem;
+  gap: 1.5rem;
+}
+@media (min-width: 64rem) {
+  .signals .sig-immersive [data-sig="apply-head"] {
+    padding: 2.25rem 2.5rem;
+  }
+}
+.signals .sig-immersive [data-sig="apply-head"] h4 {
+  font-size: var(--raw-sig-text-5xl);
+  font-weight: 700;
+  letter-spacing: var(--raw-sig-tracking-tighter);
+  line-height: var(--raw-sig-leading-097);
+}
+@media (min-width: 64rem) {
+  .signals .sig-immersive [data-sig="apply-head"] h4 {
+    font-size: var(--raw-sig-text-6xl);
+  }
+}
+.signals .sig-immersive [data-sig="apply-head"] p {
+  margin-top: 0.75rem;
+  font-size: var(--raw-sig-text-base);
+}
+
+/* Step label and explainer. */
+.signals .sig-immersive [data-sig="apply-step"] .eyebrow {
+  font-size: var(--raw-sig-text-base);
+  font-weight: 700;
+  color: var(--raw-sig-black);
+}
+.signals .sig-immersive [data-sig="apply-step"] + p {
+  max-width: 44rem;
+  font-size: var(--raw-sig-text-lg);
+  line-height: var(--raw-sig-leading-133);
+  color: var(--raw-sig-black);
+}
+
+/* The question set and the details form drop their wash and glass. */
+.signals .sig-immersive [data-sig="apply-card"] :is(.wash, .inset-glass, .inset-tile) {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+.signals .sig-immersive [data-sig="apply-card"] .inset-glass {
+  gap: 0.75rem;
+}
+.signals .sig-immersive [data-sig="apply-q"] {
+  box-shadow: inset 0 0 0 1px var(--raw-sig-black-hair);
+  border-radius: var(--raw-sig-radius-tile);
+  padding: 1.5rem 1.75rem;
+}
+.signals .sig-immersive [data-sig="apply-q"] > p {
+  font-size: var(--raw-sig-text-xl);
+  font-weight: 700;
+  letter-spacing: var(--raw-sig-tracking-tighter);
+}
+.signals .sig-immersive [data-sig="apply-q"] .btn {
+  min-width: 5.5rem;
+}
+
+/* Details fields: the search bar's pills. */
+.signals .sig-immersive [data-sig="apply-card"] label {
+  font-size: var(--raw-sig-text-sm);
+  font-weight: 700;
+  color: var(--raw-sig-black);
+}
+.signals .sig-immersive [data-sig="apply-card"] .field {
+  height: 3.5rem;
+  padding-inline: 1.5rem;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--raw-sig-black);
+  font-family: var(--raw-sig-font);
+  font-size: var(--raw-sig-text-base);
+  font-weight: 600;
+  color: var(--raw-sig-black);
+}
+.signals .sig-immersive [data-sig="apply-card"] .field:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--raw-sig-blue);
+}
+.signals .sig-immersive [data-sig="apply-card"] p:has(+ [data-sig="apply-cv"]) {
+  font-size: var(--raw-sig-text-sm);
+  font-weight: 700;
+  color: var(--raw-sig-black);
+}
+/* At desktop the details sit two to a row, the CV across the full width —
+   a single column of 56px pills across the whole wrap reads as a sign-up
+   wall rather than a short form. */
+@media (min-width: 64rem) {
+  .signals .sig-immersive [data-sig="apply-card"] form .inset-glass {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .signals .sig-immersive [data-sig="apply-card"] form .inset-glass > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+.signals .sig-immersive [data-sig="apply-cv"] {
+  min-height: 3.5rem;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--raw-sig-black);
+  padding: 0.5rem 1.25rem 0.5rem 0.5rem;
+}
+.signals .sig-immersive [data-sig="apply-cv"] .icon-chip {
+  background: var(--raw-sig-lime);
+  color: var(--raw-sig-black);
+  box-shadow: none;
+}
+.signals .sig-immersive [data-sig="apply-cv"] .text-ui-sm {
+  font-size: var(--raw-sig-text-base);
+  font-weight: 700;
+}
+
+/* End states: full width, left-set, display headings. */
+.signals .sig-immersive :is([data-sig="apply-done"], [data-sig="apply-gate"]) {
+  max-width: none;
+  text-align: left;
+  border-radius: var(--raw-sig-radius-panel);
+  padding: 2.5rem 1.75rem;
+}
+@media (min-width: 64rem) {
+  .signals .sig-immersive :is([data-sig="apply-done"], [data-sig="apply-gate"]) {
+    padding: 3.5rem 3rem;
+  }
+}
+.signals .sig-immersive [data-sig="apply-done"] {
+  background: var(--raw-sig-lime);
+}
+.signals .sig-immersive [data-sig="apply-gate"] {
+  box-shadow: inset 0 0 0 1px var(--raw-sig-black-hair);
+}
+.signals .sig-immersive :is([data-sig="apply-done"], [data-sig="apply-gate"]) > p:first-child {
+  justify-content: flex-start;
+}
+.signals .sig-immersive :is([data-sig="apply-done"], [data-sig="apply-gate"]) .icon-chip {
+  width: 3.5rem;
+  height: 3.5rem;
+  background: var(--raw-sig-black);
+  color: var(--raw-sig-creme-100);
+  box-shadow: none;
+}
+.signals .sig-immersive :is([data-sig="apply-done"], [data-sig="apply-gate"]) h5 {
+  margin-top: 1.75rem;
+  font-size: var(--raw-sig-text-5xl);
+  font-weight: 700;
+  letter-spacing: var(--raw-sig-tracking-tighter);
+  line-height: var(--raw-sig-leading-097);
+}
+@media (min-width: 64rem) {
+  .signals .sig-immersive :is([data-sig="apply-done"], [data-sig="apply-gate"]) h5 {
+    font-size: var(--raw-sig-text-8xl);
+  }
+}
+.signals .sig-immersive :is([data-sig="apply-done"], [data-sig="apply-gate"]) h5 + p {
+  max-width: 40rem;
+  font-size: var(--raw-sig-text-lg);
+  color: var(--raw-sig-black);
+}
+.signals .sig-immersive [data-sig="apply-done"] .inset-tile {
+  max-width: 40rem;
+  margin-top: 0.5rem;
+}
+.signals .sig-immersive [data-sig="apply-done"] .inset-tile p {
+  color: var(--raw-sig-black);
+}
+
+/* The link-out note, when "Link to your ATS" is chosen: a full-width blue
+   tint card on the paper, not a floating white box. */
+.signals .sig-immersive [data-sig="link-note"] {
+  max-width: none;
+  margin-top: 0.5rem;
+  padding: 1.75rem 2rem;
+  gap: 1.25rem;
+  background: var(--raw-sig-blue-tint);
   box-shadow: none;
   border-radius: var(--raw-sig-radius-panel);
-}
-.signals .sig-immersive [data-sig="apply-head"] {
   --ink-heading: var(--raw-sig-black);
+  --ink-body: var(--raw-sig-black);
   --ink-label: var(--raw-sig-ink-body);
-  background: var(--raw-sig-lime);
-  box-shadow: none;
-  border-radius: var(--raw-sig-radius-tile);
 }
+.signals .sig-immersive [data-sig="link-note"] h3 {
+  font-size: var(--raw-sig-text-xl);
+  font-weight: 700;
+  letter-spacing: var(--raw-sig-tracking-tighter);
+}
+.signals .sig-immersive [data-sig="link-note"] .icon-chip {
+  background: var(--raw-sig-black);
+  color: var(--raw-sig-creme-100);
+  box-shadow: none;
+}
+
+/* Easy Apply: the page's own chunky pill — 42px, 16px medium, the arrow
+   kept — in black on the paper. The ATS link-out takes the outline pill. */
+.signals .sig-immersive [data-sig="apply-btn"] {
+  height: 2.625rem;
+  padding-inline: 1.25rem;
+  gap: 0.625rem;
+  font-size: var(--raw-sig-text-base);
+  font-weight: 500;
+}
+.signals .sig-immersive button[data-sig="apply-btn"] {
+  background: var(--raw-sig-black);
+  color: var(--raw-sig-creme-100);
+}
+/* The page's own up-right arrow: the demo draws a right arrow; a quarter
+   turn back makes it the ↗ every other pill on the page carries. */
+.signals .sig-immersive [data-sig="apply-btn"] svg {
+  transform: rotate(-45deg);
+}
+.signals .sig-immersive button[data-sig="apply-btn"]:hover {
+  background: var(--raw-sig-blue);
+  color: var(--raw-sig-white);
+}
+.signals .sig-immersive span[data-sig="apply-btn"] {
+  border-color: var(--raw-sig-creme-400);
+}
+
 .signals .sig-immersive [data-sig="brand-wrap"] {
   max-width: none;
 }

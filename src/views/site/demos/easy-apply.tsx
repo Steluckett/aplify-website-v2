@@ -164,6 +164,7 @@ export const EasyApplyDemo = ({
                   {questions.map((question, index) => (
                     <div
                       key={question}
+                      data-sig="apply-q"
                       className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
                     >
                       <p className="text-ui-base font-medium text-ink">
@@ -213,7 +214,10 @@ export const EasyApplyDemo = ({
 
         {step === "gate" ? (
           <Reveal variant="fade">
-            <div className="mx-auto w-full max-w-2xl py-6 text-center">
+            <div
+              data-sig="apply-gate"
+              className="mx-auto w-full max-w-2xl py-6 text-center"
+            >
               <p className="flex justify-center">
                 <span
                   className="icon-chip h-12 w-12 bg-surface-raised shadow-sm"
@@ -276,7 +280,10 @@ export const EasyApplyDemo = ({
                     <p className="mb-2 text-ui-xs font-medium text-ink-label">
                       {content.form.fields.cv}
                     </p>
-                    <div className="flex flex-wrap items-center gap-3 rounded-pill bg-surface-raised px-3 py-2 shadow-sm">
+                    <div
+                      data-sig="apply-cv"
+                      className="flex flex-wrap items-center gap-3 rounded-pill bg-surface-raised px-3 py-2 shadow-sm"
+                    >
                       <span className="icon-chip h-8 w-8" aria-hidden>
                         <DocIcon />
                       </span>
@@ -307,7 +314,10 @@ export const EasyApplyDemo = ({
 
         {step === "done" ? (
           <Reveal variant="fade">
-            <div className="mx-auto w-full max-w-2xl py-6 text-center">
+            <div
+              data-sig="apply-done"
+              className="mx-auto w-full max-w-2xl py-6 text-center"
+            >
               <p className="flex justify-center">
                 <span
                   className="icon-chip h-12 w-12 bg-surface-raised shadow-sm"
@@ -352,7 +362,7 @@ export const EasyApplyDemo = ({
  * where you are, it is not the thing being looked at.
  */
 const StepHeader = ({ label, fill }: { label: string; fill: string }) => (
-  <div className="flex flex-wrap items-center gap-4">
+  <div data-sig="apply-step" className="flex flex-wrap items-center gap-4">
     <p className="eyebrow">{label}</p>
     <span
       className="tally h-2 w-24 flex-none rounded-pill"
