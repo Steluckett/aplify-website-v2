@@ -752,7 +752,10 @@ const CELL = "h-16 bg-surface-raised align-middle";
  */
 const ListView = ({ jobs, route, onApply }: ViewProps) => (
   <div className="overflow-x-auto">
-    <table className="w-full min-w-[46rem] border-separate border-spacing-x-0 border-spacing-y-3">
+    <table
+      data-sig="job-table"
+      className="w-full min-w-[46rem] border-separate border-spacing-x-0 border-spacing-y-3"
+    >
       <caption className="sr-only">
         Sample roles matching the current filters
       </caption>
@@ -955,6 +958,7 @@ const ApplyAction = ({
   if (route === "link") {
     return (
       <span
+        data-sig="apply-btn"
         className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-pill
                    border border-hairline px-4 py-2 text-ui-sm font-medium text-ink-label"
         title="In the product this opens the job's page in your ATS"
@@ -969,6 +973,7 @@ const ApplyAction = ({
     <button
       type="button"
       onClick={() => onApply(job)}
+      data-sig="apply-btn"
       className="btn btn-primary px-4 py-2 text-ui-sm"
     >
       {jobSearchContent.card.easyApply}
