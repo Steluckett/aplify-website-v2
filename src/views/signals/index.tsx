@@ -3,6 +3,15 @@ import { BookDemoOverlay } from "@/views/site/book-demo";
 import { SigClose } from "./close";
 import { SigHero } from "./hero";
 import { SigNav } from "./nav";
+import {
+  SigAi,
+  SigBrand,
+  SigCost,
+  SigDashboard,
+  SigData,
+  SigGoogle,
+  SigIntegrations,
+} from "./more";
 import { SigDemo, SigFaq, SigImplementation, SigSecurity } from "./panels";
 import { SigProof } from "./proof";
 import { SigQuotes } from "./quotes";
@@ -39,14 +48,23 @@ export const SignalsView = () => (
     <SigNav />
     <BookDemoOverlay />
     <main className="w-full overflow-x-clip">
+      {/* The original page's five acts, in its order, each band in the
+          reference's language. */}
       <SigHero />
       <SigStatement />
       <SigStats />
-      <SigSteps />
       <SigSplit />
-      <SigProof />
-      <SigStages />
+      <SigCost />
+      <SigSteps />
       <SigDemo />
+      <SigBrand />
+      <SigProof />
+      <SigData />
+      <SigAi />
+      <SigGoogle />
+      <SigStages />
+      <SigDashboard />
+      <SigIntegrations />
       <SigImplementation />
       <SigQuotes />
       <SigSecurity />

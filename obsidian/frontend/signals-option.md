@@ -70,7 +70,25 @@ src/app/classic/page.tsx       The Aurora page, for comparison
 | Testimonial wall, heading pinned with `sticky` | three quotes + three case results |
 | Insights | security |
 | FAQ panel | buyer questions, answered in approved copy |
+| Statement-style word fill + black card | what it costs |
+| Insights header + creme panel (×4) | job search, brand, AI rewrite and dashboard demos |
+| Raw vs clean rows on the card palette | better data |
+| Split: argument + two cards (person / Google) | Google for Jobs |
+| Ruled "brands" grid | integrations (Eploy in lime, text only) |
 | Close + footer | the ask |
+
+Every band of the Aurora page now has a home here, in its original order.
+
+## The demos, re-skinned
+
+The live demos are Aurora components and are NOT forked. Wrapped in
+`.sig-product`, their tier-2 roles are re-pointed at this page's palette in
+`signals.css`: creme surfaces, white tiles ruled in creme-300, near-black
+ink, royal blue for every accent, focus ring and primary button, this
+page's face and radii, no shadows, Aurora's light grounds flattened to
+creme-200 and its deep grounds to near-black, and no tracked capitals.
+The brand demo's preview keeps its own colours by design (it shows a
+client's brand). Change a demo's look here, never in the demo.
 
 ## Rules it keeps
 

@@ -12,7 +12,7 @@ import { DemoPill, LinkPill, SigHeading, SigLabel } from "./primitives";
 
 /** Label rule, then a heading on the left and its standfirst on the right —
  *  the reference's insights header, reused wherever a band opens. */
-const BandHead = ({
+export const BandHead = ({
   label,
   lines,
   linesSm,
@@ -52,7 +52,7 @@ export const SigDemo = () => (
         standfirst={demos.jobSearch.standfirst}
       />
       <Reveal variant="rise" className="mt-12 lg:mt-16">
-        <div className="rounded-sig-panel bg-sig-creme-200 p-3 lg:p-6">
+        <div className="sig-product rounded-sig-panel bg-sig-creme-200 p-3 lg:p-6">
           <JobSearchDemo />
         </div>
       </Reveal>

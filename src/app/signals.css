@@ -33,6 +33,10 @@
   --raw-sig-creme-300: #dddad1;
   --raw-sig-creme-400: #d3d0c5;
   --raw-sig-creme-500: #6b685f; /* 4.89:1 on creme-100 — labels */
+  /* Product inks for the re-skinned demos — AA on white, both cremes and
+     creme-300 (label 6.68 / 5.86 / 5.35 / 4.78; body 10.1 → 7.2). */
+  --raw-sig-ink-label: #5f5c54;
+  --raw-sig-ink-body: #45413c;
   --raw-sig-white: #ffffff;
   --raw-sig-blue: #2563c9; /* Aplify royal — accent on creme 4.97:1, white on it 5.67:1 */
   --raw-sig-blue-tint: #b4c9f5; /* its pale tint — accent on black and card ground, 11.8:1 */
@@ -114,9 +118,83 @@
   line-height: var(--raw-sig-leading-133);
 }
 
-/* The live product keeps the dashboard's own face. */
-.signals .screen {
-  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+/* --- The live demos, re-skinned ------------------------------------------
+   The job search, dashboard, AI rewrite and brand demos are built on Aurora's
+   tier-2 roles. Wrapped in `.sig-product`, those roles are re-pointed at this
+   page's palette, so the demos match the page without a line of their code
+   changing: creme surfaces, white raised tiles, near-black ink, royal blue
+   for every accent and primary button, the page's face and radii, and flat
+   grounds where Aurora painted blobs and washes. `.screen` re-declares some
+   roles itself, so it is listed alongside to win the cascade.
+   (The brand demo's PREVIEW keeps its own colours — it is showing a client's
+   brand, not ours — only its frame and controls change.) */
+.signals .sig-product,
+.signals .sig-product .screen {
+  --canvas: var(--raw-sig-creme-100);
+  --surface: var(--raw-sig-creme-200);
+  --surface-raised: var(--raw-sig-white);
+  --surface-chip: var(--raw-sig-creme-100);
+  --ink: var(--raw-sig-black);
+  --ink-heading: var(--raw-sig-black);
+  --ink-body: var(--raw-sig-ink-body);
+  --ink-label: var(--raw-sig-ink-label);
+  --ink-accent: var(--raw-sig-blue);
+  --hairline: var(--raw-sig-creme-300);
+  --track: var(--raw-sig-creme-300);
+  --accent: var(--raw-sig-blue);
+  --accent-mid: var(--raw-sig-blue);
+  --accent-end: var(--raw-sig-blue);
+  --accent-grad: linear-gradient(var(--raw-sig-blue), var(--raw-sig-blue));
+  --accent-grad-x: linear-gradient(var(--raw-sig-blue), var(--raw-sig-blue));
+  --accent-grad-solid: linear-gradient(var(--raw-sig-blue), var(--raw-sig-blue));
+  --wash: linear-gradient(var(--raw-sig-creme-200), var(--raw-sig-creme-200));
+  --radius-panel: var(--raw-sig-radius-panel);
+  --radius-card: var(--raw-sig-radius-tile);
+  --radius-sm: var(--raw-sig-radius-field);
+  --shadow-sm: none;
+  --shadow-tile: none;
+  --shadow-group: none;
+  --shadow-lift: none;
+  font-family: var(--raw-sig-font);
+}
+/* Aurora's fifteen grounds, flattened to the page's two: the light ones go
+   to creme-200, the deep ones to near-black (the AI rewrite's white cards
+   then sit on black, as the reference's dark panels do). Inks on each were
+   already solved light-on-deep / dark-on-light, so they hold. */
+.signals .sig-product :is(.bg-01, .bg-02, .bg-03, .bg-04, .bg-05, .bg-06) {
+  background: var(--raw-sig-creme-200);
+}
+.signals .sig-product :is(.bg-07, .bg-08, .bg-09, .bg-10, .bg-11, .bg-12, .bg-13, .bg-14, .bg-15) {
+  background: var(--raw-sig-black);
+}
+/* Aurora's tracked capitals have no place in this page's voice. */
+.signals .sig-product .uppercase.tracking-eyebrow,
+.signals .sig-product .eyebrow {
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+.signals .sig-product .grain::after {
+  display: none;
+}
+.signals .sig-product .btn-primary {
+  background: var(--raw-sig-blue);
+  color: var(--raw-sig-white);
+  box-shadow: none;
+}
+.signals .sig-product .btn-secondary {
+  background: var(--raw-sig-white);
+  box-shadow: inset 0 0 0 1px var(--raw-sig-creme-300);
+}
+.signals .sig-product .tile,
+.signals .sig-product .inset-tile {
+  box-shadow: inset 0 0 0 1px var(--raw-sig-creme-300);
+}
+.signals .sig-product .field {
+  background: var(--raw-sig-white);
+  box-shadow: inset 0 0 0 1px var(--raw-sig-creme-300);
+}
+.signals .sig-product :focus-visible {
+  outline-color: var(--raw-sig-blue);
 }
 
 /* A black ground: the reference's hero, dark panels and footer. */

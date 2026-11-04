@@ -10,6 +10,12 @@ This is a human-curated log — not a mirror of `git log`.
 
 ## 2026-11-04
 
+- **SIGNALS option: the missing bands are back, and the demos match.** What
+  it costs, brand, better data, AI enrichment, Google for Jobs, dashboard
+  and integrations rebuilt in the reference's language, in the Aurora page's
+  order. The live demos are re-skinned through a scoped `.sig-product`
+  token override rather than forked.
+
 - **SIGNALS option palette: purple out.** Two hues only — Aplify royal blue
   `#2563c9` and lime — on near-black and creme, with a pale royal tint
   `#b4c9f5` where lilac was. Primary pill is royal blue with white text.
