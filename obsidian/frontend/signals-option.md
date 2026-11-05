@@ -129,6 +129,12 @@ Later passes (2026-11-04) extended the hooks and the language:
   cards whose edge goes black once rewritten, solid label discs (black doc,
   lime spark), display titles with lime / blue-tint pills, the action as
   the chunky black pill, capabilities as small blue-tint tags under a rule.
+- **Friction** ("Nobody has ever thanked you…"): the accordion and photo
+  are gone. `FrictionList` sets the eight reasons at display size and the
+  reader's scroll drives them — faint until current, the sentence beside
+  the current one, then a lime strike as they move on. Visual only; it
+  claims no per-reason fix. Phones show every sentence; reduced motion is
+  static.
 - **Standfirst baseline**: `.sig-baseline` lifts a paragraph beside a
   display heading onto the heading's baseline (`--raw-sig-baseline-lift`,
   measured — it was 18px low).

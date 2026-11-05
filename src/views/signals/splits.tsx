@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Reveal } from "@/components/ui/reveal";
 import { sigFriction, sigSplit } from "@/data/content/signals";
 
-import { SigAccordion } from "./accordion";
+import { FrictionList } from "./friction-list";
 import { DemoPill, LinkPill } from "./primitives";
 
 /**
@@ -18,8 +18,8 @@ import { DemoPill, LinkPill } from "./primitives";
  *               dots and two pills
  *   row two   — the friction line is the page's sharpest sentence, so it is
  *               lifted out of the half-column to run the full width at
- *               statement size; beneath it, the accordion (1–5) and a 16:9
- *               photo (7–12)
+ *               statement size; beneath it, the eight reasons as a scrolled,
+ *               struck-through display list (`FrictionList`) — no photo
  *
  * Rows are 50px apart (70 at lg), the heading 40px above them (50 at lg).
  * The h3s set as running two-tone text, not stacked lines, exactly as theirs.
@@ -97,37 +97,13 @@ export const SigSplit = () => (
               <Accent plain={sigFriction.plain} accent={sigFriction.accent} />
             </h3>
           </Reveal>
-          <div className="mt-12 grid grid-cols-1 gap-7.5 lg:mt-16 lg:grid-cols-12 lg:items-center lg:gap-5">
-            <Reveal
-              variant="rise"
-              className="lg:col-span-6 lg:col-start-7 lg:row-start-1"
-            >
-              <div className="relative aspect-video overflow-hidden rounded-sig-panel bg-sig-black">
-                <Image
-                  src={sigFriction.photo.src}
-                  alt={sigFriction.photo.alt}
-                  fill
-                  sizes="(max-width: 1024px) 95vw, 48vw"
-                  className="object-cover"
-                />
-              </div>
-            </Reveal>
-            <Reveal
-              variant="up"
-              className="lg:col-span-5 lg:col-start-1 lg:row-start-1"
-            >
-              <p className="mb-7.5 max-w-[30rem] text-sig-base">
-                {sigFriction.standfirst}
-              </p>
-              <div>
-                <SigAccordion
-                  items={sigFriction.cuts.map((c) => ({
-                    title: c.title,
-                    body: c.body,
-                  }))}
-                />
-              </div>
-            </Reveal>
+          <Reveal variant="up" delay={120}>
+            <p className="mt-8 max-w-[36rem] text-sig-lg lg:mt-10">
+              {sigFriction.standfirst}
+            </p>
+          </Reveal>
+          <div className="mt-12 lg:mt-16">
+            <FrictionList cuts={sigFriction.cuts} />
           </div>
         </div>
       </div>
