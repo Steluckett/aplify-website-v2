@@ -23,6 +23,12 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
+  // The product tour is one self-contained HTML file in `public/`, kept out of
+  // the app so it carries none of the site's chrome. This gives it a clean URL.
+  async rewrites() {
+    return [{ source: "/product-tour", destination: "/product-tour.html" }];
+  },
+
   // React Compiler (automatic memoisation) is an opt-in performance win.
   // It requires the `babel-plugin-react-compiler` dev dependency and routes
   // the build through Babel — enable once installed:

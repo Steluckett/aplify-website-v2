@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+</head>
+<body>
+<title>How Aplify Works</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: one screen. A map of the whole journey fills the stage; a camera zooms into one part at a time while a side panel explains it in plain words.
+   Look: borrowed from Aplify Core's recruiter app. A tinted near-white ground with soft blue, violet and mint glows, white cards with soft shadows, pill controls, a sky-blue to violet sweep, and one dark navy card. Single light look by choice. */
+:root{
+  --bg:#f0f2f7; --card:#ffffff; --tint:#edf0f6; --line:#e6e9f0; --edge:#cfd6e0;
+  --ink:#101318; --heading:#0c1220; --body:#4a515c; --muted:#626875; --navy:#041324;
+  --accent:#0b84e0; --violet:#5b4ee0; --mid:#3c78eb; --accent-soft:#e7effc; --accent-strong:#0673ad;
+  --apps:#ea580c; --updates:#8b5cf6; --warn:#d9363e; --alt:#7b8494;
+  --ok:#0b7a55; --ok-soft:#e0f4ec; --build:#8a5a00; --build-soft:#fff1cc;
+  --grad:linear-gradient(115deg,#0879b8,#5044d6);
+  --wash:linear-gradient(135deg,rgba(14,165,233,.20),rgba(91,78,224,.21) 52%,rgba(80,200,190,.15));
+  --shadow-sm:0 1px 1.5px rgba(16,19,26,.05),0 6px 18px rgba(16,19,26,.06);
+  --shadow:0 1px 2px rgba(16,19,26,.04),0 10px 28px rgba(16,19,26,.08);
+  --shadow-lg:0 2px 4px rgba(16,19,26,.04),0 24px 60px rgba(40,50,90,.16);
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;overflow:hidden;
+  background:radial-gradient(55% 60% at 12% 8%,rgba(120,165,245,.34),transparent 70%),radial-gradient(45% 55% at 92% 18%,rgba(150,122,240,.28),transparent 70%),radial-gradient(55% 50% at 55% 105%,rgba(80,200,190,.22),transparent 70%),var(--bg)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--mid);outline-offset:3px}
+
+.bar{flex:none;display:flex;align-items:center;gap:14px;position:relative;z-index:3;padding-block:14px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.bar.top .logo{height:24px;width:auto;display:block}
+.logo g,.mini g{fill:var(--navy)}
+.bar.top .name{color:var(--muted);font-size:13.5px;margin-left:auto}
+.i-btn{width:28px;height:28px;border-radius:50%;background:var(--card);border:1px solid var(--edge);box-shadow:var(--shadow-sm);font-weight:600;font-size:14px;color:var(--accent-strong);line-height:1}
+.i-btn:hover,.i-btn[aria-expanded="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.info{position:absolute;top:calc(100% - 2px);left:max(20px,env(safe-area-inset-left,0px));width:min(430px,calc(100vw - 40px));background:var(--card);border-radius:22px;box-shadow:var(--shadow-lg);padding:24px 26px;border:1px solid var(--line)}
+.info h1{font-size:26px;line-height:1.1;letter-spacing:-.025em;font-weight:600;color:var(--heading)}
+.info p{font-size:15px;color:var(--body);margin-top:10px;text-wrap:pretty}
+.info h2{font-size:12.5px;font-weight:500;color:var(--muted);margin-top:18px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:8px;font-size:13.5px;color:var(--ink)}
+.legend span{display:flex;align-items:center;gap:7px}
+.legend i{width:18px;height:4px;border-radius:2px}
+.legend.key i{width:16px;height:16px;border-radius:5px;border:1px solid rgba(16,19,26,.1)}
+
+.nav-btn{background:var(--card);padding:9px 18px;border-radius:999px;border:1px solid var(--edge);box-shadow:0 1px 2px rgba(16,24,40,.05);font-weight:550;font-size:14px;white-space:nowrap;color:var(--ink)}
+.nav-btn:hover{border-color:#b4bdca}
+.nav-btn.primary{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 6px 16px rgba(60,120,235,.28)}
+.nav-btn.primary:hover{filter:brightness(1.07)}
+.nav-btn[disabled]{opacity:.4;pointer-events:none}
+.where{flex:1;min-width:0;display:flex;align-items:center;gap:14px}
+.count{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dots{display:flex;gap:5px;flex-wrap:wrap;min-width:0}
+.dots button{width:22px;height:18px;display:grid;place-items:center}
+.dots button i{display:block;width:100%;height:4px;border-radius:2px;background:#d9dee8;transition:background .2s}
+.dots button:hover i{background:#b4bdca}
+.dots button.done i{background:#9cc0f2}
+.dots button.now i{background:var(--mid)}
+
+.stage{flex:1;min-height:0;position:relative;overflow:hidden}
+.world{position:absolute;left:0;top:0;width:1910px;height:945px;transform-origin:0 0;transition:transform .9s cubic-bezier(.6,0,.2,1);will-change:transform}
+.world svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+
+/* links */
+.lk path{fill:none;stroke-width:2.5;stroke-linecap:round;opacity:.55}
+.lk text{font-size:16.5px;font-weight:500;fill:var(--body);paint-order:stroke;stroke:#f1f3f9;stroke-width:8px;stroke-linejoin:round}
+.lk{transition:opacity .5s}
+/* line labels: small pills that sit on the line they name */
+.lbl{--c:var(--accent);position:absolute;transform:translate(-50%,-50%);background:#fff;border:1px solid color-mix(in srgb,var(--c) 32%,#fff);color:color-mix(in srgb,var(--c) 55%,var(--ink));font-size:15px;font-weight:500;line-height:1.2;padding:5px 13px;border-radius:999px;white-space:nowrap;box-shadow:var(--shadow-sm);transition:opacity .5s;pointer-events:none}
+.lbl.dim{opacity:.15} .lbl.off{opacity:0}
+.lbl.k-apps{--c:var(--apps)} .lbl.k-updates{--c:var(--updates)} .lbl.k-warn{--c:var(--warn)} .lbl.k-alt{--c:var(--alt)}
+.lk.dim{opacity:.12}
+.lk.off{opacity:0}
+.k-jobs path{stroke:var(--accent)}
+.k-apps path{stroke:var(--apps)}
+.k-updates path{stroke:var(--updates)}
+.k-warn path{stroke:var(--warn);stroke-dasharray:3 9}
+.k-alt path{stroke:var(--alt);stroke-dasharray:7 7;opacity:.9}
+.lk.dashed path{stroke-dasharray:3 9}
+.lk path.pulse.pulse{stroke-width:4.5;stroke-dasharray:7 93;stroke-dashoffset:100;opacity:1;animation:flow 4.2s linear infinite}
+@keyframes flow{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+
+/* nodes: white cards on the tinted ground */
+.node{--c:var(--mid);position:absolute;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 26px;display:flex;flex-direction:column;justify-content:center;gap:6px;
+  transition:opacity .5s,border-color .2s,box-shadow .3s,transform .2s;box-shadow:var(--shadow)}
+.node:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.node.dim{opacity:.3}
+.node.hot{border-color:var(--c);box-shadow:0 0 0 5px color-mix(in srgb,var(--c) 16%,transparent),var(--shadow-lg)}
+.node .hd{display:flex;align-items:center;gap:10px}
+.node .ic{flex:none;width:40px;height:40px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 1px 2px rgba(16,19,26,.06)}
+.node .ic svg{position:static;width:22px;height:22px;fill:none;stroke:var(--c);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.node h3{font-size:23.5px;font-weight:600;letter-spacing:-.022em;line-height:1.1;white-space:nowrap;color:var(--heading)}
+.node p{font-size:16.5px;color:var(--muted);line-height:1.3;text-wrap:balance}
+/* what each card is, at a glance */
+.c-page{--c:#5b4ee0;background:#f2f1ff;border-color:#dedbfb}
+.c-ad{--c:#cf2f7a;background:#fff0f6;border-color:#f8d5e5}
+.c-win{--c:#0c8f63;background:#eaf9f2;border-color:#c9eedd}
+.c-ats{--c:#041324;background:var(--navy);border-color:var(--navy);box-shadow:0 2px 4px rgba(4,19,36,.2),0 18px 40px rgba(4,19,36,.28)}
+.c-ats h3{color:#fff} .c-ats p{color:#aab4c5}
+.c-ats .ic{background:rgba(255,255,255,.12);box-shadow:none} .c-ats .ic svg{stroke:#fff}
+.c-ats.hot{box-shadow:0 0 0 5px rgba(4,19,36,.16),0 18px 40px rgba(4,19,36,.3)}
+/* Aplify and its children: the wash card */
+.node.hub,.node.own{background:var(--wash),#fff;border-color:#fff}
+.node.hub{border-radius:30px;padding:32px 26px;gap:14px;box-shadow:0 0 0 8px rgba(255,255,255,.5),0 30px 70px rgba(60,100,220,.24)}
+.node.hub .logo{position:static;height:40px;width:124px;align-self:center}
+.node.hub p{color:var(--body);font-size:17.5px;text-align:center;text-wrap:pretty}
+.jobs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.jobs-grid span{font-size:15.5px;font-weight:500;color:var(--ink);background:#fff;border-radius:12px;padding:9px 11px;line-height:1.2;box-shadow:var(--shadow-sm)}
+.node.own{padding:26px 28px}
+.node.own h3{font-size:24px}
+.node.own p{color:var(--body)}
+.node .mini{position:static;display:block;width:52px;height:17px;margin-bottom:5px}
+.node.alt{--c:#626875;border:1.5px dashed #9aa3b2;background:rgba(255,255,255,.55);padding:18px 22px;gap:4px;box-shadow:none}
+.node.alt h3{font-size:21px}
+.node.alt p{font-size:15px}
+
+/* panel */
+.panel{position:absolute;top:8px;bottom:8px;right:max(20px,env(safe-area-inset-right,0px));width:clamp(350px,38vw,520px);background:rgba(255,255,255,.93);border:1px solid #fff;border-radius:26px;
+  padding:28px 28px 22px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;z-index:2;
+  transition:transform .5s cubic-bezier(.6,0,.2,1),opacity .35s;box-shadow:var(--shadow-lg);backdrop-filter:blur(14px)}
+.panel.shut{transform:translateX(calc(100% + 40px));opacity:0;pointer-events:none}
+.panel .x{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:var(--tint);color:var(--muted);font-size:17px;line-height:1}
+.panel .x:hover{color:var(--ink);background:#e2e6ee}
+.status{align-self:flex-start;font-size:12.5px;font-weight:550;padding:3px 11px;border-radius:999px;display:flex;align-items:center;gap:6px}
+.status i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.status.live{color:var(--ok);background:var(--ok-soft)}
+.status.build{color:var(--build);background:var(--build-soft)}
+.panel h2{font-size:clamp(24px,2.3vw,31px);line-height:1.12;letter-spacing:-.028em;font-weight:600;text-wrap:balance;padding-right:34px;color:var(--heading)}
+.panel .lead{font-size:16px;color:var(--body);text-wrap:pretty}
+.panel ul{list-style:none;display:grid;gap:9px}
+.panel li{position:relative;padding-left:26px;font-size:15px;color:var(--ink);text-wrap:pretty}
+.panel li:before{content:"";position:absolute;left:2px;top:.42em;width:13px;height:7px;border-left:2.5px solid var(--mid);border-bottom:2.5px solid var(--mid);transform:rotate(-45deg);transform-origin:center}
+.say{background:var(--wash),#fff;border-radius:16px;padding:14px 16px}
+.say small{display:block;font-size:12.5px;color:var(--muted);font-weight:500}
+.say q{font-size:17px;font-weight:600;line-height:1.3;quotes:"\201C" "\201D";color:var(--heading);text-wrap:pretty}
+.more{border-top:1px solid var(--line);padding-top:16px;padding-bottom:30px;display:grid;gap:16px}
+.more h3{font-size:13.5px;font-weight:500;color:var(--muted)}
+.more h4{font-size:15.5px;font-weight:600;margin-bottom:7px;letter-spacing:-.01em;color:var(--heading)}
+.panel .more ul{gap:6px}
+.panel .more li{font-size:14px;color:var(--body);padding-left:16px}
+.panel .more li:before{left:1px;top:.62em;width:5px;height:5px;border:0;border-radius:50%;background:var(--mid);transform:none}
+.more .tag{font-size:11px;padding:1px 7px;margin-left:4px;vertical-align:1px}
+.panel:after{content:"";flex:none;position:sticky;bottom:-22px;height:40px;margin-top:-40px;background:linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.97));pointer-events:none}
+.openers{display:grid;gap:8px}
+.openers button{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:grid;gap:2px;box-shadow:var(--shadow-sm)}
+.openers button:hover{border-color:var(--mid)}
+.openers b{font-size:15.5px;font-weight:600;line-height:1.3;color:var(--heading)}
+.openers span{font-size:13px;color:var(--accent-strong)}
+
+/* low-fi mock-ups: a tinted well with white tiles inset */
+.mock{background:var(--tint);border-radius:18px;padding:14px;display:grid;gap:8px;font-size:13px}
+.mock .cap{font-size:11.5px;color:var(--muted)}
+.mc{background:#fff;border:1px solid transparent;border-radius:12px;padding:10px 12px;display:grid;gap:4px;box-shadow:var(--shadow-sm)}
+.mc b{font-size:14px;font-weight:600;color:var(--heading)}
+.mc small{color:var(--muted);font-size:12.5px}
+.mc.bad{background:#fff5f5;border-color:#f6cfd1} .mc.bad b{color:#b42318;font-weight:550}
+.mc.good{border-color:#9cc0f2}
+.big{font-size:24px!important;font-weight:650!important;letter-spacing:-.02em}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.split{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.arrow{color:var(--mid);font-weight:700;font-size:18px}
+.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-strong);white-space:nowrap}
+.tag.y{background:var(--build-soft);color:var(--build)}
+.tag.v{background:#efeaff;color:var(--violet)}
+.tag.g{background:#eef0f5;color:var(--body)}
+.field{background:#fff;border:1px solid var(--edge);border-radius:999px;padding:7px 13px;color:var(--muted);flex:1;min-width:0;box-shadow:0 1px 2px rgba(16,24,40,.05)}
+.btn{background:var(--grad);color:#fff;font-weight:600;border-radius:999px;padding:7px 14px;text-align:center}
+.sk{height:8px;border-radius:4px;background:#e2e6ee}
+.bars{display:grid;gap:6px}
+.bars div{display:grid;grid-template-columns:74px 1fr;gap:8px;align-items:center;color:var(--body);font-size:12.5px}
+.bars i{display:block;height:6px;border-radius:3px;background:var(--grad)}
+.steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.steps span{font-size:12.5px;padding:4px 10px;border-radius:999px;background:#fff;color:var(--body)}
+.steps span.on{background:var(--ok-soft);color:var(--ok)}
+.bubble{border-radius:16px;padding:9px 13px;max-width:88%;color:var(--ink)}
+.bubble.q{background:var(--navy);color:#fff;justify-self:end}
+.bubble.a{background:#fff;box-shadow:var(--shadow-sm)}
+
+@media (max-width:899px){
+  .panel{top:auto;left:0;right:0;bottom:0;width:auto;height:58%;border-radius:22px 22px 0 0;padding:22px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
+  .panel.shut{transform:translateY(105%)}
+  .bar.top .name,.dots{display:none}
+  .where{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .world,.panel,.node,.lk,.lbl{transition:none}
+  .lk path.pulse{display:none}
+}
+
+/* THE WEBSITE LAYER. Keeps the layout above and re-skins it to the new Aplify website: creme ground, black and white cards, one blue, lime for the wins, Schibsted Grotesk set tight. Must stay last. */
+:root{--bg:#f3f0e8;--card:#fff;--tint:#e9e6de;--line:#10131829;--edge:#d3d0c5;--ink:#101318;--heading:#101318;--body:#45413c;--muted:#5f5c54;--navy:#101318;
+  --accent:#2563c9;--violet:#5b4ee0;--mid:#2563c9;--accent-soft:#e3ebfa;--accent-strong:#2563c9;--apps:#101318;--updates:#5b4ee0;--warn:#c8372d;--alt:#6b685f;
+  --ok:#101318;--ok-soft:#dbfe87;--build:#45413c;--build-soft:#dddad1;--grad:#2563c9;--lime:#dbfe87;--sky:#b4c9f5;--creme:#f3f0e8;
+  --shadow-sm:0 1px 2px #10131814;--shadow:0 24px 44px -28px #10131859;--shadow-lg:0 30px 60px -30px #10131880;
+  --font:'Schibsted Grotesk',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif}
+body{background:var(--bg)}
+.nav-btn{background:transparent;border:0;box-shadow:inset 0 0 0 1px #10131840;font-weight:500;font-size:15px;padding:10px 20px}
+.nav-btn:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.nav-btn.primary{background:var(--accent);color:#fff;box-shadow:none}
+.nav-btn.primary:hover{box-shadow:none}
+.i-btn{background:transparent;border:0;box-shadow:inset 0 0 0 1px #10131840;color:var(--ink)}
+.i-btn:hover,.i-btn[aria-expanded="true"]{background:var(--ink);color:var(--creme)}
+.info{border:0;border-radius:30px;padding:28px 30px}
+.info h1{font-weight:700;letter-spacing:-.04em;font-size:30px;line-height:1}
+.legend.key i{border-color:#10131829}
+.dots button i{background:#10131826} .dots button:hover i{background:#10131859}
+.dots button.done i{background:#2563c966} .dots button.now i{background:var(--accent)}
+.lbl{box-shadow:none;border-color:#10131829;color:var(--ink)}
+.lbl.k-jobs{color:var(--accent)} .lbl.k-updates{color:var(--violet)}
+.node{border:0;border-radius:26px}
+.node h3{font-weight:700;letter-spacing:-.035em}
+.node .ic{background:#1013180f;box-shadow:none} .node .ic svg{stroke:var(--ink)}
+.node.hot,.c-ats.hot{box-shadow:0 0 0 4px var(--bg),0 0 0 7px var(--accent),var(--shadow-lg)}
+.c-page{background:#fff;border:0}
+.c-ad{background:var(--sky);border:0} .c-ad p{color:#2a3857} .c-ad .ic{background:#ffffff80}
+.c-win{background:var(--lime);border:0} .c-win p{color:#3c4720} .c-win .ic{background:#ffffff80}
+.c-ats{background:#d3d0c5;border:0;box-shadow:var(--shadow)} .c-ats h3{color:var(--ink)} .c-ats p{color:var(--body)}
+.c-ats .ic{background:#ffffff80} .c-ats .ic svg{stroke:var(--ink)}
+.node.hub,.node.own{background:var(--ink);border:0}
+.node.hub{border-radius:30px;box-shadow:0 40px 70px -30px #101318a6}
+.node.hub p,.node.own p{color:#f3f0e8b8}
+.node.own h3{color:var(--creme)}
+.node.hub .logo g,.node.own .mini g{fill:var(--creme)}
+.jobs-grid span{background:#1c2029;color:var(--creme);box-shadow:none;border-radius:10px;font-weight:500}
+.node.alt{background:transparent;border:1.5px dashed #6b685f}
+.panel{background:#fff;border:0;border-radius:30px;backdrop-filter:none;padding:32px 32px 24px}
+.panel h2{font-weight:700;letter-spacing:-.04em;line-height:1;font-size:clamp(28px,2.7vw,40px)}
+.panel .lead{font-size:16.5px}
+.panel li:before{border-color:var(--accent)}
+.status.live{background:var(--lime);color:var(--ink)}
+.say{background:var(--lime);border-radius:15px}
+.say small{color:#3c4720}
+.say q{font-weight:700;letter-spacing:-.02em;font-size:18px}
+.more h4{font-weight:700;letter-spacing:-.02em}
+.mock{border-radius:20px}
+.mc{box-shadow:none}
+.mc.good{border-color:var(--accent)}
+.field{box-shadow:none}
+.bubble.q{background:var(--ink)} .bubble.a{box-shadow:none}
+.openers button{box-shadow:none;border-radius:15px}
+.openers button:hover{border-color:var(--ink)}
+.tag{background:var(--accent-soft);color:var(--accent)} .tag.y{background:#dddad1;color:var(--ink)} .tag.v{background:var(--ink);color:var(--creme)} .tag.g{background:#e9e6de;color:var(--body)}
+.steps span.on{background:var(--lime);color:var(--ink)}
+.panel:after{background:linear-gradient(#fff0,#fff)}
+/* icons: a plain glyph in the top right corner, text ranged left at the foot of the card, as the website's tiles do */
+.node[class*=" c-"]{justify-content:flex-end}
+.node .ic,.c-ad .ic,.c-win .ic,.c-ats .ic{position:absolute;top:20px;right:20px;width:26px;height:26px;background:none;border-radius:0;box-shadow:none}
+.node .ic svg,.c-ats .ic svg{width:26px;height:26px;stroke:var(--accent);stroke-width:1.7}
+.node.hub .ic svg,.node.own .ic svg{stroke:#fff}
+/* cover: the Aplify card at full screen. Start shrinks it down into the Aplify box on the map. */
+.cover{position:fixed;inset:0;z-index:20;background:var(--ink);color:var(--creme);display:flex;flex-direction:column;overflow:hidden;
+  padding:calc(22px + env(safe-area-inset-top,0px)) max(40px,env(safe-area-inset-right,0px)) calc(36px + env(safe-area-inset-bottom,0px)) max(40px,env(safe-area-inset-left,0px));
+  clip-path:inset(0 0 0 0 round 0px);transition:clip-path .9s cubic-bezier(.7,0,.2,1),opacity .3s linear .75s}
+.cover.go{opacity:0;pointer-events:none}
+.cover.go .cv-body,.cover.go .cv-top,.cover.go .cv-art{opacity:0}
+.cv-body,.cv-top,.cv-art{transition:opacity .35s}
+.cv-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid #f3f0e82e;position:relative;z-index:1}
+.cover .logo{height:24px;width:auto;display:block}
+.cover .logo g{fill:var(--creme)}
+.cv-top span{font-size:16px;font-weight:500}
+.cv-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:28px;max-width:min(62%,900px);position:relative;z-index:1}
+.cv-body h1{font-size:clamp(40px,6.1vw,104px);line-height:.95;letter-spacing:-.045em;font-weight:700;text-wrap:balance}
+.cv-body h1 em{font-style:normal;color:var(--sky);display:block}
+.cv-body p{font-size:clamp(16px,1.35vw,21px);line-height:1.35;color:#f3f0e8c7;max-width:34em;text-wrap:pretty}
+.cv-go{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.cv-start{background:var(--accent);color:#fff;font-weight:600;font-size:18px;padding:15px 30px;border-radius:999px;display:inline-flex;align-items:center;gap:12px}
+.cv-start:hover{filter:brightness(1.12)}
+.cv-start svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cv-go small{font-size:14px;color:#f3f0e88c}
+.cv-art{position:absolute;right:0;top:0;bottom:0;width:46%;pointer-events:none}
+.cv-art svg{width:100%;height:100%}
+.cv-art .ln{fill:none;stroke:#f3f0e82e;stroke-width:2}
+.cv-art .pl{fill:none;stroke-width:3.5;stroke-linecap:round;stroke-dasharray:9 91;stroke-dashoffset:100;animation:flow 3.6s linear infinite}
+.cv-art .tile text{font-size:19px;font-weight:600;letter-spacing:-.02em;fill:var(--ink)}
+.cv-art .hubbox{fill:#1c2029;stroke:#f3f0e82e;stroke-width:1.5}
+.cv-art svg svg g{fill:var(--creme)}
+.cv-art .halo{fill:none;stroke:var(--lime);stroke-width:1.5;opacity:.5;transform-origin:330px 450px;animation:halo 3.6s ease-out infinite}
+@keyframes halo{from{transform:scale(1);opacity:.55}to{transform:scale(1.5);opacity:0}}
+.bar.top .logo{cursor:pointer}
+@media (max-width:899px){.cv-art{display:none}.cv-body{max-width:100%}.cover{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}}
+@media (prefers-reduced-motion:reduce){.cover{transition:none}.cv-art .pl,.cv-art .halo{animation:none;display:none}}
+/* cover, second layout: headline across the top on two lines, intro and Start bottom left, the looping map along the bottom */
+.cv-head{font-size:clamp(38px,6.3vw,124px);line-height:.94;letter-spacing:-.045em;font-weight:700;padding-top:clamp(24px,5.5vh,64px);position:relative;z-index:1;transition:opacity .35s}
+.cv-head span,.cv-head em{display:block;font-style:normal}
+.cv-head em{color:var(--sky)}
+.cv-low{flex:1;min-height:0;display:grid;grid-template-columns:minmax(280px,34%) minmax(0,1fr);gap:clamp(24px,5vw,90px);align-items:end;padding-top:24px;transition:opacity .35s}
+.cv-text{display:flex;flex-direction:column;gap:14px;padding-bottom:6px}
+.cv-text p{font-size:clamp(16px,1.3vw,20px);line-height:1.38;color:#f3f0e8c7;text-wrap:pretty}
+.cv-text p.cv-sub{color:var(--creme);font-weight:600}
+.cv-go{margin-top:12px}
+.cv-art{position:static;width:auto;height:100%;max-height:440px;min-height:0;align-self:end}
+.cv-art .halo{transform-origin:405px 190px}
+.cover.go .cv-head,.cover.go .cv-low{opacity:0}
+@media (min-width:900px){.cv-head span,.cv-head em{white-space:nowrap}}
+@media (max-width:899px){.cv-low{grid-template-columns:1fr;align-items:start}.cv-art{display:none}}
+/* cover, third layout: headline, then intro with Start at the right, then the looping map full width along the bottom */
+.cv-low{flex:none;display:flex;align-items:flex-end;justify-content:space-between;gap:40px;padding-top:clamp(16px,3vh,30px)}
+.cv-text{max-width:46em;padding:0}
+.cv-text p b{color:var(--creme);font-weight:600}
+.cv-go{margin:0;flex:none;flex-wrap:nowrap}
+.cv-art{flex:1;width:100%;height:auto;max-height:none;min-height:0;align-self:stretch;margin-top:clamp(18px,5vh,56px)}
+.cv-art .halo{transform-origin:680px 165px}
+.cv-art .cap{font-size:15px;font-weight:500;fill:#f3f0e88c}
+@media (max-width:899px){.cv-low{flex-direction:column;align-items:flex-start}}
+/* the dark surfaces (cover and Aplify cards) use the website's #0e0a10; text ink stays #101318 */
+:root{--dark:#0e0a10}
+.cover,.node.hub,.node.own,.bubble.q,.tag.v{background:var(--dark)}
+.i-btn:hover,.i-btn[aria-expanded="true"]{background:var(--dark)}
+.jobs-grid span{background:#1c1720} .cv-art .hubbox{fill:#1c1720}
+.cv-top{border-bottom:0;padding-bottom:0}
+.cv-head{padding-top:clamp(40px,11vh,130px)}
+.cv-text{max-width:50em}
+.cv-text{max-width:none}
+.cv-text p{font-size:clamp(22px,2.5vw,40px);line-height:1.1;font-weight:600;letter-spacing:-.03em;color:var(--creme);text-wrap:balance}
+.cv-low{align-items:center}
+.cv-head{font-size:clamp(36px,5.7vw,112px)}
+</style>
+
+<header class="bar top">
+  <svg class="logo" viewBox="0 0 317.01 103.04" role="img" aria-label="Aplify"><g fill="#fff"><rect x="143.49" width="14.35" height="77.28"/><polygon points="71.75 103.04 86.1 103.04 86.1 77.28 116.59 77.28 107.23 61.83 86.1 61.83 86.1 30.91 119.58 30.91 119.58 60.8 119.58 61.83 119.58 77.28 133.93 77.28 133.93 15.46 71.75 15.46 71.75 103.04"/><polygon points="0 77.28 44.6 77.28 35.23 61.83 14.35 61.83 14.35 30.91 47.83 30.91 47.83 61.83 47.59 61.83 47.59 77.28 47.83 77.28 62.18 77.28 62.18 15.46 0 15.46 0 77.28"/><polygon points="302.66 15.46 302.66 61.83 269.18 61.83 269.18 15.46 254.83 15.46 254.83 77.28 302.66 77.28 302.66 87.59 289.11 87.59 279.74 103.04 317.01 103.04 317.01 15.46 302.66 15.46"/><rect x="167.47" y="15.46" width="14.35" height="61.82"/><polygon points="201.27 15.46 190.83 32.69 190.83 77.28 205.18 77.28 205.18 59.84 246.31 59.84 246.31 44.38 205.18 44.38 205.18 30.91 246.31 30.91 246.31 15.46 205.18 15.46 201.27 15.46"/></g><rect fill="#02dafd" x="167.47" width="14.35" height="7.73"/></svg>
+  <button class="i-btn" id="ibtn" aria-expanded="false" aria-controls="info" aria-label="About this map and its colours">i</button>
+  <div class="info" id="info" hidden>
+    <h1>Aplify sits in the middle</h1>
+    <p>It takes jobs from the system HR already uses, puts them everywhere people look for work, and sends every application back. Click any box to look closer.</p>
+    <p>Built by recruitment people who got tired of the software.</p>
+    <h2>The lines</h2>
+    <div class="legend"><span><i style="background:var(--accent)"></i>Jobs</span><span><i style="background:var(--apps)"></i>Applications</span><span><i style="background:var(--updates)"></i>Progress updates</span></div>
+    <h2>The boxes</h2>
+    <div class="legend key"><span><i style="background:#0e0a10"></i>Aplify</span><span><i style="background:#d3d0c5"></i>The client’s ATS</span><span><i style="background:#fff"></i>The client’s pages</span><span><i style="background:#b4c9f5"></i>Where jobs are advertised</span><span><i style="background:#dbfe87"></i>What the client gains</span></div>
+  </div>
+  <span class="name">How it works, in plain words</span>
+</header>
+
+<main class="stage" id="stage">
+  <div class="world" id="world">
+    <svg id="links" viewBox="0 0 1910 945" aria-hidden="true"></svg>
+  </div>
+  <aside class="panel shut" id="panel" aria-live="polite"></aside>
+</main>
+
+<footer class="bar bottom">
+  <button class="nav-btn" id="home">Whole picture</button>
+  <div class="where"><span class="count" id="count"></span><div class="dots" id="dots"></div></div>
+  <button class="nav-btn" id="prev">Back</button>
+  <button class="nav-btn primary" id="next">Next</button>
+</footer>
+
+<section class="cover" id="cover" aria-label="Introduction">
+  <div class="cv-top"><span id="cv-logo"></span></div>
+  <h1 class="cv-head"><span>Built by recruitment people</span> <em>who got tired of the software.</em></h1>
+  <div class="cv-low">
+    <div class="cv-text">
+      <p>What Aplify is, what it does, and why our clients will want it.</p>
+    </div>
+    <div class="cv-go"><button class="cv-start" id="cv-start">Let’s go<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+  </div>
+  <div class="cv-art"><svg viewBox="0 0 1360 330" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><path class="ln" d="M160 151 H605"/><path class="ln" d="M605 179 H160"/><path class="pl" d="M160 151 H605" pathLength="100" style="stroke:#b4c9f5"/><path class="pl" d="M605 179 H160" pathLength="100" style="stroke:#f3f0e8;animation-delay:-1.8s"/><text class="cap" x="382" y="138" text-anchor="middle">Jobs</text><text class="cap" x="382" y="204" text-anchor="middle">Applications</text><path class="ln" d="M755 165 C960 165,940 29,1150 29"/><path class="pl" d="M755 165 C960 165,940 29,1150 29" pathLength="100" style="stroke:#dbfe87;animation-delay:-0.0s"/><g class="tile"><rect x="1150" y="2" width="210" height="54" rx="15" fill="#dbfe87"/><text x="1170" y="36">Google for Jobs</text></g><path class="ln" d="M755 165 C960 165,940 97,1150 97"/><path class="pl" d="M755 165 C960 165,940 97,1150 97" pathLength="100" style="stroke:#dbfe87;animation-delay:-0.7s"/><g class="tile"><rect x="1150" y="70" width="210" height="54" rx="15" fill="#dbfe87"/><text x="1170" y="104">AI search</text></g><path class="ln" d="M755 165 C960 165,940 165,1150 165"/><path class="pl" d="M755 165 C960 165,940 165,1150 165" pathLength="100" style="stroke:#b4c9f5;animation-delay:-1.4s"/><g class="tile"><rect x="1150" y="138" width="210" height="54" rx="15" fill="#ffffff"/><text x="1170" y="172">Careers site</text></g><path class="ln" d="M755 165 C960 165,940 233,1150 233"/><path class="pl" d="M755 165 C960 165,940 233,1150 233" pathLength="100" style="stroke:#b4c9f5;animation-delay:-2.1s"/><g class="tile"><rect x="1150" y="206" width="210" height="54" rx="15" fill="#ffffff"/><text x="1170" y="240">Landing pages</text></g><path class="ln" d="M755 165 C960 165,940 301,1150 301"/><path class="pl" d="M755 165 C960 165,940 301,1150 301" pathLength="100" style="stroke:#b4c9f5;animation-delay:-2.8s"/><g class="tile"><rect x="1150" y="274" width="210" height="54" rx="15" fill="#b4c9f5"/><text x="1170" y="308">Job boards</text></g><g class="tile"><rect x="0" y="138" width="160" height="54" rx="15" fill="#d3d0c5"/><text x="20" y="172">The ATS</text></g><rect class="halo" x="605" y="90" width="150" height="150" rx="30"/><rect class="hubbox" x="605" y="90" width="150" height="150" rx="30"/><g id="cv-hub"></g></svg></div>
+</section>
+
+<script>
+const WW=1910, WH=945;
+const I={
+  db:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/>',
+  win:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 14h6"/>',
+  page:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  phone:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  list:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+  case:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/>',
+  search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>',
+  form:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 12l2 2 4-4"/>',
+  spark:'<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/>',
+  people:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c3 .2 5 2.6 5 5.8"/>'
+};
+const NODES=[
+  {id:'indeed',cat:'ad',x:320,y:30,w:270,h:150,ic:'case',t:'Indeed',s:'Apply button leads to Aplify Apply',go:'indeed'},
+  {id:'boards',cat:'ad',x:685,y:30,w:270,h:150,ic:'list',t:'Job boards',s:'Fed with rewritten, on-brand adverts',go:'boards'},
+  {id:'google',cat:'win',x:1125,y:30,w:290,h:150,ic:'search',t:'Google for Jobs',s:'Jobs in Google’s jobs box',go:'google'},
+  {id:'ai',cat:'win',x:1550,y:30,w:300,h:150,ic:'spark',t:'AI search',s:'ChatGPT, Gemini, Copilot',go:'ai'},
+  {id:'ats',cat:'ats',x:50,y:350,w:280,h:220,ic:'db',t:'The ATS',s:'The system HR uses to manage hiring. Workday, Eploy and others.',go:'jobs'},
+  {id:'aplify',x:630,y:280,w:380,h:370,hub:1,go:'tidy'},
+  {id:'site',cat:'page',x:1550,y:260,w:300,h:160,ic:'win',t:'Careers site',s:'Job search and job pages',go:'site'},
+  {id:'easy',x:1140,y:315,w:260,h:160,ic:'form',cls:'own',t:'Apply',s:'Job pages and a two-minute form',go:'apply'},
+  {id:'atspage',x:1140,y:500,w:260,h:120,ic:'db',cls:'alt',t:'ATS job page',s:'The route without Aplify Apply',go:'apply'},
+  {id:'landing',cat:'page',x:1550,y:490,w:300,h:160,ic:'page',t:'Landing pages',s:'Only the jobs a campaign is about',go:'landing'},
+  {id:'social',cat:'ad',x:1550,y:765,w:300,h:140,ic:'phone',t:'Social ads',s:'Facebook, Instagram, Google',go:'landing'},
+  {id:'dash',x:460,y:765,w:310,h:150,ic:'chart',cls:'own',t:'Recruiter dashboard',s:'Every applicant in one place',go:'dash'},
+  {id:'pool',x:870,y:765,w:310,h:150,ic:'people',cls:'own',t:'Talent pool',s:'Keeps good people in touch',go:'pool'}
+];
+const LINKS=[
+  {id:'jobsIn',k:'jobs',d:'M330 405 H624',l:'Jobs',lx:477,ly:405},
+  {id:'appsIn',k:'apps',d:'M630 460 H336',l:'Applications',lx:483,ly:460},
+  {id:'updates',k:'updates',d:'M330 515 H624',l:'Progress updates',lx:477,ly:515},
+  {id:'direct',k:'warn',d:'M330 380 C680 190,1100 200,1544 310',l:'A long application built for HR',lx:901,ly:232,only:1},
+  {id:'toSite',k:'jobs',d:'M1010 298 H1544'},
+  {id:'siteEasy',k:'apps',d:'M1550 345 C1475 345,1475 375,1406 375'},
+  {id:'easyIn',k:'apps',d:'M1140 395 H1016'},
+  {id:'toLanding',k:'jobs',d:'M1010 636 H1544'},
+  {id:'landEasy',k:'apps',d:'M1550 525 C1465 525,1485 435,1406 435'},
+  {id:'clicks',k:'updates',d:'M1700 765 V656',l:'Clicks',lx:1700,ly:710},
+  {id:'toIndeedAts',k:'jobs',d:'M190 350 C190 200,240 105,314 105',l:'Jobs, as now',lx:224,ly:171,dashed:1},
+  {id:'toIndeed',k:'jobs',d:'M720 280 C720 215,520 250,500 186',l:'New apply link',lx:571,ly:226},
+  {id:'toBoards',k:'jobs',d:'M820 280 V186',l:'Clean feed',lx:820,ly:233},
+  {id:'easyGoogle',k:'jobs',d:'M1270 315 V186',l:'Readable job pages',lx:1270,ly:242},
+  {id:'easyAi',k:'jobs',d:'M1340 315 C1340 220,1680 255,1700 186'},
+  {id:'siteAts',k:'alt',d:'M1550 392 C1445 400,1500 545,1406 545'},
+  {id:'landAts',k:'alt',d:'M1550 585 C1490 585,1460 578,1406 578'},
+  {id:'toDash',k:'apps',d:'M740 650 C740 712,615 705,615 759'},
+  {id:'toPool',k:'apps',d:'M900 650 C900 712,1025 705,1025 759'}
+];
+const ALLN=NODES.map(n=>n.id), ALLL=LINKS.filter(l=>!l.only&&!l.show).map(l=>l.id);
+const hid=l=>l.only||l.show;
+
+const STEPS=[
+ {id:'overview',t:'The whole picture',nodes:ALLN,links:ALLL.concat('skip')},
+ {id:'problem',t:'Today, without Aplify',focus:['ats','site'],nodes:['ats','site'],links:['direct'],
+  lead:'A company’s jobs live in its ATS, the system HR uses to manage hiring. It was built for HR, not for someone looking for work.',
+  pts:['Job adverts go out exactly as HR typed them, with messy titles and the pay buried in the text.','Many ATSs put a registration wall first: people must create an account before they can apply, and a huge number drop out right there.','They are sent off the careers site to a different web address, in somebody else’s branding, wondering if they are still in the right place.','Then comes page after page of form, asking for details already on the CV they uploaded.','Good people give up halfway, and nobody can tell which advert they came from.'],
+  mock:`<div class="mc bad"><b>Step 1 of 179: Create an account</b><div class="sk" style="width:90%"></div><div class="sk" style="width:70%"></div><div class="sk" style="width:80%"></div><small>Choose a password, confirm your email, then start the form</small></div><span class="cap">What a typical ATS application looks like</span>`,
+  say:'How long does it take to apply for one of your jobs on a phone?'},
+ {id:'jobs',t:'Jobs arrive on their own',st:['live','Live today'],focus:['ats','aplify'],nodes:['ats','aplify'],links:['jobsIn'],
+  lead:'Aplify collects the jobs from the ATS automatically. Nobody copies, pastes or uploads anything.',
+  pts:['Works with the job feed that almost every ATS can produce.','Connects directly to Workday and Eploy.','Checks for changes every night, and every 4 hours on direct connections.','When a job closes in the ATS, it comes down everywhere.'],
+  mock:`<div class="mc"><div class="row"><b>Job feed from the ATS</b><span class="tag">Every night</span></div></div><div class="mc"><div class="row"><b>Workday</b><span class="tag">Every 4 hours</span></div></div><div class="mc"><div class="row"><b>Eploy</b><span class="tag">Every 4 hours</span></div></div>`,
+  say:'You keep your ATS. We just plug into it.'},
+ {id:'tidy',t:'Every job gets tidied up',st:['live','Live today'],focus:['aplify'],nodes:['aplify','ats'],links:['jobsIn'],
+  lead:'Before a job goes anywhere, Aplify’s AI makes it easier to find and easier to read.',
+  pts:['Rewrites clumsy titles into the words people actually search for.','Rewrites the whole advert using the company’s tone of voice, its employer promise (EVP) and its keywords.','Writes a short, scannable summary for every job.','It invents nothing. Every fact in the rewritten advert comes from the original.','Pulls the pay out of the small print and shows it clearly.','Pins each job on the map and sorts it into the right type of work.'],
+  mock:`<div class="split"><div class="mc bad"><b>HCA - NIGHTS (REF 00482) **URGENT**</b><small>Pay: competitive, see description</small></div><span class="arrow">&rsaquo;</span><div class="mc good"><b>Night Care Assistant</b><small>£12.60 an hour, Leeds LS8</small><span class="tag">Care and support</span></div></div><span class="cap">Example of a job as it arrives, and after Aplify</span>`,
+  say:'Your adverts get better without your team rewriting a single one.'},
+ {id:'site',t:'A job search people enjoy using',st:['live','Live today'],focus:['aplify','site','easy','atspage'],nodes:['aplify','site','easy','atspage'],links:['toSite','siteEasy','easyIn','siteAts'],
+  lead:'On the careers site, Aplify is the job search. It works the way the shopping and map apps on everyone’s phone work.',
+  pts:['Search by job and by town or postcode, with suggestions as you type.','“Jobs near me”, nearest first, with the miles shown on every job.','List, grid or map view, in the client’s own branding.','Drops into the careers site the client already has.','With Aplify Apply switched on, every Apply button opens the short form that cut drop-off from 85% to 30% for one care provider.','Aplify Apply is a choice. Without it, “Find out more” on a job goes straight to that job’s page on the ATS, and people apply there.'],
+  mock:`<div class="row"><span class="field">Care assistant</span><span class="field">Leeds</span><span class="btn">Search</span></div><div class="mc"><div class="row"><b>Night Care Assistant</b><span class="tag">2.1 miles away</span></div><small>£12.60 an hour, full time</small></div><div class="mc"><div class="row"><b>Senior Care Assistant</b><span class="tag">3.4 miles away</span></div><small>£13.75 an hour, part time</small></div>`,
+  say:'Can someone find your nearest job in under ten seconds?'},
+ {id:'landing',t:'Landing pages for social campaigns',st:['live','Live today'],focus:['landing','social','aplify','easy','atspage'],nodes:['landing','social','aplify','easy','atspage'],links:['toLanding','landEasy','easyIn','landAts','clicks'],
+  lead:'When we run a campaign on Facebook, Instagram or Google, the advert leads to a landing page showing only the jobs that campaign is about.',
+  pts:['A page such as “Nursing jobs in Leeds” always shows the live jobs, with no manual updates.','Closed jobs disappear on their own, so an advert never leads to a dead end.','Aplify remembers which advert each person came from, right through to the application.','With Aplify Apply switched on, every Apply button opens the short form, so more of the clicks the campaign pays for turn into applications.','Open days and events get the same short sign-up, with places tracked and attendance recorded.','Without Aplify Apply, the same pages still work. “Find out more” on a job goes straight to that job’s page on the ATS.'],
+  mock:`<div class="split"><div class="mc"><span class="tag v">Sponsored</span><b>Nurses wanted in Leeds</b><div class="btn">See the jobs</div></div><span class="arrow">&rsaquo;</span><div class="mc good"><b>Nursing jobs in Leeds</b><div class="sk"></div><div class="sk" style="width:80%"></div><div class="sk" style="width:90%"></div><small>Only the matching live jobs</small></div></div>`,
+  say:'We can show you which advert produced which applicant.'},
+ {id:'apply',t:'Aplify Apply keeps people applying',st:['live','Live today'],focus:['aplify','easy','atspage','site','landing','google','ai'],nodes:['aplify','easy','atspage','site','landing','google','ai'],links:['siteEasy','landEasy','easyIn','siteAts','landAts','easyGoogle','easyAi'],
+  lead:'Aplify Apply sits behind every Apply button, on the careers site and on campaign landing pages. It replaces the long ATS form with a short one in the client’s branding, built for phones.',
+  pts:['For one care provider, 85% of the people who pressed Apply on the ATS form never finished. With Aplify Apply that fell to 30%, and 55% more applications were submitted.','No account, no redirect, no password. The form is on the page they are already on.','A few quick questions come first, so someone who isn’t right for the job finds out kindly and early.','Add a CV from the phone. Longer details can be collected later, once the recruiter is interested.','Applications arrive in the Aplify dashboard, and go straight on into the ATS where it is connected.','Aplify Apply is a choice. Without it, “Find out more” on a job goes to that job’s page on the ATS and people apply there. The client gives up the short form, and the Google for Jobs and AI search listings that come with it.'],
+  mock:`<div class="row"><div class="mc bad" style="flex:1"><small>On the ATS form</small><b class="big">85% dropped off</b></div><div class="mc good" style="flex:1"><small>With Aplify Apply</small><b class="big">30% dropped off</b></div></div><span class="cap">One care provider, before and after Aplify Apply. 55% more applications submitted.</span><div class="mc"><small>Before you apply</small><b>Do you have the right to work in the UK?</b><div class="row"><span class="tag">Yes</span><span class="tag g">No</span></div></div><div class="mc"><small>Your details</small><div class="row"><span class="field">Name</span><span class="field">Phone</span></div><div class="row"><span class="field">Add your CV</span><span class="btn">Send application</span></div></div>`,
+  say:'How many people start your application and never finish it?'},
+ {id:'ats',t:'Applications go straight into the ATS',st:['live','Live with Eploy'],focus:['ats','aplify'],nodes:['ats','aplify'],links:['appsIn','updates'],
+  lead:'Recruiters don’t learn a new system. Each application lands in their ATS as if the person had applied there.',
+  pts:['Sends the person, their CV and their answers.','Progress comes back out, so Aplify knows who was shortlisted and who was hired.','Fully two-way with Eploy today. Workday is next, and more are planned.'],
+  mock:`<span class="cap">One applicant’s journey, kept in step on both sides</span><div class="steps"><span class="on">Applied</span><span class="on">In the ATS</span><span class="on">Shortlisted</span><span>Hired</span></div>`,
+  say:'Your recruiters carry on working exactly where they work now.'},
+ {id:'boards',t:'Clean feeds out to job boards',st:['live','Live today'],focus:['aplify','boards'],nodes:['aplify','boards'],links:['toBoards'],
+  lead:'Aplify can pass the tidied-up jobs on to job boards and partners as a ready-made feed.',
+  pts:['The boards get the rewritten adverts, not the raw ATS text: clear titles and full job descriptions in the company’s tone of voice, seeded with its employer promise (EVP) and keywords.','Pay and location go out clean and consistent too.','Each board gets the layout it asks for.','The apply link can point to Aplify Apply, so people coming from job boards get the short form too.'],
+  mock:`<div class="mc"><div class="row"><b>Feed for a job board</b><span class="tag">Improved adverts</span></div><small>Rewritten title and description, pay, location, apply link</small></div><div class="mc"><div class="row"><b>Feed for a partner</b><span class="tag g">Original adverts</span></div><small>Their own field names and order</small></div>`,
+  say:'One clean source for every place your jobs appear.'},
+ {id:'indeed',t:'Indeed applicants get Aplify Apply too',st:['build','Being built'],focus:['ats','indeed','aplify'],nodes:['ats','indeed','aplify'],links:['toIndeedAts','toIndeed'],
+  lead:'Indeed usually gets its jobs straight from the ATS, so its Apply button sends people to the long form. Indeed has approved Aplify to change where that button goes.',
+  pts:['The job stays exactly as the ATS sent it. Only the apply link changes.','Switched on once per client, then it looks after itself.','For clients who don’t use Indeed’s own in-app apply.'],
+  mock:`<div class="mc bad"><small>Now</small><b>Apply on company site &rsaquo; long ATS form</b></div><div class="mc good"><small>With Aplify</small><b>Apply on company site &rsaquo; Aplify Apply</b></div>`,
+  say:'We can fix the Indeed journey without touching your ATS.'},
+ {id:'google',t:'Found on Google for Jobs',st:['live','Live today'],focus:['easy','site','landing','google'],nodes:['easy','site','landing','google','aplify'],links:['easyGoogle','siteEasy','landEasy'],
+  lead:'Google shows its own jobs box above the normal results. To appear in it, every job needs its own page with hidden labels telling Google the title, pay, place and employer. Aplify Apply provides both.',
+  pts:['Every job page is labelled for Google automatically.','This comes with Aplify Apply. Google reads the job pages that Aplify Apply puts on the client’s site.','Without Aplify Apply, jobs link straight to the ATS, so there is no page for Google to read.','A live list of jobs tells Google what is new.','Closed jobs are taken down properly, so Google drops them.'],
+  mock:`<div class="row"><span class="field">care assistant jobs near me</span></div><div class="mc good"><small>Jobs</small><b>Night Care Assistant</b><small>The client’s name, Leeds, £12.60 an hour</small><div class="row"><span class="tag">Apply on the careers site</span></div></div><span class="cap">Illustration of Google’s jobs box</span>`,
+  say:'Search Google for one of your jobs. Is it in the jobs box?'},
+ {id:'ai',t:'Ready for ChatGPT and AI search',st:['build','Groundwork live, more planned'],focus:['easy','site','landing','ai'],nodes:['easy','site','landing','ai','aplify'],links:['easyAi','siteEasy','landEasy'],
+  lead:'People are starting to ask ChatGPT, Gemini and Copilot to find them a job. Those tools read the same labels and job pages that Google reads.',
+  pts:['Every Aplify job already carries the details AI tools look for.','This comes with Aplify Apply too. AI tools read the same job pages that Aplify Apply puts on the client’s site.','Clear titles, real pay and exact locations make a job easier for AI to recommend.','Improvements aimed squarely at AI search are planned next.'],
+  mock:`<div class="bubble q">Are there any night care jobs near Leeds?</div><div class="bubble a">Yes. There is a Night Care Assistant role in Leeds LS8 paying £12.60 an hour. You can apply on the employer’s careers site.</div><span class="cap">Illustration of an AI assistant answering</span>`,
+  say:'If someone asks ChatGPT for jobs like yours nearby, do you come up?'},
+ {id:'dash',t:'Recruiters see everything in one place',st:['live','Live today'],focus:['aplify','dash'],nodes:['aplify','dash'],links:['toDash'],
+  lead:'Behind the scenes, the client’s team gets a simple dashboard in their own branding.',
+  pts:['Every application, with its status, notes and history.','Where each applicant came from: Indeed, Facebook, Google or a named campaign.','How far each person lives from the job.','Every status change sends the candidate a branded email in the client’s own voice, so nobody is left wondering whether a human opened it.'],
+  mock:`<div class="row"><div class="mc" style="flex:1"><small>New this week</small><b>48</b></div><div class="mc" style="flex:1"><small>Waiting for review</small><b>12</b></div></div><div class="bars"><div>Facebook<i style="width:82%"></i></div><div>Indeed<i style="width:58%"></i></div><div>Google<i style="width:36%"></i></div></div><span class="cap">Example figures</span>`,
+  say:'You can see which channel brings applicants, and which brings hires.'},
+ {id:'pool',t:'A talent pool that keeps growing',st:['build','Ready to launch'],focus:['aplify','pool','dash'],nodes:['aplify','pool'],links:['toPool'],
+  lead:'Someone who isn’t right for today’s job may be perfect for next month’s. Aplify invites every applicant to stay in touch.',
+  pts:['One record per person, showing everything they have applied for.','Recruiters search the pool in plain words, by meaning and not only by keyword.','People join by choice, and their consent is recorded.'],
+  mock:`<div class="row"><span class="field">Nurses within 10 miles who can work nights</span></div><div class="mc"><div class="row"><b>Example candidate</b><span class="tag">In the talent pool</span></div><small>Applied twice, lives 4 miles away</small></div>`,
+  say:'You have already paid to attract these people. Keep them.'},
+ {id:'sell',t:'Ways to open the conversation',focus:null,nodes:ALLN,links:ALLL.concat('skip'),
+  lead:'Aplify gives us a reason to talk to a client before any campaign is planned. Each question leads to something Aplify fixes.',
+  openers:[['Search Google for one of your jobs. Is it in the jobs box?','Google for Jobs','google'],['Ask ChatGPT for jobs like yours nearby. Do you come up?','AI search','ai'],['How long does your application take on a phone?','Aplify Apply','apply'],['Do you know which advert your last hire came from?','Campaign tracking','landing'],['What happens to the good people you don’t hire?','Talent pool','pool']]}
+];
+
+// The full detail behind each step. A = switched on per client, B = not live yet.
+const A='<span class="tag g">Add-on</span>', B='<span class="tag y">Being built</span>', N='<span class="tag y">Not released yet</span>';
+const MORE={
+ sell:[
+  ['Proof to quote',['Brandon Trust: 85% of the people who pressed Apply never finished. With the short form on the page that fell to 30%, and 55% more applications were submitted. Same traffic, same jobs, same team.','Cygnet Group: salaries, titles and regions arrive written five different ways. Aplify cleans them on every import, so every advert goes out consistent.','HC-One: postcode and radius search, live filters and a map on every campaign landing page, with applying on the same page.']],
+  ['In their words',['“Aplify has helped us significantly reduce application drop-out by making the whole process quicker and more accessible. More candidates are now completing their applications, giving our recruitment team a stronger pool of people to engage with.” Louise Mitchell, Brandon Trust','“The Aplify dashboard is incredibly straightforward to use. Our recruitment team can quickly review and manage applications without unnecessary complexity, helping everyone work more efficiently and keep candidates moving through the process.” Ben Hopwell, Cygnet Group','“Aplify makes applying for a role feel quick, simple and intuitive. Candidates can complete their application without navigating a long or complicated process, creating a much more positive experience from the very first interaction.” Sammi Yates, HC-One']],
+  ['Questions clients ask first',['Do we have to replace our ATS? No. Nothing you already run gets replaced, and nobody has to work anywhere new.','Which ATS does it work with? Reading jobs works with any of them. Sending applications back is built per system, and we do that work.','Do candidates need an account? No. There is no password to lose and nothing to leak.','Where does candidate data live? In Aplify. The client’s website shows the experience and never stores a candidate.','What does setup involve? On WordPress the pages are created automatically. Two settings to go live.','Will our jobs show on Google? Yes, where Aplify Apply is switched on, because each job gets a page Google can read.']],
+  ['Where Aplify came from',['Built by recruitment people who got tired of the software, not by software people trying to understand recruitment.']]],
+ problem:[
+  ['Eight places people give up',['The search: they can’t find the job, or find it three times under three different titles.','The advert: written to fill a box in the ATS, not to persuade anybody. Nothing says why the job is any good.','The redirect: a different web address in somebody else’s branding.','The account: a username, a password and a confirmation email, for a job they haven’t got yet.','The form: twenty-odd boxes asking for what is already on their CV.','The phone: most people apply on a phone, often on a break. A form built for a desktop gets finished later, which means never.','The dead end: they fill it all in, then find out they don’t have the right to work, the licence or the hours.','The silence: they press submit and hear nothing. That is a lost opinion of the employer, not just a lost application.']],
+  ['What was already spent on that person',['The advertising, the job boards and the paid social.','The campaign, the creative agency and the QR posters.','The careers site, the employer brand and the EVP.','The SEO, and the team’s time.','All of it is spent before anyone reaches the form. The form decides whether it was worth it.']],
+  ['What it costs the employer',['Advertising money is spent sending people to an application process they abandon.','Jobs can be hard to find on Google because the pages aren’t labelled for it.','HR can’t see which advert, board or campaign produced a hire.','People who were right for the role are lost, and have to be paid for again next time.']]],
+ jobs:[
+  ['Where jobs can come from',['A job feed from the ATS, in any of the common formats (XML, JSON or CSV), including password-protected feeds.','Workday, directly, with no feed needed.','Eploy, directly, including each job’s status.','Typed in by hand, for clients with no ATS feed. Recruiters can create, edit and duplicate jobs in Aplify. '+A]],
+  ['Setting up a new client',['AI reads a new feed, works out how it is laid out and matches up the fields by itself.','Setup takes minutes, not a developer’s week.','A simple screen shows real examples from the feed, and flags anything that is missing.','Adding a new field later is a setting, not a project.']],
+  ['Staying in step',['Feeds are re-read every night. Direct connections are checked every 4 hours.','An “Import now” button for when a job can’t wait.','Jobs that leave the ATS come down automatically.','Every import leaves a report: what was added, changed, removed or skipped, and why.']]],
+ tidy:[
+  ['The guardrails',['It rewrites, it never invents. Every fact in the new advert can be traced back to the original.','Every AI decision can be edited by the client’s team.','This AI works on adverts, not on applicants. It does not screen or score the people applying.','Internal codes and repeated text are stripped out of titles.','Twelve spellings of the same region become one.']],
+  ['Better adverts',['Cleaner job titles, written the way candidates search.','A short summary for every job, used on job cards and in search results.','A full rewrite of the job description, well structured and consistent from one job to the next.','Written in the company’s house style: its tone of voice, its employer promise (EVP) and the words it wants used.','Recruiters can compare the new advert side by side with the original.']],
+  ['Facts made clear',['Pay turned from free text (“£12.50ph”, “up to 32k”) into a clean range, per hour or per year.','An exact map location for every job. If a place name is unclear, the postcode is used.','Every job tagged with its UK region, so region filters always work.','Every job sorted into the company’s own job families and roles.']],
+  ['The client stays in control',['Each company sets its own AI rules, and sees a live example from its latest job.','AI can be switched on per feed, and per feature.','Recruiters can correct a category, one job at a time or in bulk.','One click re-runs the AI for a single job or a whole feed.','AI only runs again when an advert actually changes, which keeps costs low.']]],
+ site:[
+  ['Finding the right job',['Keyword search.','Town or postcode search, with suggestions as you type.','Search within a distance: 10, 20, 30 or 50 miles, or any distance.','“Use my location” finds jobs near where the person is standing.','Results sorted nearest first, with miles away on every job.','Filters for region, type of work and role, always matching the live jobs.','Filters shown as removable chips, with “Clear all”.']],
+  ['Ways to browse',['Grid view or list view.','Map view with grouped pins and “Search this area”. '+A,'Job cards showing title, employer, location, distance, pay, hours and closing date.','Honest pay wording: a range, “From”, “Up to”, or “Depending on experience” when there is no figure.','A “recently viewed jobs” strip that can sit on any page, such as the homepage.']],
+  ['Job pages',['Full job details with a header image.','Optional “Description” and “About us” tabs.','Building blocks for a fully bespoke layout.','Closed jobs come down properly, and an outage never takes live jobs down.']],
+  ['Built for the client’s site',['The client’s own colours, fonts, spacing and button styles.','Works with the common WordPress page builders (Elementor and the block editor).','The search form fits its space, from a full-width banner to a narrow sidebar.','Loads only on pages that use it, so the site stays fast.','Keyboard-friendly, with readable contrast built in.','Improvements reach every client site automatically.','Setup is two settings. The job, apply and thank-you pages are created automatically.','No candidate data is stored on the client’s website, and the access key never leaves their server.']]],
+ landing:[
+  ['Pages built around a campaign',['A page can be locked to one type of job, one place, one brand or one location.','Visitors can’t remove the locked filter, so the page stays on message.','Any search can be turned into a link for emails, social posts and QR codes.','Brands within a group can show their own name on their jobs.','The same job search, job pages and Aplify Apply as the careers site.']],
+  ['Open days and events',['Event pages with the venue, map, times and “Get directions”.','A registration form for each event, with screening questions if needed.','Branded confirmation emails, and a list for marking who attended.','Places are tracked, and attendance is recorded against the candidate afterwards. No more spreadsheet on somebody’s desktop.']],
+  ['Tracking that proves the campaign worked',['Remembers for 30 days where each person first came from.','Records the Facebook and Google click details and campaign tags with every application.','Cookie banners, analytics, tag managers and pixels keep working on the apply pages.','The source shows against each applicant in the recruiter dashboard.','The campaign details can travel into the ATS with the candidate. '+A]]],
+ apply:[
+  ['With Aplify Apply, and without',['With it: each job gets its own page on the client’s site, and the short form sits behind the Apply button.','With it: Google for Jobs and AI search can read those job pages, so the jobs can be listed there.','Without it: the job search and landing pages still work, but “Find out more” on a job goes to that job’s page on the ATS, and people apply there.','Without it: there is no job page for Google or AI tools to read, so those listings don’t come.','A third option: Aplify can hand the applicant to a form the client already runs.','The route is set once per client, and every Apply button follows it.','It can be switched on at any time.']],
+  ['What it means for the client',['More applicants from the same advertising spend, because far fewer people give up.','A lower cost for every application.','The same short form wherever someone clicks Apply: the careers site, landing pages and job board links.','Indeed’s Apply button can lead here too. '+B,'Every application is tagged with the advert or channel it came from.','Applications arrive in the Aplify dashboard, or go on into the ATS, so recruiters work where they prefer.']],
+  ['The form',['Two short steps: “Before you apply”, then “Your details”.','Knock-out questions politely redirect people who don’t meet the essentials.','Follow-up questions appear only when relevant, such as a registration number for nurses.','Built in Aplify for each company, with no developer needed.','Different questions for different types of job.','CV upload in PDF or Word, straight from a phone.','Phone-friendly date and number pickers.']],
+  ['In the client’s branding',['Ready-made job, apply, thank-you and “not suitable” pages.','Logo, header images, colours and corner style to match the brand.','Editable wording on the thank-you and “not suitable” pages.','Old links, emails and QR codes keep working.']],
+  ['After they apply',['A branded “thanks for applying” email, with an invitation to join the talent pool.','A recruiter can move someone to the second stage in one click.','The candidate is emailed a link to the fuller application, with an automatic reminder after 48 hours.','Recruiters can see whether that email was opened.']],
+  ['Safe and compliant',['Terms, privacy and contact consent captured.','Spam protection, and a limit on applications per person.','No personal details ever appear in a web address.']]],
+ ats:[
+  ['Three places an application can go',['Straight into the client’s ATS.','Into the Aplify dashboard, for recruiters to sort through there.','On to a form the client already runs.']],
+  ['Which ATSs it works with',['Reading jobs works with any ATS, in whatever format it produces.','Sending applications back is built system by system.','If a client’s ATS isn’t connected yet, that is a piece of work we do, not a queue they join.','Nothing the client already runs gets replaced, and nobody has to work anywhere new.']],
+  ['Eploy, fully two-way',['Each application goes straight in: the candidate, CV, address and screening answers.','Existing candidates are matched by email, so there are no duplicates.','Stage changes in Eploy come back every 4 hours, so statuses stay in step.','Eploy’s screening questions are brought across, and matching form fields are built in one click.','Aplify warns when the questions change in Eploy.']],
+  ['Workday',['Every vacancy is pulled in automatically, every 4 hours.','Candidate progress comes back: clicked, account created, submitted.','Sending applications straight into Workday. '+B]],
+  ['Set up and looked after',['AI suggests how the ATS’s stages match Aplify’s statuses, and an admin can adjust them.','A full log of everything sent and received.','Buttons to re-send an application or re-sync, and a connection test.','Campaign and advert details can travel into the ATS with the candidate. '+A]]],
+ boards:[
+  ['Better adverts on every board',['Cleaner job titles, written the way candidates search.','A full rewrite of each job description, well structured and consistent from one job to the next.','Written in the company’s house style: its tone of voice, its employer promise (EVP) and the words it wants used.','A short summary for every job, for boards that show one.','The same improved advert on the careers site, landing pages and every board, so the brand reads the same everywhere.','A feed can carry the original ATS wording instead, where a board or partner needs it.']],
+  ['Facts made clear',['Pay turned from free text into a clean range, per hour or per year.','A consistent town, postcode and UK region for every job.','Every job sorted into the company’s own job families and roles.']],
+  ['What the feed can do',['Each client gets their own feeds, one per board or partner if needed.','Choose which details go in, what they are called and in what order.','Choose improved adverts or the originals.','Choose where the apply link points.','Always matches the live jobs, so closed jobs drop off the boards too.','Protected by an access key, so only the boards the client chooses can read it.','Errors are stripped out before the feed leaves.','Once a feed is clean it is an asset. One clean source can feed every board.']]],
+ indeed:[
+  ['How it is planned to work',['Uses Indeed’s official tool for approved partners.','New jobs are picked up automatically, within about an hour of reaching Indeed.','Each job shows its status: linked, waiting, or not linked and why.','Switching it off puts Indeed back exactly as the ATS sent it.','Applicants are recorded as coming from Indeed, so the source reporting stays right.']]],
+ google:[
+  ['On every job page',['Hidden labels for the title, description, pay, location, employer and dates.','Pay is only included when there is a real figure.','A unique page title: job, town and employer.','A clean description for the search result.','A brand within a group can appear as the employer.','Written when the job publishes. No separate feed, and no step per job for anyone to forget.','The job stays on the client’s own site in their own branding. Google is an extra way in, not a replacement.']],
+  ['Keeping Google up to date',['A live list of every open job, refreshed automatically.','Works alongside the common SEO plugins (Yoast and Rank Math).','Closed jobs return a proper “not found”, so Google removes them.','Google can be told the moment a job is added, changed or closed. Live for the first client.']],
+  ['Checks built in',['A one-click check that a client’s Google for Jobs setup is right.','A warning if two websites would send Google the same jobs.']]],
+ ai:[
+  ['Why Aplify jobs suit AI search',['AI tools favour clear facts. Every job has a tidy title, real pay, an exact place and a named employer.','They rely on the same hidden labels Google for Jobs uses, which are on every job page.','Well-structured adverts are easier for AI to read and quote.','Closed jobs are removed properly, so AI is less likely to recommend a dead job.']],
+  ['Planned next',['Making the full job text easier for AI tools to read. '+B,'Letting more search engines know about new jobs straight away. '+B]]],
+ dash:[
+  ['Managing applications',['Quick tiles: new this week, waiting for review, in progress, hired.','Charts for applications per week, the pipeline by stage, and where applicants came from.','Search by name, email or phone, and filter by status, job, type of work, source, region, town and date.','A slide-over view of each application: overview, answers, notes and history.','13 statuses, from Submitted to Hired, with a record of who changed what and when.','Team notes on every application.','Applications and event sign-ups arrive in one list, not four inboxes.','Export to a spreadsheet, with every filter applied.']],
+  ['One record per person',['A Candidates view showing everyone, and who has applied more than once.','One timeline per person: every application, status change, note and email.','Notes follow the person wherever they are viewed.']],
+  ['Candidate emails',['12 ready-made emails, each editable and each with an on/off switch.','Recruiters write plain text. It arrives in a branded design with the logo and a proper button.','A true preview before anything is sent.','See what was delivered, opened and clicked.','Hearing nothing is what puts people off applying to the same employer again.']],
+  ['Proving what works',['The source of every applicant, grouped into readable channels.','A full export of each person’s journey, for measuring conversion.','Distance from home to the job, in plain bands: Local, Nearby, Further out, Far.']],
+  ['In the client’s own look',['Each company’s colours, typeface and logo.','Light and dark mode, and a phone layout.','Recruiters can also log in on the careers site itself.']],
+  ['Safe and compliant',['Roles for admins and recruiters, set per company.','Candidate details are encrypted.','Candidates can ask for a copy of their data, or for it to be deleted.','Old applications are anonymised automatically after 12 months.','Daily off-site backups.','Every piece of personal information is encrypted on its own, and recruiters can still search it.','Each company only ever sees its own data.','No candidate data is stored on the client’s website. Applications and CVs go straight to Aplify and stay there.','Candidates apply without an account, so there is no password to lose and nothing to leak.','How long data is kept is set per company.']]],
+ pool:[
+  ['For candidates',['No passwords. People log in with a one-time email link.','Upload a CV and AI fills in the profile. The candidate just checks it.','Choose the kinds of work they are interested in, and where.','A weekly email of new jobs near them that never repeats a job.','Full control of their settings and their data.','A branded personal dashboard, company stories and “recommend a friend”. '+N]],
+  ['For recruiters',['Search by skills and experience, by meaning: “dementia care nights” finds the right people even when the words differ. '+A,'Search by distance from a place, with miles on every row.','Filters for right to work, availability, driving licence, type of work and more.','An AI quality score out of 100 for every candidate, with the reasoning shown.','Career history drawn as a timeline, with employment gaps highlighted.','A check of the CV against the profile, to catch inconsistencies.','“Find candidates” on any job, and “Find similar” on any person.','Add someone and send a branded personal invitation.']],
+  ['For managers',['A league table of recruiter activity, with a spreadsheet export.','Pool numbers on the main dashboard: members, active, CVs read, alert subscribers.','Consent, do-not-contact and deletion handled properly.','Candidate data stays inside Aplify and never sits on the client’s website.']]]
+};
+const $=id=>document.getElementById(id);
+const world=$('world'),stage=$('stage'),panel=$('panel');
+const logoHTML=document.querySelector('.bar.top .logo').outerHTML;
+const miniLogo=logoHTML.replace('class="logo"','class="mini"');
+let cur=0;
+
+// build nodes
+NODES.forEach(n=>{
+  const b=document.createElement('button');
+  b.className='node'+(n.hub?' hub':'')+(n.cls?' '+n.cls:'')+(n.cat?' c-'+n.cat:''); b.id='n-'+n.id;
+  b.style.cssText=`left:${n.x}px;top:${n.y}px;width:${n.w}px;height:${n.h}px`;
+  b.innerHTML=n.hub
+    ? `${logoHTML}<p>Collects every job, tidies it up, and sends it where people look for work.</p><div class="jobs-grid"><span>Clearer titles</span><span>Adverts in your voice</span><span>Short summaries</span><span>Pay made clear</span><span>Pinned on the map</span><span>Sorted by job type</span></div>`
+    : `<div class="hd">${n.cls?'':`<span class="ic"><svg viewBox="0 0 24 24">${I[n.ic]}</svg></span>`}<h3>${n.cls==='own'?miniLogo:''}${n.t}</h3></div><p>${n.s}</p>`;
+  b.onclick=()=>go(n.go);
+  world.appendChild(b);
+});
+// build links
+const col={jobs:'var(--accent)',apps:'var(--apps)',updates:'var(--updates)',warn:'var(--warn)',alt:'var(--alt)'};
+$('links').innerHTML='<defs>'+Object.keys(col).map(k=>`<marker id="ar-${k}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:${col[k]};stroke:none;opacity:1"/></marker>`).join('')+'</defs>'+
+ LINKS.map((l,i)=>`<g class="lk k-${l.k}${l.dashed?' dashed':''}" id="l-${l.id}"><path id="p-${l.id}" d="${l.d}" marker-end="url(#ar-${l.k})"/>`+
+  `<path class="pulse" d="${l.d}" pathLength="100" style="animation-delay:-${((i*.61)%4.2).toFixed(2)}s"/>`+
+  '</g>').join('');
+LINKS.forEach(l=>{if(!l.l)return;const c=document.createElement('div');c.className='lbl k-'+l.k;c.id='t-'+l.id;c.textContent=l.l;c.style.left=l.lx+'px';c.style.top=l.ly+'px';world.appendChild(c)});
+// build dots
+$('dots').innerHTML=STEPS.map((s,i)=>`<button data-i="${i}" aria-label="${s.t}" title="${s.t}"><i></i></button>`).join('');
+$('dots').onclick=e=>{const b=e.target.closest('button');if(b)show(+b.dataset.i)};
+
+function go(id){const i=STEPS.findIndex(s=>s.id===id);if(i>=0)show(i)}
+function bbox(ids){
+  const ns=NODES.filter(n=>ids.includes(n.id));
+  const x=Math.min(...ns.map(n=>n.x)),y=Math.min(...ns.map(n=>n.y));
+  return {x,y,w:Math.max(...ns.map(n=>n.x+n.w))-x,h:Math.max(...ns.map(n=>n.y+n.h))-y};
+}
+function camera(){
+  const s=STEPS[cur],W=stage.clientWidth,H=stage.clientHeight,wide=W>=900,open=cur>0;
+  let aw=W,ah=H;
+  if(open){ if(wide) aw=W-panel.offsetWidth-32; else ah=H*0.42; }
+  let b={x:0,y:0,w:WW,h:WH},pad=10;
+  if(s.focus){b=bbox(s.focus);pad=wide?70:30}
+  b={x:b.x-pad,y:b.y-pad,w:b.w+pad*2,h:b.h+pad*2};
+  const s0=Math.min(W/WW,H/WH);
+  let k=Math.min(aw/b.w,ah/b.h); if(s.focus) k=Math.min(k,s0*2.3);
+  const tx=(aw-b.w*k)/2-b.x*k, ty=(ah-b.h*k)/2-b.y*k;
+  world.style.transform=`translate(${tx}px,${ty}px) scale(${k})`;
+}
+function show(i){
+  cur=Math.max(0,Math.min(STEPS.length-1,i));
+  const s=STEPS[cur];
+  NODES.forEach(n=>{const el=$('n-'+n.id);el.classList.toggle('dim',!s.nodes.includes(n.id));el.classList.toggle('hot',!!s.focus&&s.focus.includes(n.id))});
+  LINKS.forEach(l=>{const el=$('l-'+l.id),on=s.links.includes(l.id);[el,$('t-'+l.id)].forEach(e=>{if(e){e.classList.toggle('dim',!on&&!hid(l));e.classList.toggle('off',!on&&!!hid(l))}})});
+  if(cur===0){panel.classList.add('shut')}
+  else{
+    panel.innerHTML=`<button class="x" aria-label="Back to the whole picture">&times;</button>`+
+      (s.st?`<span class="status ${s.st[0]}"><i></i>${s.st[1]}</span>`:'')+
+      `<h2>${s.t}</h2><p class="lead">${s.lead}</p>`+
+      (s.pts?`<ul>${s.pts.map(p=>`<li>${p}</li>`).join('')}</ul>`:'')+
+      (s.mock?`<div class="mock">${s.mock}</div>`:'')+
+      (s.openers?`<div class="openers">${s.openers.map(o=>`<button data-go="${o[2]}"><b>${o[0]}</b><span>Leads to: ${o[1]}</span></button>`).join('')}</div>`:'')+
+      (s.say?`<div class="say"><small>A line to say to the client</small><q>${s.say}</q></div>`:'')+
+      (MORE[s.id]?`<div class="more"><h3>${s.id==='sell'?'Proof to quote, and the questions clients ask':'Everything it does here'}</h3>${MORE[s.id].map(g=>`<section><h4>${g[0]}</h4><ul>${g[1].map(x=>`<li>${x}</li>`).join('')}</ul></section>`).join('')}</div>`:'');
+    panel.scrollTop=0;panel.classList.remove('shut');
+    panel.querySelector('.x').onclick=()=>show(0);
+    panel.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+  }
+  $('count').textContent=`${cur+1} of ${STEPS.length}`;
+  [...$('dots').children].forEach((d,j)=>{d.classList.toggle('now',j===cur);d.classList.toggle('done',j<cur)});
+  $('prev').disabled=cur===0;$('next').disabled=cur===STEPS.length-1;
+  camera();
+}
+$('prev').onclick=()=>show(cur-1);
+$('next').onclick=()=>show(cur+1);
+$('home').onclick=()=>show(0);
+const ibtn=$('ibtn'),info=$('info');
+function setInfo(o){info.hidden=!o;ibtn.setAttribute('aria-expanded',o)}
+ibtn.onclick=e=>{e.stopPropagation();setInfo(info.hidden)};
+addEventListener('click',e=>{if(!info.hidden&&!info.contains(e.target))setInfo(false)});
+addEventListener('keydown',e=>{
+  if(!cover.hidden){if(!cover.classList.contains('go')&&(e.key==='Enter'||e.key==='ArrowRight'||e.key===' ')){e.preventDefault();startTour()}return}
+  if(e.key==='ArrowRight'||e.key==='PageDown'){show(cur+1);e.preventDefault()}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){show(cur-1);e.preventDefault()}
+  else if(e.key==='Escape'&&!info.hidden){setInfo(false)}
+  else if(e.key==='Escape'||e.key==='Home'){show(0)}
+});
+new ResizeObserver(()=>{world.style.transition='none';camera();requestAnimationFrame(()=>world.style.transition='')}).observe(stage);
+
+// cover
+const cover=$('cover');
+$('cv-logo').innerHTML=logoHTML;
+$('cv-hub').innerHTML=logoHTML.replace('class="logo"','x="632" y="149" width="96" height="32"');
+function startTour(){
+  const r=$('n-aplify').getBoundingClientRect();
+  cover.style.clipPath=`inset(${r.top}px ${innerWidth-r.right}px ${innerHeight-r.bottom}px ${r.left}px round ${Math.round(r.width*.08)}px)`;
+  cover.classList.add('go');
+  setTimeout(()=>{cover.hidden=true},1100);
+}
+function showCover(){show(0);cover.hidden=false;cover.style.clipPath='';void cover.offsetWidth;cover.classList.remove('go')}
+$('cv-start').onclick=startTour;
+document.querySelector('.bar.top .logo').onclick=showCover;
+world.style.transition='none';show(0);requestAnimationFrame(()=>requestAnimationFrame(()=>world.style.transition=''));
+</script>
+
+</body>
+</html>
